@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/soundcloud.js": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}

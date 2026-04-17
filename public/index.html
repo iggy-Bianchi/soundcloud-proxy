@@ -62,9 +62,34 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .bio-fact-label{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#333;text-transform:uppercase;margin-bottom:6px}
 .bio-fact-val{font-size:14px;color:var(--bone)}
 .music-embed{margin-bottom:12px;border:0.5px solid #111}
-.merch-banner{background:var(--charcoal);border:0.5px solid #1a1a1a;padding:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem}
-.merch-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em}
-.merch-sub{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#555;text-transform:uppercase;margin-top:6px}
+.merch-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
+.merch-header-text .merch-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em}
+.merch-header-text .merch-sub{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#555;text-transform:uppercase;margin-top:6px}
+.merch-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
+.merch-card{background:var(--charcoal);border:0.5px solid #1a1a1a;overflow:hidden;transition:border-color .3s}
+.merch-card:hover{border-color:var(--toxic)}
+.merch-card-img{position:relative;width:100%;aspect-ratio:1;overflow:hidden;background:#0a0a0a;display:flex;align-items:center;justify-content:center}
+.merch-card-img img{width:100%;height:100%;object-fit:contain;transition:transform .4s}
+.merch-card:hover .merch-card-img img{transform:scale(1.05)}
+.merch-img-nav{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2}
+.merch-img-dot{width:6px;height:6px;border:0.5px solid #555;background:transparent;cursor:pointer;transition:all .2s;padding:0}
+.merch-img-dot.active{background:var(--acid);border-color:var(--acid)}
+.merch-card-body{padding:1.25rem}
+.merch-card-title{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.05em;margin-bottom:4px}
+.merch-card-price{font-family:'Courier New',monospace;font-size:13px;color:var(--acid);letter-spacing:.1em;margin-bottom:4px}
+.merch-card-variant{font-family:'Courier New',monospace;font-size:10px;color:#555;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.merch-variants{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.merch-color{width:20px;height:20px;border:0.5px solid #333;cursor:pointer;transition:border-color .2s;padding:0;position:relative}
+.merch-color.active{border-color:var(--acid)}
+.merch-color.active::after{content:'';position:absolute;inset:-3px;border:0.5px solid var(--acid)}
+.merch-buy{width:100%;padding:10px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;border:0.5px solid var(--toxic);color:var(--acid);background:rgba(26,122,26,.1);font-family:'Courier New',monospace;cursor:pointer;transition:all .3s}
+.merch-buy:hover{background:rgba(57,255,20,.15)}
+.merch-buy:disabled{opacity:.4;cursor:not-allowed}
+.merch-buy.loading{pointer-events:none;opacity:.6}
+.merch-loading{text-align:center;padding:3rem;font-family:'Courier New',monospace;font-size:11px;color:#333;letter-spacing:.2em;text-transform:uppercase}
+.merch-toast{position:fixed;top:2rem;left:50%;transform:translateX(-50%) translateY(-100px);z-index:9999;padding:14px 28px;font-family:'Courier New',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;border:0.5px solid var(--toxic);background:rgba(0,0,0,.95);color:var(--acid);transition:transform .4s ease;pointer-events:none}
+.merch-toast.show{transform:translateX(-50%) translateY(0)}
+.merch-toast.error{border-color:#661a1a;color:#ff4444}
 .list-wrap{background:var(--charcoal);border:0.5px solid #1a1a1a;padding:3rem;text-align:center;max-width:600px;margin:0 auto;position:relative;overflow:hidden}
 .list-title{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:.1em;margin-bottom:1rem}
 .list-sub{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.15em;color:#555;text-transform:uppercase;margin-bottom:2rem}
@@ -94,10 +119,8 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 @keyframes rotateSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
 @keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
-@keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
-@keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
-@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit{cursor:pointer}}
-@media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{padding:2rem 1.5rem 4rem}.section{padding:4rem 1.5rem}.bio-grid{grid-template-columns:1fr}.list-form{flex-direction:column}.list-submit{border-left:0.5px solid var(--toxic);border-top:none}.epk-bar{padding:1.5rem}footer{padding:2rem 1.5rem}}
+@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit,.merch-buy,.merch-color,.merch-img-dot{cursor:pointer}}
+@media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{padding:2rem 1.5rem 4rem}.section{padding:4rem 1.5rem}.bio-grid{grid-template-columns:1fr}.list-form{flex-direction:column}.list-submit{border-left:0.5px solid var(--toxic);border-top:none}.epk-bar{padding:1.5rem}footer{padding:2rem 1.5rem}.merch-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -105,12 +128,14 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 <canvas id="bgCanvas"></canvas>
 <div class="cursor" id="cursor"><div class="cursor-inner"><div class="cursor-dot"></div></div></div>
 <div class="cursor-ring" id="cursorRing"><div class="cursor-ring-inner"></div></div>
+<div class="merch-toast" id="merchToast"></div>
 
 <nav>
   <div></div>
   <div class="nav-links">
     <a href="#shows">Shows</a>
     <a href="#music">Music</a>
+    <a href="#merch">Merch</a>
     <a href="#about">About</a>
     <a href="#list">Mailing List</a>
     <a href="/epk" style="color:var(--acid)">EPK</a>
@@ -180,14 +205,16 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
   </div>
 </div>
 
-<div class="section fade-in">
+<div class="section fade-in" id="merch">
   <div class="section-label">Merch</div>
-  <div class="merch-banner">
-    <div>
+  <div class="merch-header">
+    <div class="merch-header-text">
       <div class="merch-title">The Congregation Wears Black</div>
       <div class="merch-sub">Limited drops. No restocks. No exceptions.</div>
     </div>
-    <a class="btn primary" href="#list">Coming Soon</a>
+  </div>
+  <div id="merchGrid" class="merch-grid">
+    <div class="merch-loading">Summoning inventory...</div>
   </div>
 </div>
 
@@ -247,6 +274,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const PROXY='https://soundcloud-proxy-xi.vercel.app';
+const SHOP_ID='27188929';
 
 // GLOBAL BACKGROUND PARTICLES
 const bgCanvas=document.getElementById('bgCanvas');
@@ -388,8 +416,161 @@ async function loadStats(){
     Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el&&s[k])el.textContent=typeof s[k]==='number'&&k.includes('eng')?s[k].toFixed(1)+'%':fmt(s[k]);});
   }catch(e){}
 }
-function fmt(n){if(!n&&n!==0)return'—';n=parseInt(n);if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString();}
+function fmt(n){if(!n&&n!==0)return'\u2014';n=parseInt(n);if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString();}
 loadStats();
+
+// MERCH TOAST
+function showToast(msg,isError){
+  const t=document.getElementById('merchToast');
+  t.textContent=msg;
+  t.className='merch-toast'+(isError?' error':'')+' show';
+  setTimeout(()=>{t.classList.remove('show');},3000);
+}
+
+// CHECK CHECKOUT STATUS
+const urlParams=new URLSearchParams(window.location.search);
+if(urlParams.get('checkout')==='success'){
+  showToast('Order confirmed. The ritual is sealed.');
+  history.replaceState(null,'',window.location.pathname);
+}else if(urlParams.get('checkout')==='cancel'){
+  showToast('Order cancelled.',true);
+  history.replaceState(null,'',window.location.pathname);
+}
+
+// MERCH GRID
+async function loadMerch(){
+  const grid=document.getElementById('merchGrid');
+  try{
+    const r=await fetch(`${PROXY}/api/printify?endpoint=shops/${SHOP_ID}/products.json`);
+    const data=await r.json();
+    const products=data.data||[];
+    if(!products.length){grid.innerHTML='<div class="merch-loading">No offerings at this time.</div>';return;}
+    grid.innerHTML='';
+    products.forEach(product=>{
+      const enabledVariants=product.variants.filter(v=>v.is_enabled&&v.is_available);
+      if(!enabledVariants.length)return;
+      const card=document.createElement('div');
+      card.className='merch-card';
+      const firstVariant=enabledVariants[0];
+      const variantImages=product.images.filter(img=>img.variant_ids.includes(firstVariant.id));
+      let currentImages=variantImages.length?variantImages:product.images.slice(0,3);
+
+      const dotsHtml=currentImages.length>1?`<div class="merch-img-nav">${currentImages.map((_,i)=>`<button class="merch-img-dot${i===0?' active':''}" data-idx="${i}"></button>`).join('')}</div>`:'';
+
+      const colorOption=product.options.find(o=>o.type==='color');
+      let swatchesHtml='';
+      if(colorOption){
+        swatchesHtml='<div class="merch-variants">';
+        enabledVariants.forEach((v,i)=>{
+          const optVal=colorOption.values.find(cv=>v.options.includes(cv.id));
+          if(optVal){
+            const bg=optVal.colors[0]||'#333';
+            swatchesHtml+=`<button class="merch-color${i===0?' active':''}" style="background:${bg}" data-variant-idx="${i}" title="${optVal.title}"></button>`;
+          }
+        });
+        swatchesHtml+='</div>';
+      }
+
+      const price=(firstVariant.price/100).toFixed(2);
+      const variantTitle=firstVariant.title.split(' / ')[0];
+
+      card.innerHTML=`
+        <div class="merch-card-img">
+          <img src="${currentImages[0]?.src||''}" alt="${product.title}" loading="lazy">
+          ${dotsHtml}
+        </div>
+        <div class="merch-card-body">
+          <div class="merch-card-title">${product.title}</div>
+          <div class="merch-card-price">$${price}</div>
+          <div class="merch-card-variant">${variantTitle}</div>
+          ${swatchesHtml}
+          <button class="merch-buy" data-product-id="${product.id}" data-variant-id="${firstVariant.id}" data-title="${product.title} - ${firstVariant.title}" data-price="${firstVariant.price}" data-image="${currentImages[0]?.src||''}">
+            Acquire
+          </button>
+        </div>`;
+
+      // Image dot navigation
+      const img=card.querySelector('.merch-card-img img');
+      const dots=card.querySelectorAll('.merch-img-dot');
+      dots.forEach(dot=>{
+        dot.addEventListener('click',()=>{
+          const idx=parseInt(dot.dataset.idx);
+          if(currentImages[idx])img.src=currentImages[idx].src;
+          dots.forEach(d=>d.classList.remove('active'));
+          dot.classList.add('active');
+        });
+      });
+
+      // Color swatch switching
+      const swatches=card.querySelectorAll('.merch-color');
+      const priceEl=card.querySelector('.merch-card-price');
+      const variantEl=card.querySelector('.merch-card-variant');
+      const buyBtn=card.querySelector('.merch-buy');
+
+      swatches.forEach(swatch=>{
+        swatch.addEventListener('click',()=>{
+          const vIdx=parseInt(swatch.dataset.variantIdx);
+          const v=enabledVariants[vIdx];
+          const vImages=product.images.filter(im=>im.variant_ids.includes(v.id));
+          currentImages=vImages.length?vImages:product.images.slice(0,3);
+          img.src=currentImages[0]?.src||'';
+          priceEl.textContent='$'+(v.price/100).toFixed(2);
+          variantEl.textContent=v.title.split(' / ')[0];
+          buyBtn.dataset.variantId=v.id;
+          buyBtn.dataset.title=product.title+' - '+v.title;
+          buyBtn.dataset.price=v.price;
+          buyBtn.dataset.image=currentImages[0]?.src||'';
+          swatches.forEach(s=>s.classList.remove('active'));
+          swatch.classList.add('active');
+          // Reset dots
+          dots.forEach((d,i)=>{
+            if(currentImages[i])d.style.display='';
+            else d.style.display='none';
+          });
+          dots.forEach(d=>d.classList.remove('active'));
+          if(dots[0])dots[0].classList.add('active');
+        });
+      });
+
+      // Buy button
+      buyBtn.addEventListener('click',async()=>{
+        buyBtn.textContent='Processing...';
+        buyBtn.classList.add('loading');
+        try{
+          const resp=await fetch(`${PROXY}/api/checkout`,{
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify({
+              productId:buyBtn.dataset.productId,
+              variantId:parseInt(buyBtn.dataset.variantId),
+              title:buyBtn.dataset.title,
+              price:parseInt(buyBtn.dataset.price),
+              image:buyBtn.dataset.image
+            })
+          });
+          const result=await resp.json();
+          if(result.url){window.location.href=result.url;}
+          else{showToast('Checkout error. Try again.',true);buyBtn.textContent='Acquire';buyBtn.classList.remove('loading');}
+        }catch(err){
+          showToast('Connection error. Try again.',true);
+          buyBtn.textContent='Acquire';
+          buyBtn.classList.remove('loading');
+        }
+      });
+
+      grid.appendChild(card);
+    });
+
+    // Re-register cursor hover for dynamically added elements
+    document.querySelectorAll('.merch-buy,.merch-color,.merch-img-dot').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.opacity='0';});
+      el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});
+    });
+  }catch(e){
+    grid.innerHTML='<div class="merch-loading">Failed to load. Refresh to try again.</div>';
+  }
+}
+loadMerch();
 </script>
 </body>
 </html>

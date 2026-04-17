@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>iamdoomsayer — Stats</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -26,47 +26,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}
 .metric{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:1rem}
 .metric-label{font-size:11px;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
-.metric-val{font-size:22px;font-weight:500;color:#f0f0f0}
+.metric-val{font-size:22px;font-weight:500}
 .metric-sub{font-size:11px;color:#555;margin-top:4px}
-.section-title{font-size:12px;color:#666;font-weight:500;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
 .section{margin-bottom:1.5rem}
+.section-title{font-size:12px;color:#666;font-weight:500;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
 .card{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:16px}
-.tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.ctrl-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
 .tab{padding:5px 12px;font-size:12px;border:0.5px solid #333;border-radius:20px;background:transparent;color:#888;cursor:pointer}
 .tab.active{border-color:#ff5500;color:#ff5500;background:#1a0a00}
 .tab:hover{color:#f0f0f0}
-canvas{display:block}
-.track-list{display:flex;flex-direction:column;gap:8px}
-.track{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px}
-.track-num{font-size:13px;color:#555;min-width:20px;text-align:right;padding-top:2px}
-.track-info{flex:1;min-width:0}
-.track-title{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
-.track-stats{display:flex;gap:12px;flex-wrap:wrap}
-.track-stat{font-size:12px;color:#666;display:flex;align-items:center;gap:4px}
-.track-stat span{color:#f0f0f0}
-.eng-badge{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}
-.eng-high{background:#0f2d1a;color:#4ade80;border:0.5px solid #166534}
-.eng-med{background:#1a1500;color:#facc15;border:0.5px solid #854d0e}
-.eng-low{background:#1a0a00;color:#f97316;border:0.5px solid #7c2d12}
+.divider{width:1px;height:20px;background:#2a2a2a;margin:0 4px}
+.legend{display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:5px;font-size:12px;color:#888}
+.legend-sq{width:10px;height:10px;border-radius:2px}
 .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
 .bar-row:last-child{margin-bottom:0}
 .bar-label{font-size:12px;color:#888;min-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bar-track{flex:1;background:#222;border-radius:3px;height:6px;overflow:hidden}
 .bar-fill{height:100%;background:#ff5500;border-radius:3px;transition:width .6s ease}
 .bar-val{font-size:12px;color:#666;min-width:40px;text-align:right}
-.snapshot-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #1a1a1a;font-size:13px}
+.track-list{display:flex;flex-direction:column;gap:8px}
+.track{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px}
+.track-num{font-size:13px;color:#555;min-width:20px;text-align:right;padding-top:2px}
+.track-info{flex:1;min-width:0}
+.track-title{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
+.track-stats{display:flex;gap:10px;flex-wrap:wrap}
+.track-stat{font-size:12px;color:#666}
+.track-stat span{color:#f0f0f0}
+.eng-badge{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}
+.eng-high{background:#0f2d1a;color:#4ade80;border:0.5px solid #166534}
+.eng-med{background:#1a1500;color:#facc15;border:0.5px solid #854d0e}
+.eng-low{background:#1a0a00;color:#f97316;border:0.5px solid #7c2d12}
+.snapshot-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #1a1a1a;font-size:13px;flex-wrap:wrap;gap:6px}
 .snapshot-row:last-child{border-bottom:none}
-.snapshot-date{color:#666;font-size:12px}
-.snapshot-vals{display:flex;gap:16px}
-.snapshot-val{text-align:right}
+.snapshot-date{color:#666;font-size:12px;min-width:100px}
+.snapshot-vals{display:flex;gap:16px;flex-wrap:wrap}
 .snapshot-val .label{font-size:11px;color:#555}
 .snapshot-val .val{font-weight:500}
 .delta-pos{color:#4ade80;font-size:11px}
 .delta-neg{color:#f87171;font-size:11px}
 .empty{color:#555;font-size:13px;padding:.5rem 0}
-.legend{display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap}
-.legend span{display:flex;align-items:center;gap:5px;font-size:12px;color:#888}
-.legend-sq{width:10px;height:10px;border-radius:2px}
 @media(max-width:600px){body{padding:1rem}.grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
@@ -102,18 +101,21 @@ canvas{display:block}
 <div class="section">
   <div class="section-title">History</div>
   <div class="card">
-    <div class="tabs">
-      <button class="tab active" onclick="setHistoryTab('plays')">Plays</button>
-      <button class="tab" onclick="setHistoryTab('followers')">Followers</button>
-      <button class="tab" onclick="setHistoryTab('engagement')">Engagement</button>
+    <div class="ctrl-row">
+      <button class="tab active" onclick="setMetric('plays')">Plays</button>
+      <button class="tab" onclick="setMetric('followers')">Followers</button>
+      <button class="tab" onclick="setMetric('engagement')">Engagement</button>
+      <div class="divider"></div>
+      <button class="tab active" id="range-day" onclick="setRange('day')">Day</button>
+      <button class="tab" id="range-week" onclick="setRange('week')">Week</button>
+      <button class="tab" id="range-month" onclick="setRange('month')">Month</button>
+      <button class="tab" id="range-all" onclick="setRange('all')">All</button>
     </div>
-    <div class="legend" id="histLegend">
-      <span><span class="legend-sq" style="background:#ff5500"></span>Total plays</span>
-    </div>
-    <div style="position:relative;height:200px">
+    <div class="legend" id="histLegend"></div>
+    <div style="position:relative;height:220px">
       <canvas id="histChart" role="img" aria-label="History chart"></canvas>
     </div>
-    <p style="font-size:11px;color:#444;margin-top:10px">History builds over time as you refresh. Each session snapshot is saved locally.</p>
+    <p style="font-size:11px;color:#444;margin-top:10px">Baseline loaded from SoundCloud Insights (Mar 19 - Apr 17). New snapshots added on each refresh.</p>
   </div>
 </div>
 
@@ -129,30 +131,83 @@ canvas{display:block}
 
 <div class="section">
   <div class="section-title">Snapshots</div>
-  <div class="card" id="snapshotTable"><div class="empty">No snapshots yet — load stats to record first snapshot</div></div>
+  <div class="card" id="snapshotTable"><div class="empty">Loading snapshots...</div></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const STORAGE_KEY='doomsayer_snapshots';
+const STORAGE_KEY='doomsayer_v3';
+const BASELINE=[
+  {label:'Mar 19',ts:1742342400000,followers:4150,plays:5900,likes:104,reposts:123,downloads:0,eng:0},
+  {label:'Mar 20',ts:1742428800000,followers:4152,plays:5903,likes:104,reposts:123,downloads:0,eng:0},
+  {label:'Mar 21',ts:1742515200000,followers:4154,plays:5905,likes:104,reposts:123,downloads:0,eng:0},
+  {label:'Mar 22',ts:1742601600000,followers:4155,plays:5906,likes:104,reposts:123,downloads:0,eng:0},
+  {label:'Mar 23',ts:1742688000000,followers:4157,plays:5909,likes:104,reposts:123,downloads:0,eng:0},
+  {label:'Mar 24',ts:1742774400000,followers:4158,plays:5910,likes:104,reposts:123,downloads:0,eng:0},
+  {label:'Mar 25',ts:1742860800000,followers:4159,plays:5911,likes:104,reposts:123,downloads:0,eng:0},
+  {label:'Mar 26',ts:1742947200000,followers:4160,plays:5912,likes:104,reposts:123,downloads:1,eng:0},
+  {label:'Mar 27',ts:1743033600000,followers:4161,plays:5920,likes:105,reposts:123,downloads:2,eng:0},
+  {label:'Mar 28',ts:1743120000000,followers:4163,plays:5938,likes:107,reposts:123,downloads:4,eng:0},
+  {label:'Mar 29',ts:1743206400000,followers:4165,plays:5958,likes:109,reposts:123,downloads:6,eng:0},
+  {label:'Mar 30',ts:1743292800000,followers:4168,plays:5998,likes:113,reposts:124,downloads:9,eng:0},
+  {label:'Mar 31',ts:1743379200000,followers:4178,plays:6108,likes:121,reposts:125,downloads:14,eng:0},
+  {label:'Apr 01',ts:1743465600000,followers:4185,plays:6166,likes:126,reposts:125,downloads:17,eng:0},
+  {label:'Apr 02',ts:1743552000000,followers:4192,plays:6231,likes:130,reposts:125,downloads:19,eng:0},
+  {label:'Apr 03',ts:1743638400000,followers:4196,plays:6266,likes:132,reposts:125,downloads:20,eng:0},
+  {label:'Apr 04',ts:1743724800000,followers:4199,plays:6291,likes:134,reposts:125,downloads:21,eng:0},
+  {label:'Apr 05',ts:1743811200000,followers:4201,plays:6311,likes:134,reposts:125,downloads:21,eng:0},
+  {label:'Apr 06',ts:1743897600000,followers:4203,plays:6326,likes:134,reposts:125,downloads:21,eng:0},
+  {label:'Apr 07',ts:1743984000000,followers:4204,plays:6348,likes:134,reposts:126,downloads:21,eng:0},
+  {label:'Apr 08',ts:1744070400000,followers:4205,plays:6354,likes:134,reposts:126,downloads:21,eng:0},
+  {label:'Apr 09',ts:1744156800000,followers:4206,plays:6358,likes:134,reposts:126,downloads:21,eng:0},
+  {label:'Apr 10',ts:1744243200000,followers:4207,plays:6368,likes:134,reposts:126,downloads:22,eng:0},
+  {label:'Apr 11',ts:1744329600000,followers:4208,plays:6375,likes:134,reposts:126,downloads:22,eng:0},
+  {label:'Apr 12',ts:1744416000000,followers:4209,plays:6378,likes:134,reposts:126,downloads:22,eng:0},
+  {label:'Apr 13',ts:1744502400000,followers:4210,plays:6380,likes:134,reposts:126,downloads:22,eng:0},
+  {label:'Apr 14',ts:1744588800000,followers:4211,plays:6400,likes:134,reposts:127,downloads:23,eng:0},
+  {label:'Apr 15',ts:1744675200000,followers:4212,plays:6425,likes:134,reposts:127,downloads:24,eng:0},
+  {label:'Apr 16',ts:1744761600000,followers:4213,plays:6450,likes:134,reposts:127,downloads:24,eng:0},
+  {label:'Apr 17',ts:1744848000000,followers:4213,plays:6465,likes:134,reposts:127,downloads:24,eng:0},
+];
+
 let snapshots=[];
 let histChart=null;
-let currentHistTab='plays';
+let currentMetric='plays';
+let currentRange='day';
 
 function fmt(n){if(!n&&n!==0)return'—';n=parseInt(n);if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString()}
 function fmtPct(n){return isNaN(n)?'—':n.toFixed(1)+'%'}
 function setStatus(msg,type){const b=document.getElementById('statusBadge');b.textContent=msg;b.className='status '+type}
 
 function loadSnapshots(){
-  try{const s=localStorage.getItem(STORAGE_KEY);if(s)snapshots=JSON.parse(s);}catch(e){snapshots=[];}
+  try{
+    const s=localStorage.getItem(STORAGE_KEY);
+    snapshots=s?JSON.parse(s):[...BASELINE];
+    if(!s)localStorage.setItem(STORAGE_KEY,JSON.stringify(BASELINE));
+  }catch(e){snapshots=[...BASELINE];}
 }
+
 function saveSnapshot(data){
-  loadSnapshots();
   const now=new Date();
-  const label=now.toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
-  snapshots.push({...data,label,ts:Date.now()});
-  if(snapshots.length>30)snapshots=snapshots.slice(-30);
+  const label=now.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  // avoid duplicate same-day entries from rapid refreshes — update last if same label
+  const last=snapshots[snapshots.length-1];
+  if(last&&last.label===label){
+    snapshots[snapshots.length-1]={...data,label,ts:Date.now()};
+  } else {
+    snapshots.push({...data,label,ts:Date.now()});
+  }
+  if(snapshots.length>90)snapshots=snapshots.slice(-90);
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(snapshots));}catch(e){}
+}
+
+function getFilteredSnapshots(){
+  const now=Date.now();
+  const day=86400000;
+  if(currentRange==='day') return snapshots.filter(s=>now-s.ts<=day*2);
+  if(currentRange==='week') return snapshots.filter(s=>now-s.ts<=day*7);
+  if(currentRange==='month') return snapshots.filter(s=>now-s.ts<=day*30);
+  return snapshots;
 }
 
 async function loadData(){
@@ -163,22 +218,20 @@ async function loadData(){
     const userRes=await fetch(`${proxy}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer`);
     if(!userRes.ok)throw new Error('User fetch failed: '+userRes.status);
     const user=await userRes.json();
-    if(user.error)throw new Error(user.error+' '+JSON.stringify(user.details));
+    if(user.error)throw new Error(user.error);
 
     const tracksRes=await fetch(`${proxy}/api/soundcloud?endpoint=users/${user.id}/tracks?limit=20`);
     const tracks=await tracksRes.json();
 
-    let totalPlays=0,totalLikes=0,totalReposts=0,totalDownloads=0,totalComments=0;
+    let totalPlays=0,totalLikes=0,totalReposts=0,totalDownloads=0;
     if(Array.isArray(tracks)){
       tracks.forEach(t=>{
         totalPlays+=parseInt(t.playback_count||0);
         totalLikes+=parseInt(t.likes_count||0);
         totalReposts+=parseInt(t.reposts_count||0);
         totalDownloads+=parseInt(t.download_count||0);
-        totalComments+=parseInt(t.comment_count||0);
       });
     }
-
     const engRate=totalPlays>0?((totalLikes+totalReposts)/totalPlays*100):0;
 
     document.getElementById('followers').textContent=fmt(user.followers_count);
@@ -191,36 +244,89 @@ async function loadData(){
     document.getElementById('avgEng').textContent=fmtPct(engRate);
 
     if(user.avatar_url){
-      const img=document.createElement('img');
-      img.src=user.avatar_url.replace('-large','-t200x200');
-      img.className='avatar';
-      document.getElementById('avatarEl').replaceWith(img);
+      try{
+        const img=document.createElement('img');
+        img.src=user.avatar_url.replace('-large','-t200x200');
+        img.className='avatar';
+        const av=document.getElementById('avatarEl');
+        if(av)av.replaceWith(img);
+      }catch(e){}
     }
 
-    const snapData={followers:user.followers_count,plays:totalPlays,likes:totalLikes,reposts:totalReposts,downloads:totalDownloads,eng:engRate};
-    saveSnapshot(snapData);
-    loadSnapshots();
+    saveSnapshot({followers:user.followers_count,plays:totalPlays,likes:totalLikes,reposts:totalReposts,downloads:totalDownloads,eng:engRate});
 
-    // deltas
-    if(snapshots.length>=2){
-      const prev=snapshots[snapshots.length-2];
-      const fDelta=user.followers_count-prev.followers;
-      const pDelta=totalPlays-prev.plays;
-      document.getElementById('followersDelta').innerHTML=fDelta>=0?`<span class="delta-pos">+${fmt(fDelta)} since last</span>`:`<span class="delta-neg">${fmt(fDelta)} since last</span>`;
-      document.getElementById('playsDelta').innerHTML=pDelta>=0?`<span class="delta-pos">+${fmt(pDelta)} since last</span>`:`<span class="delta-neg">${fmt(pDelta)} since last</span>`;
+    const prev=snapshots.length>=2?snapshots[snapshots.length-2]:null;
+    if(prev){
+      const fD=user.followers_count-prev.followers;
+      const pD=totalPlays-prev.plays;
+      document.getElementById('followersDelta').innerHTML=fD>=0?`<span class="delta-pos">+${fmt(fD)}</span>`:`<span class="delta-neg">${fmt(fD)}</span>`;
+      document.getElementById('playsDelta').innerHTML=pD>=0?`<span class="delta-pos">+${fmt(pD)}</span>`:`<span class="delta-neg">${fmt(pD)}</span>`;
     }
 
-    if(Array.isArray(tracks)){
-      renderBarChart(tracks);
-      renderTrackList(tracks);
-    }
+    if(Array.isArray(tracks)){renderBarChart(tracks);renderTrackList(tracks);}
     renderHistory();
     renderSnapshots();
     setStatus('Connected','ok');
   }catch(e){
     setStatus('Error: '+e.message,'err');
-    console.error(e);
   }
+}
+
+function setMetric(m){
+  currentMetric=m;
+  document.querySelectorAll('.ctrl-row .tab').forEach(b=>{
+    if(['plays','followers','engagement'].includes(b.textContent.toLowerCase()))
+      b.classList.toggle('active',b.textContent.toLowerCase()===m);
+  });
+  renderHistory();
+}
+
+function setRange(r){
+  currentRange=r;
+  ['day','week','month','all'].forEach(x=>{
+    const el=document.getElementById('range-'+x);
+    if(el)el.classList.toggle('active',x===r);
+  });
+  renderHistory();
+}
+
+function renderHistory(){
+  const data=getFilteredSnapshots();
+  if(data.length<2){
+    document.getElementById('histLegend').innerHTML='<span style="font-size:12px;color:#555">Not enough data for this range yet</span>';
+    if(histChart){histChart.destroy();histChart=null;}
+    return;
+  }
+  const labels=data.map(s=>s.label);
+  let datasets=[],legendHTML='';
+
+  if(currentMetric==='plays'){
+    datasets=[{label:'Plays',data:data.map(s=>s.plays),borderColor:'#ff5500',backgroundColor:'rgba(255,85,0,0.1)',tension:.3,fill:true,pointRadius:2,pointHoverRadius:4}];
+    legendHTML='<span><span class="legend-sq" style="background:#ff5500"></span>Total plays</span>';
+  } else if(currentMetric==='followers'){
+    datasets=[{label:'Followers',data:data.map(s=>s.followers),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.1)',tension:.3,fill:true,pointRadius:2,pointHoverRadius:4}];
+    legendHTML='<span><span class="legend-sq" style="background:#3b82f6"></span>Followers</span>';
+  } else {
+    datasets=[
+      {label:'Likes',data:data.map(s=>s.likes),borderColor:'#a855f7',backgroundColor:'transparent',tension:.3,pointRadius:2,pointHoverRadius:4},
+      {label:'Reposts',data:data.map(s=>s.reposts),borderColor:'#22d3ee',backgroundColor:'transparent',tension:.3,pointRadius:2,pointHoverRadius:4}
+    ];
+    legendHTML='<span><span class="legend-sq" style="background:#a855f7"></span>Likes</span><span><span class="legend-sq" style="background:#22d3ee"></span>Reposts</span>';
+  }
+
+  document.getElementById('histLegend').innerHTML=legendHTML;
+  if(histChart){histChart.destroy();}
+  histChart=new Chart(document.getElementById('histChart'),{
+    type:'line',data:{labels,datasets},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#555',font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:12}},
+        y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>fmt(v)}}
+      }
+    }
+  });
 }
 
 function renderBarChart(tracks){
@@ -237,11 +343,7 @@ function renderBarChart(tracks){
 function renderTrackList(tracks){
   const sorted=[...tracks].sort((a,b)=>b.playback_count-a.playback_count);
   document.getElementById('trackList').innerHTML=sorted.map((t,i)=>{
-    const plays=parseInt(t.playback_count||0);
-    const likes=parseInt(t.likes_count||0);
-    const reposts=parseInt(t.reposts_count||0);
-    const downloads=parseInt(t.download_count||0);
-    const comments=parseInt(t.comment_count||0);
+    const plays=parseInt(t.playback_count||0),likes=parseInt(t.likes_count||0),reposts=parseInt(t.reposts_count||0),downloads=parseInt(t.download_count||0),comments=parseInt(t.comment_count||0);
     const eng=plays>0?((likes+reposts)/plays*100):0;
     const engClass=eng>=5?'eng-high':eng>=2?'eng-med':'eng-low';
     const dur=t.duration?Math.floor(t.duration/60000)+':'+(Math.floor((t.duration%60000)/1000)).toString().padStart(2,'0'):'—';
@@ -263,132 +365,38 @@ function renderTrackList(tracks){
   }).join('');
 }
 
-function setHistoryTab(tab){
-  currentHistTab=tab;
-  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.textContent.toLowerCase()===tab));
-  renderHistory();
-}
-
-function renderHistory(){
-  if(snapshots.length<2){
-    const leg=document.getElementById('histLegend');
-    leg.innerHTML='<span style="font-size:12px;color:#555">Load stats at least twice to see history</span>';
-    if(histChart){histChart.destroy();histChart=null;}
-    return;
-  }
-  const labels=snapshots.map(s=>s.label);
-  let datasets=[];
-  let legendHTML='';
-
-  if(currentHistTab==='plays'){
-    datasets=[{label:'Plays',data:snapshots.map(s=>s.plays),borderColor:'#ff5500',backgroundColor:'rgba(255,85,0,0.1)',tension:.3,fill:true,pointRadius:3}];
-    legendHTML='<span><span class="legend-sq" style="background:#ff5500"></span>Total plays</span>';
-  } else if(currentHistTab==='followers'){
-    datasets=[{label:'Followers',data:snapshots.map(s=>s.followers),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.1)',tension:.3,fill:true,pointRadius:3}];
-    legendHTML='<span><span class="legend-sq" style="background:#3b82f6"></span>Followers</span>';
-  } else {
-    datasets=[
-      {label:'Likes',data:snapshots.map(s=>s.likes),borderColor:'#a855f7',backgroundColor:'transparent',tension:.3,pointRadius:3},
-      {label:'Reposts',data:snapshots.map(s=>s.reposts),borderColor:'#22d3ee',backgroundColor:'transparent',tension:.3,pointRadius:3}
-    ];
-    legendHTML='<span><span class="legend-sq" style="background:#a855f7"></span>Likes</span><span><span class="legend-sq" style="background:#22d3ee"></span>Reposts</span>';
-  }
-
-  document.getElementById('histLegend').innerHTML=legendHTML;
-
-  if(histChart){histChart.destroy();}
-  histChart=new Chart(document.getElementById('histChart'),{
-    type:'line',
-    data:{labels,datasets},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#666',font:{size:11},maxRotation:45}},
-        y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#666',font:{size:11},callback:v=>fmt(v)}}
-      }
-    }
-  });
-}
-
 function renderSnapshots(){
-  if(!snapshots.length){return;}
   const el=document.getElementById('snapshotTable');
-  const rows=[...snapshots].reverse().slice(0,10);
-  el.innerHTML=`
-    <div class="snapshot-row" style="border-bottom:0.5px solid #2a2a2a;margin-bottom:4px">
-      <span style="font-size:11px;color:#555">Time</span>
+  if(!snapshots.length){el.innerHTML='<div class="empty">No snapshots yet</div>';return;}
+  const rows=[...snapshots].reverse().slice(0,15);
+  el.innerHTML=`<div class="snapshot-row" style="border-bottom:0.5px solid #2a2a2a;margin-bottom:4px">
+    <span style="font-size:11px;color:#555;min-width:100px">Date</span>
+    <div class="snapshot-vals">
+      <div class="snapshot-val"><div class="label">Followers</div></div>
+      <div class="snapshot-val"><div class="label">Plays</div></div>
+      <div class="snapshot-val"><div class="label">Likes</div></div>
+      <div class="snapshot-val"><div class="label">Eng %</div></div>
+    </div>
+  </div>`+rows.map((s,i)=>{
+    const prev=rows[i+1];
+    const fD=prev?s.followers-prev.followers:null;
+    const pD=prev?s.plays-prev.plays:null;
+    return`<div class="snapshot-row">
+      <span class="snapshot-date">${s.label}</span>
       <div class="snapshot-vals">
-        <div class="snapshot-val"><div class="label">Followers</div></div>
-        <div class="snapshot-val"><div class="label">Plays</div></div>
-        <div class="snapshot-val"><div class="label">Likes</div></div>
-        <div class="snapshot-val"><div class="label">Eng %</div></div>
+        <div class="snapshot-val"><div class="val">${fmt(s.followers)}${fD!==null?' '+(fD>=0?`<span class="delta-pos">+${fmt(fD)}</span>`:`<span class="delta-neg">${fmt(fD)}</span>`):''}</div></div>
+        <div class="snapshot-val"><div class="val">${fmt(s.plays)}${pD!==null?' '+(pD>=0?`<span class="delta-pos">+${fmt(pD)}</span>`:`<span class="delta-neg">${fmt(pD)}</span>`):''}</div></div>
+        <div class="snapshot-val"><div class="val">${fmt(s.likes)}</div></div>
+        <div class="snapshot-val"><div class="val">${fmtPct(s.eng)}</div></div>
       </div>
-    </div>`+
-    rows.map((s,i)=>{
-      const prev=rows[i+1];
-      const fD=prev?s.followers-prev.followers:null;
-      const pD=prev?s.plays-prev.plays:null;
-      return`<div class="snapshot-row">
-        <span class="snapshot-date">${s.label}</span>
-        <div class="snapshot-vals">
-          <div class="snapshot-val"><div class="val">${fmt(s.followers)} ${fD!==null?(fD>=0?`<span class="delta-pos">+${fmt(fD)}</span>`:`<span class="delta-neg">${fmt(fD)}</span>`):'</div>'}</div>
-          <div class="snapshot-val"><div class="val">${fmt(s.plays)} ${pD!==null?(pD>=0?`<span class="delta-pos">+${fmt(pD)}</span>`:`<span class="delta-neg">${fmt(pD)}</span>`):'</div>'}</div>
-          <div class="snapshot-val"><div class="val">${fmt(s.likes)}</div></div>
-          <div class="snapshot-val"><div class="val">${fmtPct(s.eng)}</div></div>
-        </div>
-      </div>`;
-    }).join('');
+    </div>`;
+  }).join('');
 }
 
-// Pre-load historical snapshot baseline from SoundCloud Insights screenshot
-const BASELINE=[
-  {label:'Mar 19',ts:1710806400000,followers:4150,plays:5,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 20',ts:1710892800000,followers:4155,plays:3,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 21',ts:1710979200000,followers:4158,plays:2,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 22',ts:1711065600000,followers:4160,plays:1,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 23',ts:1711152000000,followers:4162,plays:3,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 24',ts:1711238400000,followers:4163,plays:1,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 25',ts:1711324800000,followers:4164,plays:1,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 26',ts:1711411200000,followers:4165,plays:1,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Mar 27',ts:1711497600000,followers:4166,plays:8,likes:1,reposts:0,downloads:1,eng:0},
-  {label:'Mar 28',ts:1711584000000,followers:4168,plays:18,likes:2,reposts:0,downloads:2,eng:0},
-  {label:'Mar 29',ts:1711670400000,followers:4170,plays:20,likes:2,reposts:0,downloads:2,eng:0},
-  {label:'Mar 30',ts:1711756800000,followers:4172,plays:40,likes:4,reposts:1,downloads:3,eng:0},
-  {label:'Mar 31',ts:1711843200000,followers:4178,plays:110,likes:8,reposts:1,downloads:5,eng:0},
-  {label:'Apr 01',ts:1711929600000,followers:4185,plays:58,likes:5,reposts:0,downloads:3,eng:0},
-  {label:'Apr 02',ts:1712016000000,followers:4190,plays:65,likes:4,reposts:0,downloads:2,eng:0},
-  {label:'Apr 03',ts:1712102400000,followers:4195,plays:35,likes:3,reposts:0,downloads:1,eng:0},
-  {label:'Apr 04',ts:1712188800000,followers:4198,plays:25,likes:2,reposts:0,downloads:1,eng:0},
-  {label:'Apr 05',ts:1712275200000,followers:4200,plays:20,likes:2,reposts:0,downloads:1,eng:0},
-  {label:'Apr 06',ts:1712361600000,followers:4202,plays:15,likes:1,reposts:0,downloads:1,eng:0},
-  {label:'Apr 07',ts:1712448000000,followers:4203,plays:22,likes:2,reposts:0,downloads:1,eng:0},
-  {label:'Apr 08',ts:1712534400000,followers:4204,plays:6,likes:1,reposts:0,downloads:0,eng:0},
-  {label:'Apr 09',ts:1712620800000,followers:4205,plays:4,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Apr 10',ts:1712707200000,followers:4206,plays:10,likes:1,reposts:0,downloads:1,eng:0},
-  {label:'Apr 11',ts:1712793600000,followers:4207,plays:7,likes:1,reposts:0,downloads:0,eng:0},
-  {label:'Apr 12',ts:1712880000000,followers:4208,plays:3,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Apr 13',ts:1712966400000,followers:4209,plays:2,likes:0,reposts:0,downloads:0,eng:0},
-  {label:'Apr 14',ts:1713052800000,followers:4210,plays:20,likes:2,reposts:0,downloads:1,eng:0},
-  {label:'Apr 15',ts:1713139200000,followers:4211,plays:25,likes:2,reposts:1,downloads:1,eng:0},
-  {label:'Apr 16',ts:1713225600000,followers:4212,plays:25,likes:2,reposts:1,downloads:1,eng:0},
-  {label:'Apr 17',ts:1713312000000,followers:4213,plays:15,likes:1,reposts:0,downloads:1,eng:0},
-];
-
-function seedBaseline(){
-  try{
-    const existing=localStorage.getItem(STORAGE_KEY);
-    if(!existing){
-      localStorage.setItem(STORAGE_KEY,JSON.stringify(BASELINE));
-    }
-  }catch(e){}
-}
-
-seedBaseline();
 loadSnapshots();
 renderHistory();
 renderSnapshots();
-window.addEventListener('load', loadData);
+window.addEventListener('load',loadData);
 </script>
 </body>
 </html>

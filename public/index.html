@@ -134,6 +134,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 .fade-in{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
 
+@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit{cursor:pointer}}
 @media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{padding:3rem 1.5rem}.section{padding:4rem 1.5rem}.bio-grid{grid-template-columns:1fr}.list-form{flex-direction:column}.list-submit{border-left:0.5px solid var(--toxic);border-top:none}.epk-bar{padding:1.5rem}footer{padding:2rem 1.5rem}}
 </style>
 </head>
@@ -143,7 +144,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 <div class="cursor-ring" id="cursorRing"><div class="cursor-ring-inner"></div></div>
 
 <nav>
-  <a class="nav-logo" href="#">DOOMSAYER</a>
+  <a class="nav-logo" href="#"><img src="https://raw.githubusercontent.com/iggy-Bianchi/soundcloud-proxy/main/dddlogogreen.png" alt="Doomsayer" style="height:36px;width:auto;display:block"></a>
   <div class="nav-links">
     <a href="#shows">Shows</a>
     <a href="#music">Music</a>
@@ -157,12 +158,9 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
   <div class="hero-bg"></div>
   <div class="hero-overlay"></div>
   <canvas id="heroCanvas"></canvas>
-  <div class="hero-content">
+      <div class="hero-content">
     <div class="hero-tag">Knoxville, TN &#9632; Bass / Electronic</div>
-    <div class="hero-name">
-      <span class="glitch" data-text="DOOM">DOOM</span><br>
-      <span class="glitch" data-text="SAYER">SAYER</span>
-    </div>
+    <img src="https://raw.githubusercontent.com/iggy-Bianchi/soundcloud-proxy/main/dddlogogreen.png" alt="Doomsayer" style="width:min(600px,80vw);height:auto;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .5s forwards">
     <div class="hero-sub">Some frequencies cannot be unheard.</div>
     <div class="hero-cta">
       <a class="btn primary" href="#list">Join the Ritual</a>

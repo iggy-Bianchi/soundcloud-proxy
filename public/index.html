@@ -170,7 +170,6 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
   <div class="hero-overlay"></div>
   <canvas id="heroCanvas"></canvas>
       <div class="hero-content">
-    <div class="hero-tag">Knoxville, TN &#9632; Bass / Electronic</div>
     <div id="logoWrap" style="width:min(550px,75vw);height:auto;margin-bottom:8px;position:relative">
       <img id="logoImg" src="/Doomsayer_Transparent_Logo.png" alt="Doomsayer" style="width:100%;opacity:0;display:block">
       <canvas id="logoCanvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
@@ -198,15 +197,6 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
       </div>
       <a class="show-btn" href="#list">Info</a>
     </div>
-    <div class="show">
-      <div class="show-date">27 Jun 2025</div>
-      <div class="show-info">
-        <div class="show-venue">Area 15</div>
-        <div class="show-location">Las Vegas, NV</div>
-        <div class="show-countdown" id="countdown2"></div>
-      </div>
-      <a class="show-btn" href="#list">Info</a>
-    </div>
   </div>
 </div>
 </div>
@@ -230,7 +220,8 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
   <div class="bio-grid">
     <div>
       <div class="bio-text">
-        <p>From Los Angeles, CA — Doomsayer is a multi-genre bass producer carving a dark and uncompromising path through the underground. Built on a foundation of punishing frequencies and ritualistic energy, Doomsayer has taken his sound from the clubs of Nashville and Orlando to the floors of Las Vegas, Los Angeles, New York City and beyond.</p>
+        <p>From Los Angeles, CA, Doomsayer is a multi-genre bass producer carving a dark and uncompromising path through the underground. Built on a foundation of punishing frequencies and ritualistic energy, Doomsayer has taken his sound from the clubs of Nashville and Orlando to the floors of Las Vegas, Los Angeles, New York City and beyond.</p>
+        <p>Founder of Planet Doom, the biggest recurring EDM night in Knoxville, TN, Doomsayer has built not just a sound but a scene, summoning a congregation of the underground one ritual at a time.</p>
         <div class="pull">He does not perform. He summons.</div>
         <p>Every set is a ritual. Every drop is a summoning. The music does not ask to be heard. It arrives.</p>
       </div>
@@ -425,7 +416,7 @@ function updateCountdowns(){
     if(!el)return;
     const now=new Date();
     const diff=s.date-now;
-    if(diff<=0){el.innerHTML='<span>The ritual begins.</span>';return;}
+    if(diff<=0){el.innerHTML='';return;}
     const d=Math.floor(diff/86400000);
     const h=Math.floor((diff%86400000)/3600000);
     const m=Math.floor((diff%3600000)/60000);

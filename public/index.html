@@ -9,6 +9,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--black:#000;--charcoal:#111;--toxic:#1A7A1A;--acid:#39FF14;--bone:#E8E8E8;--muted:#444}
 html{scroll-behavior:smooth}
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%}
 body{font-family:'Arial',sans-serif;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;cursor:none}
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent)}
 .nav-links{display:flex;gap:2rem}
@@ -101,6 +102,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 </head>
 <body>
 
+<canvas id="bgCanvas"></canvas>
 <div class="cursor" id="cursor"><div class="cursor-inner"><div class="cursor-dot"></div></div></div>
 <div class="cursor-ring" id="cursorRing"><div class="cursor-ring-inner"></div></div>
 
@@ -245,6 +247,32 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const PROXY='https://soundcloud-proxy-xi.vercel.app';
+
+// GLOBAL BACKGROUND PARTICLES
+const bgCanvas=document.getElementById('bgCanvas');
+const bgCtx=bgCanvas.getContext('2d');
+let bgParticles=[];
+function resizeBg(){bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;}
+resizeBg();
+window.addEventListener('resize',resizeBg);
+class BgParticle{
+  constructor(){this.reset(true);}
+  reset(init){
+    this.x=Math.random()*bgCanvas.width;
+    this.y=init?Math.random()*bgCanvas.height:bgCanvas.height+10;
+    this.size=Math.random()*1.2+.2;
+    this.speedY=-(Math.random()*.3+.05);
+    this.speedX=(Math.random()-.5)*.15;
+    this.opacity=Math.random()*.25+.05;
+    this.life=init?Math.floor(Math.random()*400):0;
+    this.maxLife=Math.random()*400+200;
+  }
+  update(){this.x+=this.speedX;this.y+=this.speedY;this.life++;if(this.life>this.maxLife||this.y<-10)this.reset(false);}
+  draw(){bgCtx.beginPath();bgCtx.arc(this.x,this.y,this.size,0,Math.PI*2);bgCtx.fillStyle=`rgba(57,255,20,${this.opacity*(1-this.life/this.maxLife)})`;bgCtx.fill();}
+}
+for(let i=0;i<120;i++)bgParticles.push(new BgParticle());
+function animBg(){bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);bgParticles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animBg);}
+animBg();
 
 // CURSOR
 const cursor=document.getElementById('cursor');

@@ -137,6 +137,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
 const STORAGE_KEY='doomsayer_v3';
+const PROXY='https://soundcloud-proxy-xi.vercel.app';
 const BASELINE=[
   {label:'Mar 19',ts:1742342400000,followers:4150,plays:5900,likes:104,reposts:123,downloads:0,eng:0},
   {label:'Mar 20',ts:1742428800000,followers:4152,plays:5903,likes:104,reposts:123,downloads:0,eng:0},
@@ -179,12 +180,20 @@ function fmt(n){if(!n&&n!==0)return'—';n=parseInt(n);if(n>=1000000)return(n/10
 function fmtPct(n){return isNaN(n)?'—':n.toFixed(1)+'%'}
 function setStatus(msg,type){const b=document.getElementById('statusBadge');b.textContent=msg;b.className='status '+type}
 
-function loadSnapshots(){
+async function loadSnapshots(){
   try{
+    const res=await fetch(`${PROXY}/api/snapshot`);
+    const server=await res.json();
+    if(Array.isArray(server)&&server.length>0){
+      snapshots=server;
+    } else {
+      const s=localStorage.getItem(STORAGE_KEY);
+      snapshots=s?JSON.parse(s):[...BASELINE];
+    }
+  }catch(e){
     const s=localStorage.getItem(STORAGE_KEY);
     snapshots=s?JSON.parse(s):[...BASELINE];
-    if(!s)localStorage.setItem(STORAGE_KEY,JSON.stringify(BASELINE));
-  }catch(e){snapshots=[...BASELINE];}
+  }
 }
 
 function saveSnapshot(data){
@@ -254,13 +263,14 @@ async function loadData(){
     }
 
     saveSnapshot({followers:user.followers_count,plays:totalPlays,likes:totalLikes,reposts:totalReposts,downloads:totalDownloads,eng:engRate});
+  await loadSnapshots();
 
     const prev=snapshots.length>=2?snapshots[snapshots.length-2]:null;
     if(prev){
       const fD=user.followers_count-prev.followers;
       const pD=totalPlays-prev.plays;
-      document.getElementById('followersDelta').innerHTML=fD>=0?`<span class="delta-pos">+${fmt(fD)}</span>`:`<span class="delta-neg">${fmt(fD)}</span>`;
-      document.getElementById('playsDelta').innerHTML=pD>=0?`<span class="delta-pos">+${fmt(pD)}</span>`:`<span class="delta-neg">${fmt(pD)}</span>`;
+      if(Math.abs(fD)>2) document.getElementById('followersDelta').innerHTML=fD>=0?`<span class="delta-pos">+${fmt(fD)}</span>`:`<span class="delta-neg">${fmt(fD)}</span>`;
+      if(Math.abs(pD)>50) document.getElementById('playsDelta').innerHTML=pD>=0?`<span class="delta-pos">+${fmt(pD)}</span>`:`<span class="delta-neg">${fmt(pD)}</span>`;
     }
 
     if(Array.isArray(tracks)){renderBarChart(tracks);renderTrackList(tracks);}
@@ -393,10 +403,27 @@ function renderSnapshots(){
   }).join('');
 }
 
-loadSnapshots();
-renderHistory();
-renderSnapshots();
-window.addEventListener('load',loadData);
+async function loadSnapshots(){
+  try{
+    const res=await fetch(`${PROXY}/api/snapshot`);
+    const server=await res.json();
+    if(Array.isArray(server)&&server.length>0){
+      snapshots=server;
+      return;
+    }
+  }catch(e){}
+  const s=localStorage.getItem(STORAGE_KEY);
+  snapshots=s?JSON.parse(s):[...BASELINE];
+}
+
+async function init(){
+  await loadSnapshots();
+  renderHistory();
+  renderSnapshots();
+  loadData();
+}
+
+init();
 </script>
 </body>
 </html>

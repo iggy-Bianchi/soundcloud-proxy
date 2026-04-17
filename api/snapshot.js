@@ -1,60 +1,6 @@
 import { Redis } from '@upstash/redis';
 
 const redis = Redis.fromEnv();
-const CM_ARTIST_ID = 9194995;
-
-async function getChartmetricToken() {
-  try {
-    const cached = await redis.get('cm_token');
-    if (cached) return cached;
-  } catch (e) {}
-
-  const res = await fetch('https://api.chartmetric.com/api/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refreshtoken: process.env.CHARTMETRIC_API_KEY })
-  });
-
-  if (!res.ok) throw new Error('Chartmetric token failed: ' + await res.text());
-  const { token, expires_in } = await res.json();
-
-  try {
-    await redis.set('cm_token', token, { ex: (expires_in || 3600) - 60 });
-  } catch (e) {}
-
-  return token;
-}
-
-async function getChartmetricStats() {
-  try {
-    const token = await getChartmetricToken();
-    const headers = { Authorization: `Bearer ${token}` };
-
-    const [spotifyRes, tiktokRes, igRes] = await Promise.all([
-      fetch(`https://api.chartmetric.com/api/artist/${CM_ARTIST_ID}/stat/spotify`, { headers }),
-      fetch(`https://api.chartmetric.com/api/artist/${CM_ARTIST_ID}/stat/tiktok`, { headers }),
-      fetch(`https://api.chartmetric.com/api/artist/${CM_ARTIST_ID}/stat/instagram`, { headers })
-    ]);
-
-    const [spotify, tiktok, ig] = await Promise.all([
-      spotifyRes.ok ? spotifyRes.json() : null,
-      tiktokRes.ok ? tiktokRes.json() : null,
-      igRes.ok ? igRes.json() : null
-    ]);
-
-    return {
-      spotify_followers: spotify?.obj?.followers ?? null,
-      spotify_monthly_listeners: spotify?.obj?.monthly_listeners ?? null,
-      tiktok_followers: tiktok?.obj?.followers ?? null,
-      tiktok_likes: tiktok?.obj?.likes ?? null,
-      ig_followers: ig?.obj?.followers ?? null,
-      ig_engagement: ig?.obj?.engagement_rate ?? null
-    };
-  } catch (e) {
-    console.error('Chartmetric error:', e.message);
-    return {};
-  }
-}
 
 async function getSoundcloudStats() {
   const CLIENT_ID = process.env.SOUNDCLOUD_CLIENT_ID;
@@ -111,18 +57,18 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
 
-  // GET — return latest snapshot
+  // GET — return latest snapshot + history
   if (req.method === 'GET') {
     try {
-      const data = await redis.get('latest_snapshot');
+      const latest = await redis.get('latest_snapshot');
       const history = await redis.get('snapshots') || [];
-      return res.status(200).json({ latest: data || {}, history });
+      return res.status(200).json({ latest: latest || {}, history });
     } catch (err) {
       return res.status(500).json({ error: err.message });
     }
   }
 
-  // POST — seed baseline or run full snapshot
+  // POST — seed baseline or run SoundCloud snapshot
   if (req.method === 'POST') {
     const body = req.body;
 
@@ -132,27 +78,27 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, seeded: body.seed.length });
     }
 
-    // Full snapshot run
+    // SoundCloud snapshot
     try {
-      const [sc, cm] = await Promise.all([getSoundcloudStats(), getChartmetricStats()]);
-
+      const sc = await getSoundcloudStats();
       const now = new Date();
       const label = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-      const snapshot = { label, ts: Date.now(), ...sc, ...cm };
 
-      // Save as latest
+      // Merge SC stats into latest snapshot (preserve CM stats)
+      const existing = await redis.get('latest_snapshot') || {};
+      const snapshot = { ...existing, ...sc, label, ts: Date.now() };
       await redis.set('latest_snapshot', snapshot);
 
       // Append to history
-      const existing = await redis.get('snapshots') || [];
-      const last = existing[existing.length - 1];
+      const history = await redis.get('snapshots') || [];
+      const last = history[history.length - 1];
       if (last && last.label === label) {
-        existing[existing.length - 1] = { ...last, ...sc, ...cm };
+        history[history.length - 1] = { ...last, followers: sc.sc_followers, plays: sc.sc_plays, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng };
       } else {
-        existing.push({ label, ts: Date.now(), followers: sc.sc_followers, plays: sc.sc_plays, likes: 0, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng });
+        history.push({ label, ts: Date.now(), followers: sc.sc_followers, plays: sc.sc_plays, likes: 0, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng });
       }
-      if (existing.length > 90) existing.splice(0, existing.length - 90);
-      await redis.set('snapshots', existing);
+      if (history.length > 90) history.splice(0, history.length - 90);
+      await redis.set('snapshots', history);
 
       return res.status(200).json({ ok: true, snapshot });
     } catch (err) {

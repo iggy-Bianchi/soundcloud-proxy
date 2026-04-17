@@ -134,8 +134,10 @@ footer{padding:2rem 3rem;border-top:0.5px solid #111;display:flex;align-items:ce
     <div class="stat-card"><div class="stat-label">Reposts</div><div class="stat-val" id="sc-reposts">—</div><div class="stat-platform">Soundcloud</div></div>
     <div class="stat-card"><div class="stat-label">Downloads</div><div class="stat-val" id="sc-downloads">—</div><div class="stat-platform">Soundcloud</div></div>
     <div class="stat-card"><div class="stat-label">Engagement</div><div class="stat-val" id="sc-eng">—</div><div class="stat-platform">Soundcloud</div></div>
-    <div class="stat-card"><div class="stat-label">IG Followers</div><div class="stat-val" id="ig-followers">—</div><div class="stat-platform" style="color:#555">Instagram</div></div>
-    <div class="stat-card"><div class="stat-label">TT Followers</div><div class="stat-val" id="tt-followers">—</div><div class="stat-platform" style="color:#444">TikTok</div></div>
+    <div class="stat-card"><div class="stat-label">Monthly Listeners</div><div class="stat-val" id="sp-listeners">—</div><div class="stat-platform" style="color:#1DB954">Spotify</div></div>
+    <div class="stat-card"><div class="stat-label">SP Followers</div><div class="stat-val" id="sp-followers">—</div><div class="stat-platform" style="color:#1DB954">Spotify</div></div>
+    <div class="stat-card"><div class="stat-label">IG Followers</div><div class="stat-val" id="ig-followers">—</div><div class="stat-platform" style="color:#444">Instagram</div></div>
+    <div class="stat-card"><div class="stat-label">TT Followers</div><div class="stat-val" id="tt-followers">—</div><div class="stat-platform" style="color:#333">TikTok</div></div>
     <div class="stat-card"><div class="stat-label">Tracks</div><div class="stat-val" id="sc-tracks">—</div><div class="stat-platform">Soundcloud</div></div>
   </div>
 
@@ -230,47 +232,57 @@ function fmtPct(n){return isNaN(n)||n===0?'—':n.toFixed(1)+'%'}
 
 async function loadStats(){
   try{
-    const r=await fetch(`${PROXY}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer`);
-    const user=await r.json();
-    if(user.error)return;
-    const tr=await fetch(`${PROXY}/api/soundcloud?endpoint=users/${user.id}/tracks?limit=20`);
-    const tracks=await tr.json();
-    let plays=0,reposts=0,downloads=0;
-    if(Array.isArray(tracks)){
-      tracks.forEach(t=>{plays+=parseInt(t.playback_count||0);reposts+=parseInt(t.reposts_count||0);downloads+=parseInt(t.download_count||0);});
-      renderTrackList(tracks);
+    const r=await fetch(`${PROXY}/api/snapshot`);
+    const data=await r.json();
+    const s=data.latest||{};
+    if(s.sc_followers)document.getElementById('sc-followers').textContent=fmt(s.sc_followers);
+    if(s.sc_plays)document.getElementById('sc-plays').textContent=fmt(s.sc_plays);
+    if(s.sc_reposts)document.getElementById('sc-reposts').textContent=fmt(s.sc_reposts);
+    if(s.sc_downloads)document.getElementById('sc-downloads').textContent=fmt(s.sc_downloads);
+    if(s.sc_eng)document.getElementById('sc-eng').textContent=fmtPct(s.sc_eng);
+    if(s.sc_tracks)document.getElementById('sc-tracks').textContent=fmt(s.sc_tracks);
+    if(s.spotify_followers)document.getElementById('sp-followers').textContent=fmt(s.spotify_followers);
+    if(s.spotify_monthly_listeners)document.getElementById('sp-listeners').textContent=fmt(s.spotify_monthly_listeners);
+    if(s.tiktok_followers)document.getElementById('tt-followers').textContent=fmt(s.tiktok_followers);
+    if(s.ig_followers)document.getElementById('ig-followers').textContent=fmt(s.ig_followers);
+    if(data.history&&Array.isArray(data.history)&&data.history.length>0){
+      snapshots=data.history;
+      renderHistory();
     }
-    const eng=plays>0?(reposts/plays*100):0;
-    document.getElementById('sc-followers').textContent=fmt(user.followers_count);
-    document.getElementById('sc-plays').textContent=fmt(plays);
-    document.getElementById('sc-reposts').textContent=fmt(reposts);
-    document.getElementById('sc-downloads').textContent=fmt(downloads);
-    document.getElementById('sc-eng').textContent=fmtPct(eng);
-    document.getElementById('sc-tracks').textContent=fmt(user.track_count);
-  }catch(e){}
+    renderTrackList();
+  }catch(e){console.log('Stats error:',e.message);}
 }
 
-function renderTrackList(tracks){
-  const sorted=[...tracks].sort((a,b)=>b.playback_count-a.playback_count);
-  document.getElementById('trackList').innerHTML=sorted.map((t,i)=>{
-    const plays=parseInt(t.playback_count||0),likes=parseInt(t.likes_count||0),reposts=parseInt(t.reposts_count||0),downloads=parseInt(t.download_count||0),comments=parseInt(t.comment_count||0);
-    const eng=plays>0?((likes+reposts)/plays*100):0;
-    const dur=t.duration?Math.floor(t.duration/60000)+':'+(Math.floor((t.duration%60000)/1000)).toString().padStart(2,'0'):'—';
-    return`<div class="track">
-      <div class="track-num">${String(i+1).padStart(2,'0')}</div>
-      <div class="track-info">
-        <div class="track-title">${t.title}</div>
-        <div class="track-stats">
-          <div class="track-stat">Plays <span>${fmt(plays)}</span></div>
-          <div class="track-stat">Reposts <span>${fmt(reposts)}</span></div>
-          <div class="track-stat">Downloads <span>${fmt(downloads)}</span></div>
-          <div class="track-stat">Comments <span>${fmt(comments)}</span></div>
-          <div class="track-stat">Duration <span>${dur}</span></div>
-          <span class="eng-badge">${fmtPct(eng)} eng</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+function renderTrackList(){
+  // Track list now comes from SoundCloud API directly since snapshot doesn't store track details
+  const PROXY='https://soundcloud-proxy-xi.vercel.app';
+  fetch(`${PROXY}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer`)
+    .then(r=>r.json()).then(user=>{
+      if(user.error)return;
+      return fetch(`${PROXY}/api/soundcloud?endpoint=users/${user.id}/tracks?limit=20`);
+    }).then(r=>r&&r.json()).then(tracks=>{
+      if(!tracks||!Array.isArray(tracks))return;
+      const sorted=[...tracks].sort((a,b)=>b.playback_count-a.playback_count);
+      document.getElementById('trackList').innerHTML=sorted.map((t,i)=>{
+        const plays=parseInt(t.playback_count||0),likes=parseInt(t.likes_count||0),reposts=parseInt(t.reposts_count||0),downloads=parseInt(t.download_count||0),comments=parseInt(t.comment_count||0);
+        const eng=plays>0?((likes+reposts)/plays*100):0;
+        const dur=t.duration?Math.floor(t.duration/60000)+':'+(Math.floor((t.duration%60000)/1000)).toString().padStart(2,'0'):'—';
+        return`<div class="track">
+          <div class="track-num">${String(i+1).padStart(2,'0')}</div>
+          <div class="track-info">
+            <div class="track-title">${t.title}</div>
+            <div class="track-stats">
+              <div class="track-stat">Plays <span>${fmt(plays)}</span></div>
+              <div class="track-stat">Reposts <span>${fmt(reposts)}</span></div>
+              <div class="track-stat">Downloads <span>${fmt(downloads)}</span></div>
+              <div class="track-stat">Comments <span>${fmt(comments)}</span></div>
+              <div class="track-stat">Duration <span>${dur}</span></div>
+              <span class="eng-badge">${fmtPct(eng)} eng</span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }).catch(()=>{});
 }
 
 async function loadSnapshots(){

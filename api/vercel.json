@@ -2,7 +2,8 @@
   "functions": {
     "api/soundcloud.js": { "runtime": "nodejs18.x" },
     "api/snapshot.js": { "runtime": "nodejs18.x" },
-    "api/chartmetric.js": { "runtime": "nodejs18.x" }
+    "api/chartmetric.js": { "runtime": "nodejs18.x" },
+    "api/printify.js": { "runtime": "nodejs18.x" }
   },
   "crons": [
     {

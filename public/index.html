@@ -144,8 +144,13 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 </head>
 <body>
 
+<div id="intro">
+  <canvas id="introCanvas"></canvas>
+  <div id="introText">The ritual begins.</div>
+  <span id="introSkip" onclick="skipIntro()">skip</span>
+</div>
+<div class="glitch-flash" id="glitchFlash"></div>
 <div class="cursor" id="cursor"><div class="cursor-inner"><div class="cursor-dot"></div></div></div>
-<div class="cursor-ring" id="cursorRing"><div class="cursor-ring-inner"></div></div>
 
 <nav>
   <a class="nav-logo" href="#"></a>

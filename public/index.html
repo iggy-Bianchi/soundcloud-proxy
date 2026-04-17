@@ -341,6 +341,50 @@ function renderSnapshots(){
     }).join('');
 }
 
+// Pre-load historical snapshot baseline from SoundCloud Insights screenshot
+const BASELINE=[
+  {label:'Mar 19',ts:1710806400000,followers:4150,plays:5,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 20',ts:1710892800000,followers:4155,plays:3,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 21',ts:1710979200000,followers:4158,plays:2,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 22',ts:1711065600000,followers:4160,plays:1,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 23',ts:1711152000000,followers:4162,plays:3,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 24',ts:1711238400000,followers:4163,plays:1,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 25',ts:1711324800000,followers:4164,plays:1,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 26',ts:1711411200000,followers:4165,plays:1,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Mar 27',ts:1711497600000,followers:4166,plays:8,likes:1,reposts:0,downloads:1,eng:0},
+  {label:'Mar 28',ts:1711584000000,followers:4168,plays:18,likes:2,reposts:0,downloads:2,eng:0},
+  {label:'Mar 29',ts:1711670400000,followers:4170,plays:20,likes:2,reposts:0,downloads:2,eng:0},
+  {label:'Mar 30',ts:1711756800000,followers:4172,plays:40,likes:4,reposts:1,downloads:3,eng:0},
+  {label:'Mar 31',ts:1711843200000,followers:4178,plays:110,likes:8,reposts:1,downloads:5,eng:0},
+  {label:'Apr 01',ts:1711929600000,followers:4185,plays:58,likes:5,reposts:0,downloads:3,eng:0},
+  {label:'Apr 02',ts:1712016000000,followers:4190,plays:65,likes:4,reposts:0,downloads:2,eng:0},
+  {label:'Apr 03',ts:1712102400000,followers:4195,plays:35,likes:3,reposts:0,downloads:1,eng:0},
+  {label:'Apr 04',ts:1712188800000,followers:4198,plays:25,likes:2,reposts:0,downloads:1,eng:0},
+  {label:'Apr 05',ts:1712275200000,followers:4200,plays:20,likes:2,reposts:0,downloads:1,eng:0},
+  {label:'Apr 06',ts:1712361600000,followers:4202,plays:15,likes:1,reposts:0,downloads:1,eng:0},
+  {label:'Apr 07',ts:1712448000000,followers:4203,plays:22,likes:2,reposts:0,downloads:1,eng:0},
+  {label:'Apr 08',ts:1712534400000,followers:4204,plays:6,likes:1,reposts:0,downloads:0,eng:0},
+  {label:'Apr 09',ts:1712620800000,followers:4205,plays:4,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Apr 10',ts:1712707200000,followers:4206,plays:10,likes:1,reposts:0,downloads:1,eng:0},
+  {label:'Apr 11',ts:1712793600000,followers:4207,plays:7,likes:1,reposts:0,downloads:0,eng:0},
+  {label:'Apr 12',ts:1712880000000,followers:4208,plays:3,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Apr 13',ts:1712966400000,followers:4209,plays:2,likes:0,reposts:0,downloads:0,eng:0},
+  {label:'Apr 14',ts:1713052800000,followers:4210,plays:20,likes:2,reposts:0,downloads:1,eng:0},
+  {label:'Apr 15',ts:1713139200000,followers:4211,plays:25,likes:2,reposts:1,downloads:1,eng:0},
+  {label:'Apr 16',ts:1713225600000,followers:4212,plays:25,likes:2,reposts:1,downloads:1,eng:0},
+  {label:'Apr 17',ts:1713312000000,followers:4213,plays:15,likes:1,reposts:0,downloads:1,eng:0},
+];
+
+function seedBaseline(){
+  try{
+    const existing=localStorage.getItem(STORAGE_KEY);
+    if(!existing){
+      localStorage.setItem(STORAGE_KEY,JSON.stringify(BASELINE));
+    }
+  }catch(e){}
+}
+
+seedBaseline();
 loadSnapshots();
 renderHistory();
 renderSnapshots();

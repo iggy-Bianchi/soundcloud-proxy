@@ -197,6 +197,18 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
       </div>
       <a class="show-btn" href="#list">Info</a>
     </div>
+    <div class="show" id="show2">
+      <div class="show-date">27 Jun 2025</div>
+      <div class="show-info">
+        <div class="show-venue">Area 15</div>
+        <div class="show-location">Las Vegas, NV</div>
+        <div class="show-countdown" id="countdown2"></div>
+      </div>
+      <a class="show-btn" href="#list">Info</a>
+    </div>
+      </div>
+      <a class="show-btn" href="#list">Info</a>
+    </div>
   </div>
 </div>
 </div>
@@ -408,15 +420,19 @@ document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
 // COUNTDOWN TIMERS
 function updateCountdowns(){
   const shows=[
-    {id:'countdown1',date:new Date('2025-05-01T20:00:00')},
-    {id:'countdown2',date:new Date('2025-06-27T20:00:00')}
+    {id:'countdown1',showId:'show1',date:new Date('2025-05-01T20:00:00')},
+    {id:'countdown2',showId:'show2',date:new Date('2025-06-27T20:00:00')}
   ];
   shows.forEach(s=>{
     const el=document.getElementById(s.id);
+    const showEl=document.getElementById(s.showId)||el?.closest('.show');
     if(!el)return;
     const now=new Date();
     const diff=s.date-now;
-    if(diff<=0){el.innerHTML='';return;}
+    if(diff<=0){
+      if(showEl)showEl.style.display='none';
+      return;
+    }
     const d=Math.floor(diff/86400000);
     const h=Math.floor((diff%86400000)/3600000);
     const m=Math.floor((diff%3600000)/60000);

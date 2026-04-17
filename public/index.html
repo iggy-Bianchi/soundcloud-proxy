@@ -3,427 +3,284 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>iamdoomsayer — Stats</title>
+<title>DOOMSAYER — Electronic Press Kit</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#f0f0f0;min-height:100vh;padding:2rem}
-.proxy-bar{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.proxy-bar label{font-size:12px;color:#888;white-space:nowrap}
-.proxy-bar input{flex:1;min-width:200px;background:#0a0a0a;border:0.5px solid #444;border-radius:6px;color:#f0f0f0;font-size:13px;padding:6px 10px}
-.proxy-bar button{padding:6px 14px;font-size:13px;border:0.5px solid #555;border-radius:6px;background:transparent;color:#f0f0f0;cursor:pointer}
-.proxy-bar button:hover{background:#222}
-.status{font-size:12px;padding:4px 10px;border-radius:20px;white-space:nowrap}
-.status.ok{background:#0f2d1a;color:#4ade80;border:0.5px solid #166534}
-.status.err{background:#2d0f0f;color:#f87171;border:0.5px solid #991b1b}
-.status.loading{background:#1a1a0f;color:#facc15;border:0.5px solid #854d0e}
-.profile-row{display:flex;align-items:center;gap:14px;margin-bottom:1.5rem}
-.avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:0.5px solid #333}
-.avatar-placeholder{width:48px;height:48px;border-radius:50%;background:#ff5500;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:500;color:#fff;flex-shrink:0}
-.profile-info h1{font-size:20px;font-weight:500;margin-bottom:2px}
-.profile-info p{font-size:13px;color:#666}
-.refresh-btn{margin-left:auto;padding:7px 14px;font-size:13px;border:0.5px solid #444;border-radius:6px;background:transparent;color:#f0f0f0;cursor:pointer}
-.refresh-btn:hover{background:#1a1a1a}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:1.5rem}
-.metric{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:1rem}
-.metric-label{font-size:11px;color:#666;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
-.metric-val{font-size:22px;font-weight:500}
-.metric-sub{font-size:11px;color:#555;margin-top:4px}
-.section{margin-bottom:1.5rem}
-.section-title{font-size:12px;color:#666;font-weight:500;margin-bottom:10px;text-transform:uppercase;letter-spacing:.04em}
-.card{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:16px}
-.ctrl-row{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
-.tab{padding:5px 12px;font-size:12px;border:0.5px solid #333;border-radius:20px;background:transparent;color:#888;cursor:pointer}
-.tab.active{border-color:#ff5500;color:#ff5500;background:#1a0a00}
-.tab:hover{color:#f0f0f0}
-.divider{width:1px;height:20px;background:#2a2a2a;margin:0 4px}
-.legend{display:flex;gap:16px;margin-bottom:10px;flex-wrap:wrap}
-.legend span{display:flex;align-items:center;gap:5px;font-size:12px;color:#888}
-.legend-sq{width:10px;height:10px;border-radius:2px}
-.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.bar-row:last-child{margin-bottom:0}
-.bar-label{font-size:12px;color:#888;min-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.bar-track{flex:1;background:#222;border-radius:3px;height:6px;overflow:hidden}
-.bar-fill{height:100%;background:#ff5500;border-radius:3px;transition:width .6s ease}
-.bar-val{font-size:12px;color:#666;min-width:40px;text-align:right}
-.track-list{display:flex;flex-direction:column;gap:8px}
-.track{background:#141414;border:0.5px solid #2a2a2a;border-radius:10px;padding:12px 16px;display:flex;align-items:flex-start;gap:12px}
-.track-num{font-size:13px;color:#555;min-width:20px;text-align:right;padding-top:2px}
-.track-info{flex:1;min-width:0}
-.track-title{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:6px}
-.track-stats{display:flex;gap:10px;flex-wrap:wrap}
-.track-stat{font-size:12px;color:#666}
-.track-stat span{color:#f0f0f0}
-.eng-badge{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}
-.eng-high{background:#0f2d1a;color:#4ade80;border:0.5px solid #166534}
-.eng-med{background:#1a1500;color:#facc15;border:0.5px solid #854d0e}
-.eng-low{background:#1a0a00;color:#f97316;border:0.5px solid #7c2d12}
-.snapshot-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:0.5px solid #1a1a1a;font-size:13px;flex-wrap:wrap;gap:6px}
-.snapshot-row:last-child{border-bottom:none}
-.snapshot-date{color:#666;font-size:12px;min-width:100px}
-.snapshot-vals{display:flex;gap:16px;flex-wrap:wrap}
-.snapshot-val .label{font-size:11px;color:#555}
-.snapshot-val .val{font-weight:500}
+:root{--orange:#ff5500;--dark:#0a0a0a;--card:#141414;--border:#2a2a2a;--muted:#666}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--dark);color:#f0f0f0;min-height:100vh}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;padding:4rem 3rem;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('https://soundcloud-proxy-xi.vercel.app/fffddd.jpg');background-size:cover;background-position:center top;filter:brightness(0.35);z-index:0}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#0a0a0a 0%,transparent 60%);z-index:1}
+.hero-content{position:relative;z-index:2;max-width:800px}
+.hero-tag{font-size:11px;letter-spacing:.2em;color:var(--orange);text-transform:uppercase;margin-bottom:1rem}
+.hero-name{font-size:clamp(3rem,10vw,7rem);font-weight:700;letter-spacing:-.02em;line-height:1;margin-bottom:1rem;text-transform:uppercase}
+.hero-sub{font-size:16px;color:#aaa;margin-bottom:2rem;max-width:500px;line-height:1.6}
+.hero-links{display:flex;gap:12px;flex-wrap:wrap}
+.hero-link{padding:10px 20px;font-size:13px;border:0.5px solid #444;border-radius:4px;color:#f0f0f0;text-decoration:none;letter-spacing:.05em;text-transform:uppercase}
+.hero-link:hover{background:#1a1a1a}
+.hero-link.primary{border-color:var(--orange);color:var(--orange)}
+
+/* SECTIONS */
+.section{padding:4rem 3rem;max-width:1100px;margin:0 auto}
+.section-label{font-size:11px;letter-spacing:.2em;color:var(--orange);text-transform:uppercase;margin-bottom:2rem;display:flex;align-items:center;gap:12px}
+.section-label::after{content:'';flex:1;height:0.5px;background:var(--border)}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:2rem}
+.stat-card{background:var(--card);border:0.5px solid var(--border);border-radius:8px;padding:1.25rem}
+.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.stat-val{font-size:26px;font-weight:500}
+.stat-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.platform-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-top:6px}
+.dot{width:6px;height:6px;border-radius:50%}
+
+/* HISTORY CHART */
+.chart-card{background:var(--card);border:0.5px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem}
+.chart-tabs{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.ctab{padding:4px 12px;font-size:12px;border:0.5px solid #333;border-radius:20px;background:transparent;color:#888;cursor:pointer}
+.ctab.active{border-color:var(--orange);color:var(--orange);background:#1a0a00}
+
+/* BIO */
+.bio-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.bio-text{font-size:16px;line-height:1.8;color:#ccc}
+.bio-text p{margin-bottom:1rem}
+.bio-facts{display:flex;flex-direction:column;gap:12px}
+.bio-fact{display:flex;flex-direction:column;gap:2px;padding-bottom:12px;border-bottom:0.5px solid var(--border)}
+.bio-fact:last-child{border-bottom:none}
+.bio-fact-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.bio-fact-val{font-size:15px;font-weight:500}
+
+/* TRACKS */
+.track-embed{margin-bottom:12px;border-radius:8px;overflow:hidden}
+iframe{display:block;border:none}
+
+/* CONTACT */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.contact-card{background:var(--card);border:0.5px solid var(--border);border-radius:8px;padding:1.5rem}
+.contact-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.contact-val{font-size:16px;font-weight:500;color:#f0f0f0;text-decoration:none}
+.contact-val:hover{color:var(--orange)}
+
+/* FOOTER */
+footer{padding:2rem 3rem;border-top:0.5px solid var(--border);text-align:center;font-size:12px;color:var(--muted)}
 .delta-pos{color:#4ade80;font-size:11px}
 .delta-neg{color:#f87171;font-size:11px}
-.empty{color:#555;font-size:13px;padding:.5rem 0}
-@media(max-width:600px){body{padding:1rem}.grid{grid-template-columns:1fr 1fr}}
+
+@media(max-width:700px){
+  .hero{padding:2rem 1.5rem;min-height:80vh}
+  .section{padding:3rem 1.5rem}
+  .bio-grid{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr}
+}
 </style>
 </head>
 <body>
 
-<div class="proxy-bar">
-  <label>Vercel proxy URL</label>
-  <input type="text" id="proxyUrl" value="https://soundcloud-proxy-xi.vercel.app" />
-  <button onclick="loadData()">Load stats</button>
-  <span class="status loading" id="statusBadge">Not connected</span>
-</div>
-
-<div class="profile-row">
-  <div class="avatar-placeholder" id="avatarEl">D</div>
-  <div class="profile-info">
-    <h1 id="artistName">iamdoomsayer</h1>
-    <p id="profileUrl">soundcloud.com/iamdoomsayer</p>
-  </div>
-  <button class="refresh-btn" onclick="loadData()">Refresh</button>
-</div>
-
-<div class="grid">
-  <div class="metric"><div class="metric-label">Followers</div><div class="metric-val" id="followers">—</div><div class="metric-sub" id="followersDelta"></div></div>
-  <div class="metric"><div class="metric-label">Following</div><div class="metric-val" id="following">—</div></div>
-  <div class="metric"><div class="metric-label">Tracks</div><div class="metric-val" id="trackCount">—</div></div>
-  <div class="metric"><div class="metric-label">Total plays</div><div class="metric-val" id="totalPlays">—</div><div class="metric-sub" id="playsDelta"></div></div>
-  <div class="metric"><div class="metric-label">Total likes</div><div class="metric-val" id="totalLikes">—</div></div>
-  <div class="metric"><div class="metric-label">Total reposts</div><div class="metric-val" id="totalReposts">—</div></div>
-  <div class="metric"><div class="metric-label">Total downloads</div><div class="metric-val" id="totalDownloads">—</div></div>
-  <div class="metric"><div class="metric-label">Avg engagement</div><div class="metric-val" id="avgEng">—</div></div>
-</div>
-
-<div class="section">
-  <div class="section-title">History</div>
-  <div class="card">
-    <div class="ctrl-row">
-      <button class="tab active" onclick="setMetric('plays')">Plays</button>
-      <button class="tab" onclick="setMetric('followers')">Followers</button>
-      <button class="tab" onclick="setMetric('engagement')">Engagement</button>
-      <div class="divider"></div>
-      <button class="tab" id="range-day" onclick="setRange('day')">Day</button>
-      <button class="tab" id="range-week" onclick="setRange('week')">Week</button>
-      <button class="tab" id="range-month" onclick="setRange('month')">Month</button>
-      <button class="tab active" id="range-all" onclick="setRange('all')">All</button>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Electronic Press Kit</div>
+    <div class="hero-name">Doom<br>sayer</div>
+    <div class="hero-sub">Multi-genre bass producer. Knoxville, TN. Underground electronic.</div>
+    <div class="hero-links">
+      <a class="hero-link primary" href="mailto:Doomsayermail@gmail.com">Book Now</a>
+      <a class="hero-link" href="https://soundcloud.com/iamdoomsayer" target="_blank">SoundCloud</a>
+      <a class="hero-link" href="https://open.spotify.com/artist/7qKOHQyTesKwALRRCfare2" target="_blank">Spotify</a>
+      <a class="hero-link" href="https://instagram.com/iamdoomsayer" target="_blank">Instagram</a>
+      <a class="hero-link" href="https://tiktok.com/@iamdoomsayer" target="_blank">TikTok</a>
     </div>
-    <div class="legend" id="histLegend"></div>
-    <div style="position:relative;height:220px">
-      <canvas id="histChart" role="img" aria-label="History chart"></canvas>
-    </div>
-    <p style="font-size:11px;color:#444;margin-top:10px">Baseline loaded from SoundCloud Insights (Mar 19 - Apr 17). New snapshots added on each refresh.</p>
   </div>
 </div>
 
+<!-- STATS -->
 <div class="section">
-  <div class="section-title">Top tracks by plays</div>
-  <div class="card" id="barChart"><div class="empty">Load stats to see chart</div></div>
+  <div class="section-label">Live stats</div>
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Followers</div>
+      <div class="stat-val" id="sc-followers">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#ff5500"></span>SoundCloud</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total plays</div>
+      <div class="stat-val" id="sc-plays">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#ff5500"></span>SoundCloud</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Reposts</div>
+      <div class="stat-val" id="sc-reposts">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#ff5500"></span>SoundCloud</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Downloads</div>
+      <div class="stat-val" id="sc-downloads">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#ff5500"></span>SoundCloud</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Engagement</div>
+      <div class="stat-val" id="sc-eng">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#ff5500"></span>SoundCloud</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Followers</div>
+      <div class="stat-val" id="ig-followers">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#e1306c"></span>Instagram</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Followers</div>
+      <div class="stat-val" id="tt-followers">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#888"></span>TikTok</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tracks</div>
+      <div class="stat-val" id="sc-tracks">—</div>
+      <div class="platform-tag"><span class="dot" style="background:#ff5500"></span>SoundCloud</div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="chart-card">
+    <div class="chart-tabs">
+      <button class="ctab active" onclick="setMetric('plays')">Plays</button>
+      <button class="ctab" onclick="setMetric('followers')">Followers</button>
+      <button class="ctab" onclick="setMetric('engagement')">Engagement</button>
+      <span style="width:1px;background:#2a2a2a;margin:0 4px"></span>
+      <button class="ctab" onclick="setRange('week')">Week</button>
+      <button class="ctab" onclick="setRange('month')">Month</button>
+      <button class="ctab active" onclick="setRange('all')">All</button>
+    </div>
+    <div style="position:relative;height:200px">
+      <canvas id="histChart" role="img" aria-label="Play history chart"></canvas>
+    </div>
+  </div>
 </div>
 
+<!-- BIO -->
 <div class="section">
-  <div class="section-title">Track breakdown</div>
-  <div class="track-list" id="trackList"><div class="empty" style="padding:1rem">Load stats to see tracks</div></div>
+  <div class="section-label">About</div>
+  <div class="bio-grid">
+    <div>
+      <div class="bio-text">
+        <p>Hailing from Knoxville, TN, Doomsayer is a multi-genre bass producer carving a dark and uncompromising path through the underground. Built on a foundation of punishing frequencies and ritualistic energy, Doomsayer has taken his sound from the clubs of Nashville and Orlando to the floors of Las Vegas, Los Angeles, New York City and beyond.</p>
+        <p>He does not perform. He summons.</p>
+      </div>
+    </div>
+    <div class="bio-facts">
+      <div class="bio-fact"><div class="bio-fact-label">Based in</div><div class="bio-fact-val">Knoxville, TN</div></div>
+      <div class="bio-fact"><div class="bio-fact-label">Genre</div><div class="bio-fact-val">Bass / Electronic / Multi-genre</div></div>
+      <div class="bio-fact"><div class="bio-fact-label">Markets played</div><div class="bio-fact-val">Las Vegas, Los Angeles, New York City, Nashville, Orlando</div></div>
+      <div class="bio-fact"><div class="bio-fact-label">Booking</div><div class="bio-fact-val"><a href="mailto:Doomsayermail@gmail.com" style="color:#f0f0f0;text-decoration:none">Doomsayermail@gmail.com</a></div></div>
+    </div>
+  </div>
 </div>
 
+<!-- TRACKS -->
 <div class="section">
-  <div class="section-title">Snapshots</div>
-  <div class="card" id="snapshotTable"><div class="empty">Loading snapshots...</div></div>
+  <div class="section-label">Music</div>
+  <div class="track-embed">
+    <iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer&color=%23ff5500&auto_play=false&hide_related=false&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe>
+  </div>
 </div>
+
+<!-- CONTACT -->
+<div class="section">
+  <div class="section-label">Contact & Booking</div>
+  <div class="contact-grid">
+    <div class="contact-card">
+      <div class="contact-label">Booking inquiries</div>
+      <a class="contact-val" href="mailto:Doomsayermail@gmail.com">Doomsayermail@gmail.com</a>
+    </div>
+    <div class="contact-card">
+      <div class="contact-label">Phone</div>
+      <a class="contact-val" href="tel:3233095416">323-309-5416</a>
+    </div>
+  </div>
+</div>
+
+<footer>DOOMSAYER &mdash; Stats update automatically every 24 hours &mdash; soundcloud-proxy-xi.vercel.app</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-const STORAGE_KEY='doomsayer_v3';
 const PROXY='https://soundcloud-proxy-xi.vercel.app';
-const BASELINE=[
-  {label:'Mar 19',ts:1742342400000,followers:4150,plays:5900,likes:104,reposts:123,downloads:0,eng:0},
-  {label:'Mar 20',ts:1742428800000,followers:4152,plays:5903,likes:104,reposts:123,downloads:0,eng:0},
-  {label:'Mar 21',ts:1742515200000,followers:4154,plays:5905,likes:104,reposts:123,downloads:0,eng:0},
-  {label:'Mar 22',ts:1742601600000,followers:4155,plays:5906,likes:104,reposts:123,downloads:0,eng:0},
-  {label:'Mar 23',ts:1742688000000,followers:4157,plays:5909,likes:104,reposts:123,downloads:0,eng:0},
-  {label:'Mar 24',ts:1742774400000,followers:4158,plays:5910,likes:104,reposts:123,downloads:0,eng:0},
-  {label:'Mar 25',ts:1742860800000,followers:4159,plays:5911,likes:104,reposts:123,downloads:0,eng:0},
-  {label:'Mar 26',ts:1742947200000,followers:4160,plays:5912,likes:104,reposts:123,downloads:1,eng:0},
-  {label:'Mar 27',ts:1743033600000,followers:4161,plays:5920,likes:105,reposts:123,downloads:2,eng:0},
-  {label:'Mar 28',ts:1743120000000,followers:4163,plays:5938,likes:107,reposts:123,downloads:4,eng:0},
-  {label:'Mar 29',ts:1743206400000,followers:4165,plays:5958,likes:109,reposts:123,downloads:6,eng:0},
-  {label:'Mar 30',ts:1743292800000,followers:4168,plays:5998,likes:113,reposts:124,downloads:9,eng:0},
-  {label:'Mar 31',ts:1743379200000,followers:4178,plays:6108,likes:121,reposts:125,downloads:14,eng:0},
-  {label:'Apr 01',ts:1743465600000,followers:4185,plays:6166,likes:126,reposts:125,downloads:17,eng:0},
-  {label:'Apr 02',ts:1743552000000,followers:4192,plays:6231,likes:130,reposts:125,downloads:19,eng:0},
-  {label:'Apr 03',ts:1743638400000,followers:4196,plays:6266,likes:132,reposts:125,downloads:20,eng:0},
-  {label:'Apr 04',ts:1743724800000,followers:4199,plays:6291,likes:134,reposts:125,downloads:21,eng:0},
-  {label:'Apr 05',ts:1743811200000,followers:4201,plays:6311,likes:134,reposts:125,downloads:21,eng:0},
-  {label:'Apr 06',ts:1743897600000,followers:4203,plays:6326,likes:134,reposts:125,downloads:21,eng:0},
-  {label:'Apr 07',ts:1743984000000,followers:4204,plays:6348,likes:134,reposts:126,downloads:21,eng:0},
-  {label:'Apr 08',ts:1744070400000,followers:4205,plays:6354,likes:134,reposts:126,downloads:21,eng:0},
-  {label:'Apr 09',ts:1744156800000,followers:4206,plays:6358,likes:134,reposts:126,downloads:21,eng:0},
-  {label:'Apr 10',ts:1744243200000,followers:4207,plays:6368,likes:134,reposts:126,downloads:22,eng:0},
-  {label:'Apr 11',ts:1744329600000,followers:4208,plays:6375,likes:134,reposts:126,downloads:22,eng:0},
-  {label:'Apr 12',ts:1744416000000,followers:4209,plays:6378,likes:134,reposts:126,downloads:22,eng:0},
-  {label:'Apr 13',ts:1744502400000,followers:4210,plays:6380,likes:134,reposts:126,downloads:22,eng:0},
-  {label:'Apr 14',ts:1744588800000,followers:4225,plays:5950,likes:0,reposts:335,downloads:23,eng:0},
-  {label:'Apr 15',ts:1744675200000,followers:4228,plays:5965,likes:0,reposts:337,downloads:24,eng:0},
-  {label:'Apr 16',ts:1744761600000,followers:4230,plays:5980,likes:0,reposts:339,downloads:25,eng:0},
-  {label:'Apr 17',ts:1744848000000,followers:4243,plays:5906,likes:0,reposts:340,downloads:25,eng:5.7},
-];
-
 let snapshots=[];
 let histChart=null;
 let currentMetric='plays';
 let currentRange='all';
 
 function fmt(n){if(!n&&n!==0)return'—';n=parseInt(n);if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString()}
-function fmtPct(n){return isNaN(n)?'—':n.toFixed(1)+'%'}
-function setStatus(msg,type){const b=document.getElementById('statusBadge');b.textContent=msg;b.className='status '+type}
+function fmtPct(n){return isNaN(n)||n===0?'—':n.toFixed(1)+'%'}
+
+async function loadStats(){
+  try{
+    const r=await fetch(`${PROXY}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer`);
+    const user=await r.json();
+    if(user.error)throw new Error(user.error);
+    const tr=await fetch(`${PROXY}/api/soundcloud?endpoint=users/${user.id}/tracks?limit=20`);
+    const tracks=await tr.json();
+    let plays=0,reposts=0,downloads=0;
+    if(Array.isArray(tracks))tracks.forEach(t=>{plays+=parseInt(t.playback_count||0);reposts+=parseInt(t.reposts_count||0);downloads+=parseInt(t.download_count||0);});
+    const eng=plays>0?(reposts/plays*100):0;
+    document.getElementById('sc-followers').textContent=fmt(user.followers_count);
+    document.getElementById('sc-plays').textContent=fmt(plays);
+    document.getElementById('sc-reposts').textContent=fmt(reposts);
+    document.getElementById('sc-downloads').textContent=fmt(downloads);
+    document.getElementById('sc-eng').textContent=fmtPct(eng);
+    document.getElementById('sc-tracks').textContent=fmt(user.track_count);
+  }catch(e){console.log('SC error:',e.message);}
+}
 
 async function loadSnapshots(){
   try{
-    const res=await fetch(`${PROXY}/api/snapshot`);
-    const server=await res.json();
-    if(Array.isArray(server)&&server.length>0){
-      snapshots=server;
-    } else {
-      const s=localStorage.getItem(STORAGE_KEY);
-      snapshots=s?JSON.parse(s):[...BASELINE];
-    }
-  }catch(e){
-    const s=localStorage.getItem(STORAGE_KEY);
-    snapshots=s?JSON.parse(s):[...BASELINE];
-  }
+    const r=await fetch(`${PROXY}/api/snapshot`);
+    const data=await r.json();
+    if(Array.isArray(data)&&data.length>0){snapshots=data;renderHistory();}
+  }catch(e){}
 }
 
-function saveSnapshot(data){
-  const now=new Date();
-  const label=now.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-  // avoid duplicate same-day entries from rapid refreshes — update last if same label
-  const last=snapshots[snapshots.length-1];
-  if(last&&last.label===label){
-    snapshots[snapshots.length-1]={...data,label,ts:Date.now()};
-  } else {
-    snapshots.push({...data,label,ts:Date.now()});
-  }
-  if(snapshots.length>90)snapshots=snapshots.slice(-90);
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(snapshots));}catch(e){}
-}
-
-function getFilteredSnapshots(){
-  const now=Date.now();
-  const day=86400000;
-  if(currentRange==='day') return snapshots.filter(s=>now-s.ts<=day*2);
-  if(currentRange==='week') return snapshots.filter(s=>now-s.ts<=day*7);
-  if(currentRange==='month') return snapshots.filter(s=>now-s.ts<=day*30);
+function getFiltered(){
+  const now=Date.now(),day=86400000;
+  if(currentRange==='week')return snapshots.filter(s=>now-s.ts<=day*7);
+  if(currentRange==='month')return snapshots.filter(s=>now-s.ts<=day*30);
   return snapshots;
-}
-
-async function loadData(){
-  const proxy=document.getElementById('proxyUrl').value.trim().replace(/\/$/,'');
-  if(!proxy){setStatus('Enter proxy URL','err');return;}
-  setStatus('Loading...','loading');
-  try{
-    const userRes=await fetch(`${proxy}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer`);
-    if(!userRes.ok)throw new Error('User fetch failed: '+userRes.status);
-    const user=await userRes.json();
-    if(user.error)throw new Error(user.error);
-
-    const tracksRes=await fetch(`${proxy}/api/soundcloud?endpoint=users/${user.id}/tracks?limit=20`);
-    const tracks=await tracksRes.json();
-
-    let totalPlays=0,totalLikes=0,totalReposts=0,totalDownloads=0;
-    if(Array.isArray(tracks)){
-      tracks.forEach(t=>{
-        totalPlays+=parseInt(t.playback_count||0);
-        totalLikes+=parseInt(t.likes_count||0);
-        totalReposts+=parseInt(t.reposts_count||0);
-        totalDownloads+=parseInt(t.download_count||0);
-      });
-    }
-    const engRate=totalPlays>0?((totalLikes+totalReposts)/totalPlays*100):0;
-
-    document.getElementById('followers').textContent=fmt(user.followers_count);
-    document.getElementById('following').textContent=fmt(user.followings_count);
-    document.getElementById('trackCount').textContent=fmt(user.track_count);
-    document.getElementById('totalPlays').textContent=fmt(totalPlays);
-    document.getElementById('totalLikes').textContent=fmt(totalLikes);
-    document.getElementById('totalReposts').textContent=fmt(totalReposts);
-    document.getElementById('totalDownloads').textContent=fmt(totalDownloads);
-    document.getElementById('avgEng').textContent=fmtPct(engRate);
-
-    if(user.avatar_url){
-      try{
-        const img=document.createElement('img');
-        img.src=user.avatar_url.replace('-large','-t200x200');
-        img.className='avatar';
-        const av=document.getElementById('avatarEl');
-        if(av)av.replaceWith(img);
-      }catch(e){}
-    }
-
-    saveSnapshot({followers:user.followers_count,plays:totalPlays,likes:totalLikes,reposts:totalReposts,downloads:totalDownloads,eng:engRate});
-  await loadSnapshots();
-
-    const prev=snapshots.length>=2?snapshots[snapshots.length-2]:null;
-    if(prev){
-      const fD=user.followers_count-prev.followers;
-      const pD=totalPlays-prev.plays;
-      if(Math.abs(fD)>2) document.getElementById('followersDelta').innerHTML=fD>=0?`<span class="delta-pos">+${fmt(fD)}</span>`:`<span class="delta-neg">${fmt(fD)}</span>`;
-      if(Math.abs(pD)>50) document.getElementById('playsDelta').innerHTML=pD>=0?`<span class="delta-pos">+${fmt(pD)}</span>`:`<span class="delta-neg">${fmt(pD)}</span>`;
-    }
-
-    if(Array.isArray(tracks)){renderBarChart(tracks);renderTrackList(tracks);}
-    renderHistory();
-    renderSnapshots();
-    setStatus('Connected','ok');
-  }catch(e){
-    setStatus('Error: '+e.message,'err');
-  }
 }
 
 function setMetric(m){
   currentMetric=m;
-  document.querySelectorAll('.ctrl-row .tab').forEach(b=>{
-    if(['plays','followers','engagement'].includes(b.textContent.toLowerCase()))
-      b.classList.toggle('active',b.textContent.toLowerCase()===m);
-  });
+  document.querySelectorAll('.ctab').forEach(b=>{if(['plays','followers','engagement'].includes(b.textContent.toLowerCase()))b.classList.toggle('active',b.textContent.toLowerCase()===m);});
   renderHistory();
 }
 
 function setRange(r){
   currentRange=r;
-  ['day','week','month','all'].forEach(x=>{
-    const el=document.getElementById('range-'+x);
-    if(el)el.classList.toggle('active',x===r);
-  });
+  document.querySelectorAll('.ctab').forEach(b=>{if(['week','month','all'].includes(b.textContent.toLowerCase()))b.classList.toggle('active',b.textContent.toLowerCase()===r);});
   renderHistory();
 }
 
 function renderHistory(){
-  const data=getFilteredSnapshots();
-  if(data.length<2){
-    document.getElementById('histLegend').innerHTML='<span style="font-size:12px;color:#555">Not enough data for this range yet</span>';
-    if(histChart){histChart.destroy();histChart=null;}
-    return;
-  }
+  const data=getFiltered();
+  if(data.length<2)return;
   const labels=data.map(s=>s.label);
-  let datasets=[],legendHTML='';
-
-  if(currentMetric==='plays'){
-    datasets=[{label:'Plays',data:data.map(s=>s.plays),borderColor:'#ff5500',backgroundColor:'rgba(255,85,0,0.1)',tension:.3,fill:true,pointRadius:2,pointHoverRadius:4}];
-    legendHTML='<span><span class="legend-sq" style="background:#ff5500"></span>Total plays</span>';
-  } else if(currentMetric==='followers'){
-    datasets=[{label:'Followers',data:data.map(s=>s.followers),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.1)',tension:.3,fill:true,pointRadius:2,pointHoverRadius:4}];
-    legendHTML='<span><span class="legend-sq" style="background:#3b82f6"></span>Followers</span>';
-  } else {
-    datasets=[
-      {label:'Likes',data:data.map(s=>s.likes),borderColor:'#a855f7',backgroundColor:'transparent',tension:.3,pointRadius:2,pointHoverRadius:4},
-      {label:'Reposts',data:data.map(s=>s.reposts),borderColor:'#22d3ee',backgroundColor:'transparent',tension:.3,pointRadius:2,pointHoverRadius:4}
-    ];
-    legendHTML='<span><span class="legend-sq" style="background:#a855f7"></span>Likes</span><span><span class="legend-sq" style="background:#22d3ee"></span>Reposts</span>';
-  }
-
-  document.getElementById('histLegend').innerHTML=legendHTML;
-  if(histChart){histChart.destroy();}
+  let datasets=[];
+  if(currentMetric==='plays')datasets=[{label:'Plays',data:data.map(s=>s.plays),borderColor:'#ff5500',backgroundColor:'rgba(255,85,0,0.1)',tension:.3,fill:true,pointRadius:2}];
+  else if(currentMetric==='followers')datasets=[{label:'Followers',data:data.map(s=>s.followers),borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,0.1)',tension:.3,fill:true,pointRadius:2}];
+  else datasets=[{label:'Reposts',data:data.map(s=>s.reposts),borderColor:'#a855f7',backgroundColor:'transparent',tension:.3,pointRadius:2}];
+  if(histChart)histChart.destroy();
   histChart=new Chart(document.getElementById('histChart'),{
     type:'line',data:{labels,datasets},
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false}},
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#555',font:{size:10},maxRotation:45,autoSkip:true,maxTicksLimit:12}},
-        y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>fmt(v)}}
-      }
-    }
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#555',font:{size:10},maxTicksLimit:10,autoSkip:true}},y:{grid:{color:'rgba(255,255,255,.04)'},ticks:{color:'#555',font:{size:10},callback:v=>fmt(v)}}}}
   });
 }
 
-function renderBarChart(tracks){
-  const sorted=[...tracks].sort((a,b)=>b.playback_count-a.playback_count).slice(0,8);
-  const max=sorted[0]?.playback_count||1;
-  document.getElementById('barChart').innerHTML=sorted.map(t=>`
-    <div class="bar-row">
-      <div class="bar-label" title="${t.title}">${t.title}</div>
-      <div class="bar-track"><div class="bar-fill" style="width:${Math.round(t.playback_count/max*100)}%"></div></div>
-      <div class="bar-val">${fmt(t.playback_count)}</div>
-    </div>`).join('');
-}
+// Instagram & TikTok — manual fallback since APIs require auth
+document.getElementById('ig-followers').textContent='—';
+document.getElementById('tt-followers').textContent='—';
 
-function renderTrackList(tracks){
-  const sorted=[...tracks].sort((a,b)=>b.playback_count-a.playback_count);
-  document.getElementById('trackList').innerHTML=sorted.map((t,i)=>{
-    const plays=parseInt(t.playback_count||0),likes=parseInt(t.likes_count||0),reposts=parseInt(t.reposts_count||0),downloads=parseInt(t.download_count||0),comments=parseInt(t.comment_count||0);
-    const eng=plays>0?((likes+reposts)/plays*100):0;
-    const engClass=eng>=5?'eng-high':eng>=2?'eng-med':'eng-low';
-    const dur=t.duration?Math.floor(t.duration/60000)+':'+(Math.floor((t.duration%60000)/1000)).toString().padStart(2,'0'):'—';
-    return`<div class="track">
-      <div class="track-num">${i+1}</div>
-      <div class="track-info">
-        <div class="track-title">${t.title}</div>
-        <div class="track-stats">
-          <div class="track-stat">Plays <span>${fmt(plays)}</span></div>
-          <div class="track-stat">Likes <span>${fmt(likes)}</span></div>
-          <div class="track-stat">Reposts <span>${fmt(reposts)}</span></div>
-          <div class="track-stat">Downloads <span>${fmt(downloads)}</span></div>
-          <div class="track-stat">Comments <span>${fmt(comments)}</span></div>
-          <div class="track-stat">Duration <span>${dur}</span></div>
-          <span class="eng-badge ${engClass}">${fmtPct(eng)} eng</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function renderSnapshots(){
-  const el=document.getElementById('snapshotTable');
-  if(!snapshots.length){el.innerHTML='<div class="empty">No snapshots yet</div>';return;}
-  const rows=[...snapshots].reverse().slice(0,15);
-  el.innerHTML=`<div class="snapshot-row" style="border-bottom:0.5px solid #2a2a2a;margin-bottom:4px">
-    <span style="font-size:11px;color:#555;min-width:100px">Date</span>
-    <div class="snapshot-vals">
-      <div class="snapshot-val"><div class="label">Followers</div></div>
-      <div class="snapshot-val"><div class="label">Plays</div></div>
-      <div class="snapshot-val"><div class="label">Likes</div></div>
-      <div class="snapshot-val"><div class="label">Eng %</div></div>
-    </div>
-  </div>`+rows.map((s,i)=>{
-    const prev=rows[i+1];
-    const fD=prev?s.followers-prev.followers:null;
-    const pD=prev?s.plays-prev.plays:null;
-    return`<div class="snapshot-row">
-      <span class="snapshot-date">${s.label}</span>
-      <div class="snapshot-vals">
-        <div class="snapshot-val"><div class="val">${fmt(s.followers)}${fD!==null?' '+(fD>=0?`<span class="delta-pos">+${fmt(fD)}</span>`:`<span class="delta-neg">${fmt(fD)}</span>`):''}</div></div>
-        <div class="snapshot-val"><div class="val">${fmt(s.plays)}${pD!==null?' '+(pD>=0?`<span class="delta-pos">+${fmt(pD)}</span>`:`<span class="delta-neg">${fmt(pD)}</span>`):''}</div></div>
-        <div class="snapshot-val"><div class="val">${fmt(s.likes)}</div></div>
-        <div class="snapshot-val"><div class="val">${fmtPct(s.eng)}</div></div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-async function loadSnapshots(){
-  try{
-    const res=await fetch(`${PROXY}/api/snapshot`);
-    const server=await res.json();
-    if(Array.isArray(server)&&server.length>0){
-      snapshots=server;
-      return;
-    }
-  }catch(e){}
-  const s=localStorage.getItem(STORAGE_KEY);
-  snapshots=s?JSON.parse(s):[...BASELINE];
-}
-
-async function init(){
-  await loadSnapshots();
-  renderHistory();
-  renderSnapshots();
-  loadData();
-}
-
-init();
+loadStats();
+loadSnapshots();
 </script>
 </body>
 </html>

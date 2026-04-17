@@ -1,7 +1,12 @@
 {
   "functions": {
-    "api/soundcloud.js": {
-      "runtime": "nodejs18.x"
+    "api/soundcloud.js": { "runtime": "nodejs18.x" },
+    "api/snapshot.js": { "runtime": "nodejs18.x" }
+  },
+  "crons": [
+    {
+      "path": "/api/snapshot",
+      "schedule": "0 9 * * *"
     }
-  }
+  ]
 }

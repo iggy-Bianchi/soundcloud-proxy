@@ -33,14 +33,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .nav-links a:hover{color:var(--acid)}
 
 /* HERO */
-.hero{position:relative;height:100vh;display:flex;align-items:flex-end;padding:3rem 3rem 5rem;overflow:hidden}
+.hero{position:relative;height:100vh;display:flex;align-items:flex-end;justify-content:center;padding:0 3rem 4rem;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
 .hero-bg-blur{position:absolute;inset:-20px;z-index:0}
 .hero-bg-blur video{width:100%;height:100%;object-fit:cover;filter:blur(20px) brightness(0.25);transform:scale(1.1)}
 .hero-bg-main{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center}
 .hero-bg-main video{height:100%;width:auto;object-fit:contain}
 .hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#000 0%,rgba(0,0,0,.6) 50%,rgba(0,0,0,.4) 100%);z-index:0}
-.hero-content{position:relative;z-index:2;max-width:900px}
+.hero-content{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;align-items:center;text-align:center}
 .hero-tag{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.3em;color:var(--acid);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .3s forwards}
 .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,15vw,11rem);letter-spacing:.05em;line-height:.9;margin-bottom:1.5rem;color:var(--bone);opacity:0;animation:fadeUp .8s .5s forwards}
 .hero-name .glitch{position:relative;display:inline-block}

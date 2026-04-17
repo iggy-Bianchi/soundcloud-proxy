@@ -16,8 +16,14 @@ export default async function handler(req, res) {
     }
   }
 
-  // POST — save a new snapshot (called by cron or manually)
+  // POST — save a new snapshot or seed baseline
   if (req.method === 'POST') {
+    // Handle seed payload
+    const body = req.body;
+    if (body && body.seed && Array.isArray(body.seed)) {
+      await redis.set('snapshots', body.seed);
+      return res.status(200).json({ ok: true, seeded: body.seed.length });
+    }
     const CLIENT_ID = process.env.SOUNDCLOUD_CLIENT_ID;
     const CLIENT_SECRET = process.env.SOUNDCLOUD_CLIENT_SECRET;
 

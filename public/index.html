@@ -12,12 +12,18 @@ html{scroll-behavior:smooth}
 body{font-family:'Arial',sans-serif;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;cursor:none}
 
 /* CUSTOM CURSOR */
-.cursor{position:fixed;width:8px;height:8px;background:var(--acid);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,opacity .2s;mix-blend-mode:difference}
-.cursor-ring{position:fixed;width:32px;height:32px;border:0.5px solid var(--acid);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .12s ease;opacity:.4}
-.cursor.clicked{transform:translate(-50%,-50%) scale(2)}
+.cursor{position:fixed;width:20px;height:20px;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
+.cursor-inner{width:100%;height:100%;position:relative;animation:spinSigil 3s linear infinite}
+.cursor-inner::before{content:'';position:absolute;inset:0;border:1px solid var(--acid);transform:rotate(0deg)}
+.cursor-inner::after{content:'';position:absolute;inset:4px;border:1px solid var(--toxic);transform:rotate(45deg)}
+.cursor-dot{position:absolute;width:2px;height:2px;background:var(--acid);top:50%;left:50%;transform:translate(-50%,-50%)}
+.cursor-ring{position:fixed;width:40px;height:40px;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .15s ease}
+.cursor-ring-inner{width:100%;height:100%;border:0.5px solid rgba(57,255,20,.2);border-radius:50%;animation:pulseCursor 2s ease infinite}
+@keyframes spinSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulseCursor{0%,100%{transform:scale(1);opacity:.2}50%{transform:scale(1.2);opacity:.4}}
 
 /* CANVAS */
-#heroCanvas{position:absolute;inset:0;z-index:1;pointer-events:none}
+#heroCanvas{position:absolute;inset:0;z-index:1;pointer-events:none;width:100%;height:100%}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent)}
@@ -35,8 +41,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,15vw,11rem);letter-spacing:.05em;line-height:.9;margin-bottom:1.5rem;color:var(--bone);opacity:0;animation:fadeUp .8s .5s forwards}
 .hero-name .glitch{position:relative;display:inline-block}
 .hero-name .glitch::before,.hero-name .glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%}
-.hero-name .glitch::before{color:var(--acid);animation:glitch1 4s infinite;clip-path:polygon(0 0,100% 0,100% 35%,0 35%);opacity:.7}
-.hero-name .glitch::after{color:#ff0040;animation:glitch2 4s infinite;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);opacity:.5}
+.hero-name .glitch::before{color:var(--acid);animation:glitch1 6s infinite;clip-path:polygon(0 0,100% 0,100% 35%,0 35%);opacity:0}
+.hero-name .glitch::after{color:var(--acid);animation:glitch2 6s infinite;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);opacity:0}
+@keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
+@keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
 .hero-sub{font-size:13px;letter-spacing:.15em;color:#666;text-transform:uppercase;margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s .7s forwards}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .9s forwards}
 .btn{padding:12px 28px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border:0.5px solid #333;color:var(--bone);font-family:'Arial',sans-serif;cursor:none;background:transparent;transition:all .3s}
@@ -117,8 +125,8 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 
 /* ANIMATIONS */
 @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes glitch1{0%,90%,100%{transform:translate(0)}92%{transform:translate(-3px,1px)}94%{transform:translate(3px,-1px)}96%{transform:translate(-2px,2px)}}
-@keyframes glitch2{0%,88%,100%{transform:translate(0)}90%{transform:translate(3px,1px)}93%{transform:translate(-3px,-1px)}95%{transform:translate(2px,2px)}}
+@keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
+@keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
 @keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
 @keyframes rotateSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -131,8 +139,8 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor" id="cursor"><div class="cursor-inner"><div class="cursor-dot"></div></div></div>
+<div class="cursor-ring" id="cursorRing"><div class="cursor-ring-inner"></div></div>
 
 <nav>
   <a class="nav-logo" href="#">DOOMSAYER</a>
@@ -155,7 +163,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
       <span class="glitch" data-text="DOOM">DOOM</span><br>
       <span class="glitch" data-text="SAYER">SAYER</span>
     </div>
-    <div class="hero-sub">He does not perform. He summons.</div>
+    <div class="hero-sub">Some frequencies cannot be unheard.</div>
     <div class="hero-cta">
       <a class="btn primary" href="#list">Join the Ritual</a>
       <a class="btn" href="#shows">Upcoming Shows</a>
@@ -274,20 +282,21 @@ const cursor=document.getElementById('cursor');
 const ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
-function animRing(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
+function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
 animRing();
-document.addEventListener('mousedown',()=>cursor.classList.add('clicked'));
-document.addEventListener('mouseup',()=>cursor.classList.remove('clicked'));
 document.querySelectorAll('a,button,.btn').forEach(el=>{
-  el.addEventListener('mouseenter',()=>{ring.style.transform='translate(-50%,-50%) scale(2)';ring.style.opacity='.8';ring.style.borderColor='var(--acid)';});
-  el.addEventListener('mouseleave',()=>{ring.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='.4';ring.style.borderColor='var(--acid)';});
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.opacity='0';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});
 });
 
 // PARTICLE CANVAS
 const canvas=document.getElementById('heroCanvas');
 const ctx=canvas.getContext('2d');
 let particles=[];
-function resizeCanvas(){canvas.width=canvas.offsetWidth;canvas.height=canvas.offsetHeight;}
+function resizeCanvas(){
+  canvas.width=canvas.parentElement.offsetWidth;
+  canvas.height=canvas.parentElement.offsetHeight;
+}
 resizeCanvas();
 window.addEventListener('resize',resizeCanvas);
 class Particle{
@@ -313,7 +322,7 @@ class Particle{
     ctx.fill();
   }
 }
-for(let i=0;i<80;i++)particles.push(new Particle());
+for(let i=0;i<80;i++){const p=new Particle();p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;p.life=Math.floor(Math.random()*p.maxLife);particles.push(p);}
 function animParticles(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   particles.forEach(p=>{p.update();p.draw();});

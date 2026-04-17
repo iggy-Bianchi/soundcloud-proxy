@@ -7,84 +7,50 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--black:#000000;--charcoal:#111111;--toxic:#1A7A1A;--acid:#39FF14;--bone:#E8E8E8;--muted:#444}
+:root{--black:#000;--charcoal:#111;--toxic:#1A7A1A;--acid:#39FF14;--bone:#E8E8E8;--muted:#444}
 html{scroll-behavior:smooth}
 body{font-family:'Arial',sans-serif;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;cursor:none}
-
-/* CUSTOM CURSOR */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent)}
+.nav-links{display:flex;gap:2rem}
+.nav-links a{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#666;text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--acid)}
 .cursor{position:fixed;width:20px;height:20px;pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
 .cursor-inner{width:100%;height:100%;position:relative;animation:spinSigil 3s linear infinite}
-.cursor-inner::before{content:'';position:absolute;inset:0;border:1px solid var(--acid);transform:rotate(0deg)}
+.cursor-inner::before{content:'';position:absolute;inset:0;border:1px solid var(--acid)}
 .cursor-inner::after{content:'';position:absolute;inset:4px;border:1px solid var(--toxic);transform:rotate(45deg)}
 .cursor-dot{position:absolute;width:2px;height:2px;background:var(--acid);top:50%;left:50%;transform:translate(-50%,-50%)}
 .cursor-ring{position:fixed;width:40px;height:40px;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:all .15s ease}
 .cursor-ring-inner{width:100%;height:100%;border:0.5px solid rgba(57,255,20,.2);border-radius:50%;animation:pulseCursor 2s ease infinite}
 @keyframes spinSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes pulseCursor{0%,100%{transform:scale(1);opacity:.2}50%{transform:scale(1.2);opacity:.4}}
-
-/* CANVAS */
-#heroCanvas{position:absolute;inset:0;z-index:1;pointer-events:none;width:100%;height:100%}
-
-/* NAV */
-nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.9),transparent)}
-.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.15em;color:var(--bone);text-decoration:none}
-.nav-links{display:flex;gap:2rem}
-.nav-links a{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#666;text-decoration:none;transition:color .2s}
-.nav-links a:hover{color:var(--acid)}
-
-/* HERO */
 .hero{position:relative;height:100vh;display:flex;align-items:flex-end;padding:3rem 3rem 5rem;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0;overflow:hidden}
 .hero-bg-blur{position:absolute;inset:-20px;z-index:0}
 .hero-bg-blur video{width:100%;height:100%;object-fit:cover;filter:blur(20px) brightness(0.25);transform:scale(1.1)}
 .hero-bg-main{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center}
 .hero-bg-main video{height:100%;width:auto;object-fit:contain}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#000 0%,rgba(0,0,0,.6) 50%,rgba(0,0,0,.4) 100%);z-index:0}
-.hero-content{position:relative;z-index:2;max-width:900px}
-.hero-tag{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.3em;color:var(--acid);text-transform:uppercase;margin-bottom:1.5rem;opacity:0;animation:fadeUp .8s .3s forwards}
-.hero-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,15vw,11rem);letter-spacing:.05em;line-height:.9;margin-bottom:1.5rem;color:var(--bone);opacity:0;animation:fadeUp .8s .5s forwards}
-.hero-name .glitch{position:relative;display:inline-block}
-.hero-name .glitch::before,.hero-name .glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;height:100%}
-.hero-name .glitch::before{color:var(--acid);animation:glitch1 6s infinite;clip-path:polygon(0 0,100% 0,100% 35%,0 35%);opacity:0}
-.hero-name .glitch::after{color:var(--acid);animation:glitch2 6s infinite;clip-path:polygon(0 65%,100% 65%,100% 100%,0 100%);opacity:0}
-@keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
-@keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to top,#000 0%,rgba(0,0,0,.5) 50%,rgba(0,0,0,.3) 100%);z-index:2}
+#heroCanvas{position:absolute;inset:0;z-index:3;pointer-events:none;width:100%;height:100%}
+.hero-content{position:relative;z-index:4;max-width:900px}
 .hero-sub{font-size:13px;letter-spacing:.15em;color:#666;text-transform:uppercase;margin-bottom:2.5rem;opacity:0;animation:fadeUp .8s .7s forwards}
 .hero-cta{display:flex;gap:12px;flex-wrap:wrap;opacity:0;animation:fadeUp .8s .9s forwards}
 .btn{padding:12px 28px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border:0.5px solid #333;color:var(--bone);font-family:'Arial',sans-serif;cursor:none;background:transparent;transition:all .3s}
-.btn:hover{border-color:var(--acid);color:var(--acid);box-shadow:0 0 20px rgba(57,255,20,.1)}
+.btn:hover{border-color:var(--acid);color:var(--acid)}
 .btn.primary{border-color:var(--toxic);color:var(--acid);background:rgba(26,122,26,.1)}
-.btn.primary:hover{background:rgba(57,255,20,.1);box-shadow:0 0 30px rgba(57,255,20,.15)}
-.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:2;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.3em;color:#333;text-transform:uppercase;animation:pulse 2s infinite}
-
-/* SECTIONS */
+.btn.primary:hover{background:rgba(57,255,20,.1)}
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);z-index:4;font-family:'Courier New',monospace;font-size:10px;letter-spacing:.3em;color:#333;text-transform:uppercase;animation:pulse 2s infinite}
 .section{padding:6rem 3rem;max-width:1200px;margin:0 auto}
 .section-label{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.3em;color:var(--toxic);text-transform:uppercase;margin-bottom:3rem;display:flex;align-items:center;gap:16px}
 .section-label::after{content:'';flex:1;height:0.5px;background:#1a1a1a}
-
-/* SHOWS WITH COUNTDOWN */
-.shows-list{display:flex;flex-direction:column}
-.show{display:flex;align-items:center;gap:2rem;padding:1.5rem 0;border-bottom:0.5px solid #111;flex-wrap:wrap;transition:background .3s}
-.show:hover{background:rgba(57,255,20,.02)}
+.show{display:flex;align-items:center;gap:2rem;padding:1.5rem 0;border-bottom:0.5px solid #111;flex-wrap:wrap}
 .show-date{font-family:'Courier New',monospace;font-size:12px;letter-spacing:.2em;color:var(--acid);min-width:120px;text-transform:uppercase}
 .show-info{flex:1}
-.show-venue{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.05em;color:var(--bone)}
+.show-venue{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.05em}
 .show-location{font-size:11px;letter-spacing:.15em;color:#555;text-transform:uppercase;margin-top:2px}
 .show-countdown{font-family:'Courier New',monospace;font-size:11px;color:#333;letter-spacing:.1em;margin-top:6px}
 .show-countdown span{color:var(--acid)}
 .show-btn{padding:8px 20px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;border:0.5px solid #333;color:#666;text-decoration:none;white-space:nowrap;font-family:'Courier New',monospace;transition:all .3s;cursor:none}
 .show-btn:hover{border-color:var(--toxic);color:var(--acid)}
-
-/* STATS COUNTER */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;background:#111;border:0.5px solid #111;margin-bottom:3rem}
-.stat-card{background:var(--black);padding:2rem 1.5rem;transition:background .3s}
-.stat-card:hover{background:#050505}
-.stat-label{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#444;text-transform:uppercase;margin-bottom:10px}
-.stat-val{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--bone);line-height:1;transition:color .3s}
-.stat-card:hover .stat-val{color:var(--acid)}
-.stat-platform{font-size:10px;letter-spacing:.1em;color:var(--toxic);margin-top:6px;text-transform:uppercase}
-
-/* BIO */
 .bio-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:4rem;align-items:start}
 .bio-text{font-size:16px;line-height:1.9;color:#888}
 .bio-text p{margin-bottom:1.5rem}
@@ -94,61 +60,52 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .bio-fact:last-child{border-bottom:none}
 .bio-fact-label{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#333;text-transform:uppercase;margin-bottom:6px}
 .bio-fact-val{font-size:14px;color:var(--bone)}
-
-.music-embed{margin-bottom:1rem;border:0.5px solid #111}
+.music-embed{margin-bottom:12px;border:0.5px solid #111}
 .merch-banner{background:var(--charcoal);border:0.5px solid #1a1a1a;padding:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem}
 .merch-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em}
 .merch-sub{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#555;text-transform:uppercase;margin-top:6px}
-
-/* MAILING LIST */
 .list-wrap{background:var(--charcoal);border:0.5px solid #1a1a1a;padding:3rem;text-align:center;max-width:600px;margin:0 auto;position:relative;overflow:hidden}
 .list-title{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;letter-spacing:.1em;margin-bottom:1rem}
 .list-sub{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.15em;color:#555;text-transform:uppercase;margin-bottom:2rem}
 .list-form{display:flex;max-width:400px;margin:0 auto}
-.list-input{flex:1;padding:12px 16px;background:#000;border:0.5px solid #333;color:var(--bone);font-size:13px;font-family:'Arial',sans-serif;outline:none;cursor:none;transition:border-color .3s}
+.list-input{flex:1;padding:12px 16px;background:#000;border:0.5px solid #333;color:var(--bone);font-size:13px;font-family:'Arial',sans-serif;outline:none;cursor:none}
 .list-input:focus{border-color:var(--toxic)}
-.list-submit{padding:12px 24px;background:transparent;border:0.5px solid var(--toxic);border-left:none;color:var(--acid);font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:none;font-family:'Courier New',monospace;white-space:nowrap;transition:all .3s}
+.list-submit{padding:12px 24px;background:transparent;border:0.5px solid var(--toxic);border-left:none;color:var(--acid);font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:none;font-family:'Courier New',monospace;white-space:nowrap}
 .list-submit:hover{background:rgba(57,255,20,.05)}
-
-/* RITUAL CONFIRM */
 .ritual-overlay{position:absolute;inset:0;background:var(--black);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;opacity:0;pointer-events:none;transition:opacity .5s}
 .ritual-overlay.active{opacity:1;pointer-events:all}
 .ritual-sigil{width:80px;height:80px;border:0.5px solid var(--toxic);border-radius:50%;display:flex;align-items:center;justify-content:center;animation:rotateSigil 4s linear infinite}
 .ritual-sigil::before{content:'';width:40px;height:40px;border:0.5px solid var(--acid);transform:rotate(45deg)}
-.ritual-confirm-text{font-family:'Courier New',monospace;font-size:12px;letter-spacing:.3em;color:var(--acid);text-transform:uppercase;text-align:center}
+.ritual-confirm-text{font-family:'Courier New',monospace;font-size:12px;letter-spacing:.3em;color:var(--acid);text-transform:uppercase}
 .ritual-sub{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#333;text-transform:uppercase}
-
 .epk-bar{background:var(--charcoal);border-top:0.5px solid #111;border-bottom:0.5px solid #111;padding:2rem 3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .epk-bar p{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.2em;color:#555;text-transform:uppercase}
 footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
 .footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.1em;color:#333}
 .footer-links{display:flex;gap:1.5rem}
-.footer-links a{font-size:10px;letter-spacing:.15em;color:#333;text-decoration:none;text-transform:uppercase;transition:color .2s}
+.footer-links a{font-size:10px;letter-spacing:.15em;color:#333;text-decoration:none;text-transform:uppercase}
 .footer-links a:hover{color:var(--acid)}
 .footer-copy{font-family:'Courier New',monospace;font-size:10px;color:#222;letter-spacing:.1em}
-
-/* ANIMATIONS */
-@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
-@keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
-@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
-@keyframes rotateSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
 .fade-in{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
 .fade-in.visible{opacity:1;transform:translateY(0)}
-
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+@keyframes rotateSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
+@keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
+@keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
+@keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
 @media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit{cursor:pointer}}
-@media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{padding:3rem 1.5rem}.section{padding:4rem 1.5rem}.bio-grid{grid-template-columns:1fr}.list-form{flex-direction:column}.list-submit{border-left:0.5px solid var(--toxic);border-top:none}.epk-bar{padding:1.5rem}footer{padding:2rem 1.5rem}}
+@media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{padding:2rem 1.5rem 4rem}.section{padding:4rem 1.5rem}.bio-grid{grid-template-columns:1fr}.list-form{flex-direction:column}.list-submit{border-left:0.5px solid var(--toxic);border-top:none}.epk-bar{padding:1.5rem}footer{padding:2rem 1.5rem}}
 </style>
 </head>
 <body>
 
-
 <div class="cursor" id="cursor"><div class="cursor-inner"><div class="cursor-dot"></div></div></div>
+<div class="cursor-ring" id="cursorRing"><div class="cursor-ring-inner"></div></div>
 
 <nav>
-  <a class="nav-logo" href="#"></a>
+  <div></div>
   <div class="nav-links">
     <a href="#shows">Shows</a>
     <a href="#music">Music</a>
@@ -160,19 +117,15 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 
 <div class="hero">
   <div class="hero-bg">
-  <div class="hero-bg-blur">
-    <video autoplay muted loop playsinline src="/D_Hero_Vid.mp4"></video>
+    <div class="hero-bg-blur"><video autoplay muted loop playsinline src="/D_Hero_Vid.mp4"></video></div>
+    <div class="hero-bg-main"><video autoplay muted loop playsinline src="/D_Hero_Vid.mp4"></video></div>
   </div>
-  <div class="hero-bg-main">
-    <video autoplay muted loop playsinline src="/D_Hero_Vid.mp4"></video>
-  </div>
-</div>
   <div class="hero-overlay"></div>
   <canvas id="heroCanvas"></canvas>
-      <div class="hero-content">
-    <div id="logoWrap" style="width:min(550px,75vw);height:auto;margin-bottom:8px;position:relative">
-      <img id="logoImg" src="/Doomsayer_Transparent_Logo.png" alt="Doomsayer" style="width:100%;opacity:0;display:block">
-      <canvas id="logoCanvas" style="position:absolute;inset:0;width:100%;height:100%"></canvas>
+  <div class="hero-content">
+    <div id="logoWrap" style="width:min(550px,75vw);margin-bottom:8px;position:relative;line-height:0">
+      <img id="logoImg" src="/Doomsayer_Transparent_Logo.png" alt="Doomsayer" style="width:100%;height:auto;display:block;visibility:hidden">
+      <canvas id="logoCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%"></canvas>
     </div>
     <div class="hero-sub">Some frequencies cannot be unheard.</div>
     <div class="hero-cta">
@@ -187,7 +140,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 <div style="background:var(--charcoal);border-top:0.5px solid #111;border-bottom:0.5px solid #111">
 <div class="section fade-in" id="shows">
   <div class="section-label">Upcoming</div>
-  <div class="shows-list">
+  <div>
     <div class="show">
       <div class="show-date">01 May 2026</div>
       <div class="show-info">
@@ -203,9 +156,6 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
         <div class="show-venue">Area 15</div>
         <div class="show-location">Las Vegas, NV</div>
         <div class="show-countdown" id="countdown2"></div>
-      </div>
-      <a class="show-btn" href="#list">Info</a>
-    </div>
       </div>
       <a class="show-btn" href="#list">Info</a>
     </div>
@@ -228,6 +178,17 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
   </div>
 </div>
 
+<div class="section fade-in">
+  <div class="section-label">Merch</div>
+  <div class="merch-banner">
+    <div>
+      <div class="merch-title">The Congregation Wears Black</div>
+      <div class="merch-sub">Limited drops. No restocks. No exceptions.</div>
+    </div>
+    <a class="btn primary" href="#list">Coming Soon</a>
+  </div>
+</div>
+
 <div style="background:var(--charcoal);border-top:0.5px solid #111;border-bottom:0.5px solid #111">
 <div class="section fade-in" id="about">
   <div class="section-label">About</div>
@@ -237,7 +198,6 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
         <p>From Los Angeles, CA, Doomsayer is a multi-genre bass producer carving a dark and uncompromising path through the underground. Built on a foundation of punishing frequencies and ritualistic energy, Doomsayer has taken his sound from the clubs of Nashville and Orlando to the floors of Las Vegas, Los Angeles, New York City and beyond.</p>
         <p>Founder of Planet Doom, the biggest recurring EDM night in Knoxville, TN, Doomsayer has built not just a sound but a scene, summoning a congregation of the underground one ritual at a time.</p>
         <div class="pull">He does not perform. He summons.</div>
-        <p>Every set is a ritual. Every drop is a summoning. The music does not ask to be heard. It arrives.</p>
       </div>
     </div>
     <div class="bio-facts">
@@ -248,17 +208,6 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
     </div>
   </div>
 </div>
-</div>
-
-<div class="section fade-in">
-  <div class="section-label">Merch</div>
-  <div class="merch-banner">
-    <div>
-      <div class="merch-title">The Congregation Wears Black</div>
-      <div class="merch-sub">Limited drops. No restocks. No exceptions.</div>
-    </div>
-    <a class="btn primary" href="#list">Coming Soon</a>
-  </div>
 </div>
 
 <div style="background:var(--charcoal);border-top:0.5px solid #111;border-bottom:0.5px solid #111;padding:4rem 3rem" id="list">
@@ -293,8 +242,11 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
   <div class="footer-copy">&#9632; The ritual continues.</div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
-// CUSTOM CURSOR
+const PROXY='https://soundcloud-proxy-xi.vercel.app';
+
+// CURSOR
 const cursor=document.getElementById('cursor');
 const ring=document.getElementById('cursorRing');
 let mx=0,my=0,rx=0,ry=0;
@@ -306,120 +258,72 @@ document.querySelectorAll('a,button,.btn').forEach(el=>{
   el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});
 });
 
-// SHATTER ASSEMBLE LOGO
-const logoImg=document.getElementById('logoImg');
-const logoCanvas=document.getElementById('logoCanvas');
-const logoWrap=document.getElementById('logoWrap');
-
-logoImg.onload=()=>{
-  const W=logoImg.naturalWidth;
-  const H=logoImg.naturalHeight;
-  logoCanvas.width=W;
-  logoCanvas.height=H;
-  const lctx=logoCanvas.getContext('2d');
-
-  const COLS=8,ROWS=5;
-  const fw=W/COLS,fh=H/ROWS;
-  const fragments=[];
-
-  for(let r=0;r<ROWS;r++){
-    for(let c=0;c<COLS;c++){
-      const angle=(Math.random()-0.5)*Math.PI*3;
-      const dist=300+Math.random()*400;
-      const dx=Math.cos(angle)*dist;
-      const dy=Math.sin(angle)*dist;
-      fragments.push({
-        sx:c*fw,sy:r*fh,fw,fh,
-        tx:c*fw,ty:r*fh,
-        x:c*fw+dx,y:r*fh+dy,
-        rot:(Math.random()-0.5)*Math.PI*2,
-        alpha:0
-      });
-    }
-  }
-
-  const START=performance.now()+300;
-  const DUR=1400;
-
-  function easeOutBack(t){const c1=1.5;const c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);}
-
-  function draw(now){
-    lctx.clearRect(0,0,W,H);
-    const elapsed=now-START;
-    const progress=Math.min(1,Math.max(0,elapsed/DUR));
-    const e=easeOutBack(progress);
-
-    fragments.forEach(f=>{
-      const cx=f.x+(f.tx-f.x)*e;
-      const cy=f.y+(f.ty-f.y)*e;
-      const rot=f.rot*(1-e);
-      const alpha=Math.min(1,progress*3);
-
-      lctx.save();
-      lctx.globalAlpha=alpha;
-      lctx.translate(cx+f.fw/2,cy+f.fh/2);
-      lctx.rotate(rot);
-      lctx.drawImage(logoImg,f.sx,f.sy,f.fw,f.fh,-f.fw/2,-f.fh/2,f.fw,f.fh);
-      lctx.restore();
-    });
-
-    if(progress<1)requestAnimationFrame(draw);
-    else{
-      lctx.clearRect(0,0,W,H);
-      lctx.drawImage(logoImg,0,0);
-    }
-  }
-  requestAnimationFrame(draw);
-};
-
-if(logoImg.complete)logoImg.onload();
-const canvas=document.getElementById('heroCanvas');
-const ctx=canvas.getContext('2d');
+// PARTICLES
+const heroCanvas=document.getElementById('heroCanvas');
+const ctx=heroCanvas.getContext('2d');
 let particles=[];
-function resizeCanvas(){
-  canvas.width=canvas.parentElement.offsetWidth;
-  canvas.height=canvas.parentElement.offsetHeight;
-}
+function resizeCanvas(){heroCanvas.width=heroCanvas.parentElement.offsetWidth;heroCanvas.height=heroCanvas.parentElement.offsetHeight;}
 resizeCanvas();
 window.addEventListener('resize',resizeCanvas);
 class Particle{
-  constructor(){this.reset();}
-  reset(){
-    this.x=Math.random()*canvas.width;
-    this.y=canvas.height+Math.random()*100;
+  constructor(){this.reset(true);}
+  reset(init){
+    this.x=Math.random()*heroCanvas.width;
+    this.y=init?Math.random()*heroCanvas.height:heroCanvas.height+10;
     this.size=Math.random()*1.5+.2;
     this.speedY=-(Math.random()*.4+.1);
     this.speedX=(Math.random()-.5)*.2;
     this.opacity=Math.random()*.4+.1;
-    this.life=0;
+    this.life=init?Math.floor(Math.random()*300):0;
     this.maxLife=Math.random()*300+200;
   }
-  update(){
-    this.x+=this.speedX;this.y+=this.speedY;this.life++;
-    if(this.life>this.maxLife||this.y<-10)this.reset();
-  }
-  draw(){
-    ctx.beginPath();
-    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-    ctx.fillStyle=`rgba(57,255,20,${this.opacity*(1-this.life/this.maxLife)})`;
-    ctx.fill();
-  }
+  update(){this.x+=this.speedX;this.y+=this.speedY;this.life++;if(this.life>this.maxLife||this.y<-10)this.reset(false);}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=`rgba(57,255,20,${this.opacity*(1-this.life/this.maxLife)})`;ctx.fill();}
 }
-for(let i=0;i<80;i++){const p=new Particle();p.x=Math.random()*canvas.width;p.y=Math.random()*canvas.height;p.life=Math.floor(Math.random()*p.maxLife);particles.push(p);}
-function animParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particles.forEach(p=>{p.update();p.draw();});
-  requestAnimationFrame(animParticles);
-}
+for(let i=0;i<80;i++)particles.push(new Particle());
+function animParticles(){ctx.clearRect(0,0,heroCanvas.width,heroCanvas.height);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animParticles);}
 animParticles();
 
-// SCROLL FADE IN
-const observer=new IntersectionObserver(entries=>{
-  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
-},{threshold:.15});
+// LOGO SHATTER
+const logoImg=document.getElementById('logoImg');
+const logoCanvas=document.getElementById('logoCanvas');
+function initLogo(){
+  const W=logoImg.naturalWidth,H=logoImg.naturalHeight;
+  if(!W||!H){setTimeout(initLogo,100);return;}
+  logoCanvas.width=W;logoCanvas.height=H;
+  const lctx=logoCanvas.getContext('2d');
+  const COLS=8,ROWS=5,fw=W/COLS,fh=H/ROWS;
+  const frags=[];
+  for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+    const angle=(Math.random()-.5)*Math.PI*3,dist=300+Math.random()*400;
+    frags.push({sx:c*fw,sy:r*fh,fw,fh,tx:c*fw,ty:r*fh,x:c*fw+Math.cos(angle)*dist,y:r*fh+Math.sin(angle)*dist,rot:(Math.random()-.5)*Math.PI*2});
+  }
+  const START=performance.now()+300,DUR=1400;
+  function easeOutBack(t){const c1=1.5,c3=c1+1;return 1+c3*Math.pow(t-1,3)+c1*Math.pow(t-1,2);}
+  function draw(now){
+    lctx.clearRect(0,0,W,H);
+    const e=easeOutBack(Math.min(1,Math.max(0,(now-START)/DUR)));
+    const alpha=Math.min(1,Math.max(0,(now-START)/(DUR*0.3)));
+    frags.forEach(f=>{
+      lctx.save();
+      lctx.globalAlpha=alpha;
+      lctx.translate(f.x+(f.tx-f.x)*e+f.fw/2,f.y+(f.ty-f.y)*e+f.fh/2);
+      lctx.rotate(f.rot*(1-e));
+      lctx.drawImage(logoImg,f.sx,f.sy,f.fw,f.fh,-f.fw/2,-f.fh/2,f.fw,f.fh);
+      lctx.restore();
+    });
+    if((now-START)/DUR<1)requestAnimationFrame(draw);
+    else{lctx.clearRect(0,0,W,H);lctx.drawImage(logoImg,0,0);}
+  }
+  requestAnimationFrame(draw);
+}
+logoImg.complete?initLogo():logoImg.onload=initLogo;
+
+// SCROLL FADE
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.15});
 document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
 
-// COUNTDOWN TIMERS
+// COUNTDOWNS
 function updateCountdowns(){
   const shows=[
     {id:'countdown1',showId:'show1',date:new Date('2026-05-01T20:00:00')},
@@ -429,29 +333,35 @@ function updateCountdowns(){
     const el=document.getElementById(s.id);
     const showEl=document.getElementById(s.showId)||el?.closest('.show');
     if(!el)return;
-    const now=new Date();
-    const diff=s.date-now;
-    if(diff<=0){
-      if(showEl)showEl.style.display='none';
-      return;
-    }
-    const d=Math.floor(diff/86400000);
-    const h=Math.floor((diff%86400000)/3600000);
-    const m=Math.floor((diff%3600000)/60000);
-    const sec=Math.floor((diff%60000)/1000);
+    const diff=s.date-new Date();
+    if(diff<=0){if(showEl)showEl.style.display='none';return;}
+    const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),sec=Math.floor((diff%60000)/1000);
     el.innerHTML=`<span>${d}</span>d <span>${h}</span>h <span>${m}</span>m <span>${sec}</span>s`;
   });
 }
 updateCountdowns();
 setInterval(updateCountdowns,1000);
 
-// EMAIL SUBMIT
+// EMAIL
 function submitEmail(){
   const v=document.getElementById('emailInput').value;
   if(!v||!v.includes('@'))return;
   document.getElementById('ritualOverlay').classList.add('active');
   document.getElementById('emailInput').value='';
 }
+
+// STATS
+async function loadStats(){
+  try{
+    const r=await fetch(`${PROXY}/api/snapshot`);
+    const data=await r.json();
+    const s=data.latest||{};
+    const ids={sc_followers:'sc-followers',sc_plays:'sc-plays',sc_reposts:'sc-reposts',sc_downloads:'sc-downloads',sc_eng:'sc-eng',sc_tracks:'sc-tracks',spotify_followers:'sp-followers',spotify_monthly_listeners:'sp-listeners',tiktok_followers:'tt-followers',ig_followers:'ig-followers'};
+    Object.entries(ids).forEach(([k,id])=>{const el=document.getElementById(id);if(el&&s[k])el.textContent=typeof s[k]==='number'&&k.includes('eng')?s[k].toFixed(1)+'%':fmt(s[k]);});
+  }catch(e){}
+}
+function fmt(n){if(!n&&n!==0)return'—';n=parseInt(n);if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString();}
+loadStats();
 </script>
 </body>
 </html>

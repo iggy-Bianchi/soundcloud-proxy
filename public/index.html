@@ -792,9 +792,13 @@ async function loadSCPlayers(){
         });
       }
 
-      // Click handlers using addEventListener (works on mobile)
-      player.querySelector('.sc-player-art').addEventListener('click',()=>toggleSCPlay(idx));
-      player.querySelector('.sc-player-art').addEventListener('touchend',(e)=>{e.preventDefault();toggleSCPlay(idx);});
+      // Click handlers (click works on both desktop and mobile)
+      const artEl=player.querySelector('.sc-player-art');
+      let touchMoved=false;
+      artEl.addEventListener('touchstart',()=>{touchMoved=false;},{passive:true});
+      artEl.addEventListener('touchmove',()=>{touchMoved=true;},{passive:true});
+      artEl.addEventListener('touchend',(e)=>{if(!touchMoved){e.preventDefault();toggleSCPlay(idx);}});
+      artEl.addEventListener('click',(e)=>{if(!('ontouchend' in window))toggleSCPlay(idx);});
       player.querySelector('.sc-progress-wrap').addEventListener('click',(e)=>seekSC(e,idx));
     });
 

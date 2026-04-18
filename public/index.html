@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>DOOMSAYER</title>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z47PSEW4LB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Z47PSEW4LB');</script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -792,13 +794,16 @@ async function loadSCPlayers(){
         });
       }
 
-      // Click handlers (click works on both desktop and mobile)
+      // Click handler - single unified approach with debounce
       const artEl=player.querySelector('.sc-player-art');
-      let touchMoved=false;
-      artEl.addEventListener('touchstart',()=>{touchMoved=false;},{passive:true});
-      artEl.addEventListener('touchmove',()=>{touchMoved=true;},{passive:true});
-      artEl.addEventListener('touchend',(e)=>{if(!touchMoved){e.preventDefault();toggleSCPlay(idx);}});
-      artEl.addEventListener('click',(e)=>{if(!('ontouchend' in window))toggleSCPlay(idx);});
+      let lastTap=0;
+      artEl.addEventListener('click',(e)=>{
+        const now=Date.now();
+        if(now-lastTap<300)return;
+        lastTap=now;
+        e.preventDefault();
+        toggleSCPlay(idx);
+      });
       player.querySelector('.sc-progress-wrap').addEventListener('click',(e)=>seekSC(e,idx));
     });
 

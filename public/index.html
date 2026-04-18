@@ -72,10 +72,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .sc-players{display:flex;flex-direction:column;gap:12px}
 .sc-player{display:flex;align-items:center;gap:16px;background:var(--charcoal);border:0.5px solid #1a1a1a;padding:12px;transition:border-color .3s}
 .sc-player:hover{border-color:#222}
-.sc-player-art{width:80px;height:80px;flex-shrink:0;position:relative;cursor:pointer}
+.sc-player-art{width:80px;height:80px;flex-shrink:0;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .sc-player-art img{width:100%;height:100%;object-fit:cover}
 .sc-player-art-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
 .sc-player:hover .sc-player-art-overlay,.sc-player.playing .sc-player-art-overlay{opacity:1}
+@media(hover:none){.sc-player-art-overlay{opacity:.6}}
 .sc-play-icon{width:0;height:0;border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent var(--acid);margin-left:3px}
 .sc-pause-icon{width:16px;height:20px;border-left:4px solid var(--acid);border-right:4px solid var(--acid)}
 .sc-player-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
@@ -86,7 +87,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .sc-player-stats{display:flex;gap:12px;flex-shrink:0}
 .sc-player-stat{font-family:'Courier New',monospace;font-size:10px;color:#444;letter-spacing:.1em;text-transform:uppercase}
 .sc-player-stat span{color:#666}
-.sc-progress-wrap{width:100%;height:24px;position:relative;cursor:pointer}
+.sc-progress-wrap{width:100%;height:24px;position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .sc-waveform{width:100%;height:24px;position:relative;overflow:hidden}
 .sc-waveform-bg{width:100%;height:100%;filter:brightness(0.3) saturate(0)}
 .sc-waveform-fill{position:absolute;top:0;left:0;height:100%;overflow:hidden;width:0%}
@@ -95,7 +96,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .sc-player-time{font-family:'Courier New',monospace;font-size:10px;color:#333;letter-spacing:.1em}
 .sc-player-link{font-family:'Courier New',monospace;font-size:9px;color:#333;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s}
 .sc-player-link:hover{color:var(--acid)}
-@media(max-width:768px){.sc-player{flex-direction:column;align-items:stretch}.sc-player-art{width:100%;height:200px}.sc-player-top{flex-direction:column;align-items:flex-start;gap:4px}}
+@media(max-width:768px){.sc-player{flex-direction:column;align-items:stretch}.sc-player-art{width:100%;height:auto;aspect-ratio:1}.sc-player-art img{width:100%;height:100%;object-fit:contain;background:#0a0a0a}.sc-player-top{flex-direction:column;align-items:flex-start;gap:4px}.sc-progress-wrap{height:32px}.sc-waveform{height:32px}}
 .merch-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
 .merch-header-text .merch-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em}
 .merch-header-text .merch-sub{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#555;text-transform:uppercase;margin-top:6px}
@@ -153,7 +154,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 @keyframes rotateSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
 @keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
-@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit,.merch-buy,.merch-color,.merch-img-dot,.past-toggle{cursor:pointer}}
+@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit,.merch-buy,.merch-color,.merch-img-dot,.past-toggle,.sc-player-art,.sc-progress-wrap,.sc-player-link{cursor:pointer}}
 @media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{padding:2rem 1.5rem 4rem}.section{padding:4rem 1.5rem}.bio-grid{grid-template-columns:1fr}.list-form{flex-direction:column}.list-submit{border-left:0.5px solid var(--toxic);border-top:none}.epk-bar{padding:1.5rem}footer{padding:2rem 1.5rem}.merch-grid{grid-template-columns:1fr}}
 </style>
 </head>

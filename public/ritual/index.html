@@ -1,52 +1,411 @@
-import { Redis } from '@upstash/redis';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>THE RITUAL — DOOMSAYER</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#000;--charcoal:#111;--toxic:#1A7A1A;--acid:#39FF14;--bone:#E8E8E8;--muted:#444}
+body{font-family:'Arial',sans-serif;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;display:flex;flex-direction:column;align-items:center}
+a{color:var(--acid);text-decoration:none;font-family:'Courier New',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase}
+a:hover{color:var(--bone)}
 
-function getWeekKey() {
-  const now = new Date();
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - ((now.getDay() + 6) % 7));
-  monday.setHours(0, 0, 0, 0);
-  return `ritual:week:${monday.getFullYear()}-${monday.getMonth()+1}-${monday.getDate()}`;
+/* NAV */
+nav{width:100%;padding:1.5rem 3rem;display:flex;align-items:center;justify-content:space-between;border-bottom:0.5px solid #111}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.15em;color:var(--bone)}
+.nav-back{font-size:11px;letter-spacing:.2em;color:#444;text-transform:uppercase;font-family:'Courier New',monospace}
+.nav-back:hover{color:var(--acid)}
+
+/* HERO */
+.page-header{text-align:center;padding:3rem 2rem 2rem;max-width:600px}
+.page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,10vw,6rem);letter-spacing:.1em;color:var(--bone);line-height:1}
+.page-sub{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.3em;color:var(--toxic);text-transform:uppercase;margin-top:.5rem}
+.prize-banner{background:#0a1a0a;border:0.5px solid var(--toxic);padding:12px 24px;margin-top:1.5rem;text-align:center}
+.prize-banner p{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.2em;color:var(--acid);text-transform:uppercase}
+.prize-banner span{color:var(--bone)}
+
+/* GAME */
+.game-wrap{width:100%;max-width:500px;padding:2rem;display:flex;flex-direction:column;align-items:center;gap:1.5rem}
+.game-status{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.3em;color:#444;text-transform:uppercase;text-align:center;min-height:20px}
+.game-status.active{color:var(--acid)}
+.score-row{display:flex;gap:3rem;justify-content:center}
+.score-block{text-align:center}
+.score-label{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#333;text-transform:uppercase;margin-bottom:4px}
+.score-val{font-family:'Bebas Neue',sans-serif;font-size:2.5rem;color:var(--bone)}
+
+/* SIGIL GAME BOARD */
+.sigil-board{position:relative;width:280px;height:280px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:6px}
+.sigil-sector{background:#0d2e0d;border:0.5px solid #1A7A1A;cursor:pointer;transition:background .1s,box-shadow .1s;border-radius:4px;display:flex;align-items:center;justify-content:center}
+.sigil-sector:active{background:#1a4a1a}
+.sigil-sector.lit{background:var(--acid);box-shadow:0 0 20px rgba(57,255,20,0.4)}
+.sigil-sector.player-lit{background:#39ff1488;box-shadow:0 0 15px rgba(57,255,20,0.3)}
+#sector-top{grid-column:1;grid-row:1;border-radius:4px 0 0 0}
+#sector-right{grid-column:2;grid-row:1;border-radius:0 4px 0 0}
+#sector-bottom{grid-column:1;grid-row:2;border-radius:0 0 0 4px}
+#sector-left{grid-column:2;grid-row:2;border-radius:0 0 4px 0}
+.center-sigil{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:2;background:var(--black);border-radius:50%;padding:4px}
+.center-sigil svg{display:block}
+
+/* BUTTONS */
+.btn{padding:12px 28px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;border:0.5px solid #333;color:var(--bone);font-family:'Courier New',monospace;cursor:pointer;background:transparent;transition:all .3s}
+.btn:hover{border-color:var(--acid);color:var(--acid)}
+.btn.primary{border-color:var(--toxic);color:var(--acid);background:rgba(26,122,26,.1)}
+.btn.primary:hover{background:rgba(57,255,20,.1)}
+.btn:disabled{opacity:.3;cursor:not-allowed}
+
+/* GAME OVER */
+.game-over{display:none;flex-direction:column;align-items:center;gap:1rem;text-align:center;padding:2rem;background:var(--charcoal);border:0.5px solid #222;width:100%;max-width:400px}
+.game-over.visible{display:flex}
+.go-title{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:.1em}
+.go-score{font-family:'Courier New',monospace;font-size:12px;letter-spacing:.2em;color:var(--acid)}
+.name-input{width:100%;padding:12px 16px;background:#000;border:0.5px solid #333;color:var(--bone);font-size:14px;font-family:'Courier New',monospace;letter-spacing:.1em;outline:none;text-align:center;text-transform:uppercase}
+.name-input:focus{border-color:var(--toxic)}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+
+/* LEADERBOARD */
+.leaderboard{width:100%;max-width:500px;padding:0 2rem 4rem}
+.lb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.lb-title{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.3em;color:var(--toxic);text-transform:uppercase}
+.lb-reset{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.1em;color:#333}
+.lb-row{display:flex;align-items:center;gap:1rem;padding:12px 0;border-bottom:0.5px solid #111}
+.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:#333;min-width:30px}
+.lb-rank.gold{color:var(--acid)}
+.lb-name{flex:1;font-family:'Courier New',monospace;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.lb-name.gold{color:var(--acid)}
+.lb-score{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;color:var(--bone)}
+.lb-badge{font-family:'Courier New',monospace;font-size:9px;letter-spacing:.1em;padding:2px 8px;border:0.5px solid var(--toxic);color:var(--acid);text-transform:uppercase;white-space:nowrap}
+.lb-empty{font-family:'Courier New',monospace;font-size:11px;color:#333;letter-spacing:.1em;text-align:center;padding:2rem 0}
+.lb-loading{font-family:'Courier New',monospace;font-size:11px;color:#333;letter-spacing:.2em;text-align:center;padding:2rem 0;text-transform:uppercase}
+
+/* SHARE CARD */
+.share-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;padding:2rem}
+.share-modal.visible{display:flex}
+#shareCardCanvas{border:0.5px solid #1A7A1A;max-width:320px;width:100%}
+.share-label{font-family:'Courier New',monospace;font-size:11px;letter-spacing:.3em;color:var(--toxic);text-transform:uppercase}
+.share-sub{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.15em;color:#444;text-transform:uppercase;text-align:center;max-width:300px}padding:2rem 3rem;border-top:0.5px solid #111;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+.footer-copy{font-family:'Courier New',monospace;font-size:10px;color:#222;letter-spacing:.1em}
+
+@media(max-width:500px){nav{padding:1rem 1.5rem}.sigil-board{width:240px;height:240px}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="/">DOOMSAYER</a>
+  <a class="nav-back" href="/">&#9664; Back</a>
+</nav>
+
+<div class="page-header">
+  <div class="page-title">THE RITUAL</div>
+  <div class="page-sub">Repeat the sequence. Survive the summoning.</div>
+  <div class="prize-banner">
+    <p>&#9632; Weekly top congregation member wins <span>guest list to a show</span> &#9632;</p>
+  </div>
+</div>
+
+<div class="game-wrap">
+  <div class="score-row">
+    <div class="score-block">
+      <div class="score-label">Round</div>
+      <div class="score-val" id="roundDisplay">0</div>
+    </div>
+    <div class="score-block">
+      <div class="score-label">Best</div>
+      <div class="score-val" id="bestDisplay">0</div>
+    </div>
+  </div>
+
+  <div class="game-status" id="gameStatus">Press start to begin the ritual</div>
+
+  <div class="sigil-board" id="sigilBoard">
+    <div class="sigil-sector" id="sector-top"><span style="font-family:'Courier New',monospace;font-size:10px;color:rgba(57,255,20,0.3);letter-spacing:.1em">I</span></div>
+    <div class="sigil-sector" id="sector-right"><span style="font-family:'Courier New',monospace;font-size:10px;color:rgba(57,255,20,0.3);letter-spacing:.1em">II</span></div>
+    <div class="sigil-sector" id="sector-bottom"><span style="font-family:'Courier New',monospace;font-size:10px;color:rgba(57,255,20,0.3);letter-spacing:.1em">III</span></div>
+    <div class="sigil-sector" id="sector-left"><span style="font-family:'Courier New',monospace;font-size:10px;color:rgba(57,255,20,0.3);letter-spacing:.1em">IV</span></div>
+    <div class="center-sigil">
+      <svg width="60" height="60" viewBox="0 0 60 60">
+        <rect x="15" y="15" width="30" height="30" fill="none" stroke="#1A7A1A" stroke-width="0.5" transform="rotate(45 30 30)"/>
+        <circle cx="30" cy="30" r="4" fill="#39FF14" opacity="0.6"/>
+      </svg>
+    </div>
+  </div>
+
+  <button class="btn primary" id="startBtn" onclick="startGame()">Begin the Ritual</button>
+</div>
+
+<div class="game-over" id="gameOver">
+  <div class="go-title">CONSUMED</div>
+  <div class="go-score" id="goScore">You survived <span id="goRound">0</span> rounds</div>
+  <input class="name-input" id="nameInput" type="text" placeholder="Enter your name" maxlength="20" />
+  <div class="btn-row">
+    <button class="btn primary" onclick="submitScore()">Submit Score</button>
+    <button class="btn" onclick="shareScore()">Share</button>
+    <button class="btn" onclick="restartGame()">Try Again</button>
+  </div>
+</div>
+
+<div class="leaderboard">
+  <div class="lb-header">
+    <div class="lb-title">&#9632; Weekly congregation</div>
+    <div class="lb-reset" id="resetTimer"></div>
+  </div>
+  <div id="lbList"><div class="lb-loading">Loading...</div></div>
+</div>
+
+<div class="share-modal" id="shareModal">
+  <div class="share-label">Your score card</div>
+  <canvas id="shareCardCanvas" width="1080" height="1920"></canvas>
+  <div class="share-sub">Save image and post to your IG story or tweet it</div>
+  <div class="btn-row">
+    <button class="btn primary" onclick="downloadCard()">Save Image</button>
+    <button class="btn" onclick="tweetScore()">Tweet</button>
+    <button class="btn" onclick="closeShare()">Close</button>
+  </div>
+</div>
+
+<footer>
+  <a href="/">DOOMSAYER</a>
+  <div class="footer-copy">&#9632; The ritual continues.</div>
+</footer>
+
+<script>
+const PROXY='https://soundcloud-proxy-xi.vercel.app';
+const SECTORS=['top','right','bottom','left'];
+let sequence=[],playerSeq=[],round=0,bestRound=0,playing=false,accepting=false,speed=600,lastScore=0;
+
+function getEl(id){return document.getElementById(id);}
+
+function lightSector(id,duration){
+  const el=getEl('sector-'+id);
+  el.classList.add('lit');
+  setTimeout(()=>el.classList.remove('lit'),duration);
 }
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  const redis = Redis.fromEnv();
-  const key = getWeekKey();
-
-  if (req.method === 'GET') {
-    try {
-      const scores = await redis.get(key) || [];
-      return res.status(200).json({ scores: scores.slice(0, 10) });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
-    }
-  }
-
-  if (req.method === 'POST') {
-    try {
-      let body = req.body;
-      if (typeof body === 'string') {
-        try { body = JSON.parse(body); } catch(e) { body = {}; }
-      }
-      const { name, score, ts } = body || {};
-      if (!name || !score) return res.status(400).json({ error: 'Missing name or score' });
-      const scores = await redis.get(key) || [];
-      scores.push({ name: String(name).substring(0, 20).toUpperCase(), score: parseInt(score), ts: ts || Date.now() });
-      scores.sort((a, b) => b.score - a.score);
-      const top25 = scores.slice(0, 25);
-      await redis.set(key, top25, { ex: 60 * 60 * 24 * 14 });
-      return res.status(200).json({ ok: true, scores: top25.slice(0, 10) });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
-    }
-  }
-
-  return res.status(405).json({ error: 'Method not allowed' });
+function flashSector(id){
+  const el=getEl('sector-'+id);
+  el.classList.add('player-lit');
+  setTimeout(()=>el.classList.remove('player-lit'),200);
 }
+
+async function playSequence(){
+  accepting=false;
+  getEl('gameStatus').textContent='Watch the sequence...';
+  getEl('gameStatus').className='game-status active';
+  await delay(500);
+  for(let i=0;i<sequence.length;i++){
+    lightSector(sequence[i],speed*0.6);
+    await delay(speed);
+  }
+  accepting=true;
+  getEl('gameStatus').textContent='Your turn. Repeat the sequence.';
+}
+
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function startGame(){
+  sequence=[];playerSeq=[];round=0;playing=true;
+  getEl('gameOver').classList.remove('visible');
+  getEl('startBtn').style.display='none';
+  getEl('sigilBoard').style.pointerEvents='all';
+  nextRound();
+}
+
+async function nextRound(){
+  round++;
+  speed=Math.max(250,600-round*20);
+  getEl('roundDisplay').textContent=round;
+  playerSeq=[];
+  sequence.push(SECTORS[Math.floor(Math.random()*4)]);
+  await playSequence();
+}
+
+SECTORS.forEach(s=>{
+  getEl('sector-'+s).addEventListener('click',()=>{
+    if(!accepting)return;
+    flashSector(s);
+    playerSeq.push(s);
+    const idx=playerSeq.length-1;
+    if(playerSeq[idx]!==sequence[idx]){
+      gameOver();return;
+    }
+    if(playerSeq.length===sequence.length){
+      accepting=false;
+      getEl('gameStatus').textContent='Sequence complete.';
+      if(round>bestRound){bestRound=round;getEl('bestDisplay').textContent=bestRound;}
+      setTimeout(nextRound,800);
+    }
+  });
+});
+
+function gameOver(){
+  accepting=false;playing=false;lastScore=round;
+  getEl('sigilBoard').style.pointerEvents='none';
+  getEl('gameStatus').textContent='The ritual has consumed you.';
+  getEl('gameStatus').className='game-status';
+  getEl('goRound').textContent=round;
+  setTimeout(()=>{getEl('gameOver').classList.add('visible');},600);
+}
+
+function restartGame(){
+  getEl('gameOver').classList.remove('visible');
+  getEl('startBtn').style.display='block';
+  getEl('roundDisplay').textContent='0';
+  getEl('gameStatus').textContent='Press start to begin the ritual';
+  getEl('gameStatus').className='game-status';
+}
+
+async function submitScore(){
+  const name=getEl('nameInput').value.trim().toUpperCase()||'ANONYMOUS';
+  if(lastScore===0)return;
+  try{
+    await fetch(`${PROXY}/api/ritual`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({name,score:lastScore,ts:Date.now()})
+    });
+    loadLeaderboard();
+    getEl('gameOver').classList.remove('visible');
+    getEl('startBtn').style.display='block';
+    getEl('nameInput').value='';
+  }catch(e){console.log(e);}
+}
+
+function shareScore(){
+  const canvas=document.getElementById('shareCardCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=1080,H=1920;
+
+  // Background
+  ctx.fillStyle='#000000';
+  ctx.fillRect(0,0,W,H);
+
+  // Grid lines subtle
+  ctx.strokeStyle='rgba(26,122,26,0.08)';
+  ctx.lineWidth=1;
+  for(let x=0;x<W;x+=60){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=60){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+
+  // Top acid green line
+  ctx.fillStyle='#39FF14';
+  ctx.fillRect(0,0,W,3);
+  ctx.fillRect(0,H-3,W,3);
+
+  // DOOMSAYER wordmark area
+  ctx.fillStyle='rgba(26,122,26,0.15)';
+  ctx.fillRect(80,160,W-160,4);
+
+  // "THE RITUAL" label
+  ctx.fillStyle='#1A7A1A';
+  ctx.font='400 42px Courier New';
+  ctx.letterSpacing='12px';
+  ctx.textAlign='center';
+  ctx.fillText('THE RITUAL', W/2, 200);
+
+  // DOOMSAYER big text
+  ctx.fillStyle='#E8E8E8';
+  ctx.font='900 180px Arial Black';
+  ctx.textAlign='center';
+  ctx.fillText('DOOM', W/2, 480);
+  ctx.fillText('SAYER', W/2, 650);
+
+  // Divider
+  ctx.fillStyle='#39FF14';
+  ctx.fillRect(W/2-100,700,200,2);
+
+  // Score number
+  ctx.fillStyle='#39FF14';
+  ctx.font='900 320px Arial Black';
+  ctx.textAlign='center';
+  ctx.fillText(lastScore, W/2, 1100);
+
+  // "ROUNDS SURVIVED" label
+  ctx.fillStyle='#1A7A1A';
+  ctx.font='400 44px Courier New';
+  ctx.textAlign='center';
+  ctx.fillText('ROUNDS SURVIVED', W/2, 1180);
+
+  // Sigil decoration
+  ctx.strokeStyle='rgba(57,255,20,0.2)';
+  ctx.lineWidth=1;
+  ctx.beginPath();ctx.arc(W/2,1380,120,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.arc(W/2,1380,80,0,Math.PI*2);ctx.stroke();
+  const s=60;
+  ctx.beginPath();
+  ctx.moveTo(W/2,1380-s);ctx.lineTo(W/2+s,1380);
+  ctx.lineTo(W/2,1380+s);ctx.lineTo(W/2-s,1380);
+  ctx.closePath();ctx.stroke();
+
+  // "Can you survive longer?"
+  ctx.fillStyle='#444';
+  ctx.font='400 36px Courier New';
+  ctx.textAlign='center';
+  ctx.fillText('Can you survive longer?', W/2, 1580);
+
+  // URL
+  ctx.fillStyle='#39FF14';
+  ctx.font='400 40px Courier New';
+  ctx.textAlign='center';
+  ctx.fillText('iamdoomsayer.com/ritual', W/2, 1720);
+
+  // Bottom line
+  ctx.fillStyle='rgba(26,122,26,0.3)';
+  ctx.fillRect(80,1760,W-160,1);
+
+  document.getElementById('shareModal').classList.add('visible');
+}
+
+function downloadCard(){
+  const canvas=document.getElementById('shareCardCanvas');
+  const link=document.createElement('a');
+  link.download='doomsayer-ritual-score.png';
+  link.href=canvas.toDataURL('image/png');
+  link.click();
+}
+
+function tweetScore(){
+  const text=`I survived ${lastScore} rounds of THE RITUAL on @iamdoomsayer's site. Can you beat me? iamdoomsayer.com/ritual`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,'_blank');
+}
+
+function closeShare(){
+  document.getElementById('shareModal').classList.remove('visible');
+}
+
+async function loadLeaderboard(){
+  try{
+    const r=await fetch(`${PROXY}/api/ritual`);
+    const data=await r.json();
+    if(!data.scores||!data.scores.length){
+      getEl('lbList').innerHTML='<div class="lb-empty">No congregation members yet. Be the first.</div>';
+      return;
+    }
+    getEl('lbList').innerHTML=data.scores.map((s,i)=>`
+      <div class="lb-row">
+        <div class="lb-rank ${i===0?'gold':''}">${i+1}</div>
+        <div class="lb-name ${i===0?'gold':''}">${s.name}${i===0?' <span class="lb-badge">Guest List</span>':''}</div>
+        <div class="lb-score">${s.score}</div>
+      </div>`).join('');
+  }catch(e){
+    getEl('lbList').innerHTML='<div class="lb-empty">Could not load leaderboard.</div>';
+  }
+}
+
+function updateResetTimer(){
+  const now=new Date();
+  const nextMonday=new Date(now);
+  nextMonday.setDate(now.getDate()+(8-now.getDay())%7||7);
+  nextMonday.setHours(0,0,0,0);
+  const diff=nextMonday-now;
+  const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000);
+  getEl('resetTimer').textContent=`Resets in ${d}d ${h}h ${m}m`;
+}
+
+loadLeaderboard();
+updateResetTimer();
+setInterval(updateResetTimer,60000);
+getEl('sigilBoard').style.pointerEvents='none';
+</script>
+</body>
+</html>

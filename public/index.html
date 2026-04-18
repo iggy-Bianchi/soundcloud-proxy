@@ -52,6 +52,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .show-countdown span{color:var(--acid)}
 .show-btn{padding:8px 20px;font-size:10px;letter-spacing:.15em;text-transform:uppercase;border:0.5px solid #333;color:#666;text-decoration:none;white-space:nowrap;font-family:'Courier New',monospace;transition:all .3s;cursor:none}
 .show-btn:hover{border-color:var(--toxic);color:var(--acid)}
+.past-toggle{width:100%;padding:1rem;background:transparent;border:0.5px solid #1a1a1a;color:#555;font-family:'Courier New',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.past-toggle:hover{border-color:var(--toxic);color:var(--acid)}
+.past-toggle.open{border-color:var(--toxic);color:var(--acid)}
+.show.past-show{opacity:.5;transition:opacity .3s}
+.show.past-show:hover{opacity:.8}
+.show.past-show .show-date{color:#555}
+.show.past-show .show-btn{display:none}
+.no-upcoming{font-family:'Courier New',monospace;font-size:11px;color:#333;letter-spacing:.15em;text-transform:uppercase;padding:1.5rem 0}
 .bio-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:4rem;align-items:start}
 .bio-text{font-size:16px;line-height:1.9;color:#888}
 .bio-text p{margin-bottom:1.5rem}
@@ -119,7 +127,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 @keyframes rotateSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes glitch1{0%,89%,91%,100%{opacity:0;transform:translate(0)}90%{opacity:.8;transform:translate(-3px,1px)}}
 @keyframes glitch2{0%,93%,95%,100%{opacity:0;transform:translate(0)}94%{opacity:.7;transform:translate(3px,-1px)}}
-@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit,.merch-buy,.merch-color,.merch-img-dot{cursor:pointer}}
+@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.btn,.show-btn,.list-submit,.merch-buy,.merch-color,.merch-img-dot,.past-toggle{cursor:pointer}}
 @media(max-width:768px){nav{padding:1rem 1.5rem}.nav-links{display:none}.hero{padding:2rem 1.5rem 4rem}.section{padding:4rem 1.5rem}.bio-grid{grid-template-columns:1fr}.list-form{flex-direction:column}.list-submit{border-left:0.5px solid var(--toxic);border-top:none}.epk-bar{padding:1.5rem}footer{padding:2rem 1.5rem}.merch-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -156,8 +164,9 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
     </div>
     <div class="hero-sub">Some frequencies cannot be unheard.</div>
     <div class="hero-cta">
-      <a class="btn primary" href="#list">Join the Ritual</a>
+      <a class="btn primary" href="#list">Join the Congregation</a>
       <a class="btn" href="#shows">Upcoming Shows</a>
+      <a class="btn" href="/ritual" style="border-color:var(--toxic);color:var(--acid)">The Ritual</a>
       <a class="btn" href="/epk">Press Kit</a>
     </div>
   </div>
@@ -167,25 +176,29 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 <div style="background:var(--charcoal);border-top:0.5px solid #111;border-bottom:0.5px solid #111">
 <div class="section fade-in" id="shows">
   <div class="section-label">Upcoming</div>
-  <div>
-    <div class="show">
+  <div id="upcomingShows">
+    <div class="show" data-show-date="2026-05-01T20:00:00">
       <div class="show-date">01 May 2026</div>
       <div class="show-info">
         <div class="show-venue">Scruffy City Hall</div>
         <div class="show-location">Knoxville, TN &#9632; Emo Night</div>
-        <div class="show-countdown" id="countdown1"></div>
+        <div class="show-countdown"></div>
       </div>
       <a class="show-btn" href="#list">Info</a>
     </div>
-    <div class="show" id="show2">
+    <div class="show" data-show-date="2026-06-27T20:00:00">
       <div class="show-date">27 Jun 2026</div>
       <div class="show-info">
         <div class="show-venue">Area 15</div>
         <div class="show-location">Las Vegas, NV</div>
-        <div class="show-countdown" id="countdown2"></div>
+        <div class="show-countdown"></div>
       </div>
       <a class="show-btn" href="#list">Info</a>
     </div>
+  </div>
+  <div id="pastEventsWrap" style="display:none;margin-top:2rem">
+    <button id="pastToggle" class="past-toggle">&#9660; &nbsp; Show Past Events (<span id="pastCount">0</span>)</button>
+    <div id="pastShows" style="display:none"></div>
   </div>
 </div>
 </div>
@@ -241,7 +254,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 
 <div style="background:var(--charcoal);border-top:0.5px solid #111;border-bottom:0.5px solid #111;padding:4rem 3rem" id="list">
   <div class="list-wrap fade-in">
-    <div class="list-title">Join the Ritual</div>
+    <div class="list-title">Join the Congregation</div>
     <div class="list-sub">New material. Show dates. Nothing else.</div>
     <div class="list-form">
       <input class="list-input" type="email" id="emailInput" placeholder="your@email.com" />
@@ -379,18 +392,74 @@ logoImg.complete?initLogo():logoImg.onload=initLogo;
 const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});},{threshold:.15});
 document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
 
+// SHOWS - SORT UPCOMING VS PAST
+function sortShows(){
+  const upcoming=document.getElementById('upcomingShows');
+  const pastWrap=document.getElementById('pastEventsWrap');
+  const pastContainer=document.getElementById('pastShows');
+  const pastCount=document.getElementById('pastCount');
+  const allShows=[...upcoming.querySelectorAll('.show'),...pastContainer.querySelectorAll('.show')];
+  const now=new Date();
+  const upcomingList=[];
+  const pastList=[];
+
+  allShows.forEach(show=>{
+    const dateStr=show.dataset.showDate;
+    if(!dateStr)return;
+    const showDate=new Date(dateStr);
+    // Show stays upcoming until midnight the next day
+    const nextDay=new Date(showDate);
+    nextDay.setDate(nextDay.getDate()+1);
+    nextDay.setHours(23,59,59,999);
+    if(now<=nextDay){upcomingList.push({el:show,date:showDate});}
+    else{pastList.push({el:show,date:showDate});}
+  });
+
+  // Sort upcoming by date ascending
+  upcomingList.sort((a,b)=>a.date-b.date);
+  // Sort past by date descending (most recent first)
+  pastList.sort((a,b)=>b.date-a.date);
+
+  // Clear and re-append
+  upcoming.innerHTML='';
+  if(upcomingList.length){
+    upcomingList.forEach(s=>{s.el.classList.remove('past-show');upcoming.appendChild(s.el);});
+  }else{
+    upcoming.innerHTML='<div class="no-upcoming">No upcoming shows. Check back soon.</div>';
+  }
+
+  pastContainer.innerHTML='';
+  if(pastList.length){
+    pastWrap.style.display='block';
+    pastCount.textContent=pastList.length;
+    pastList.forEach(s=>{s.el.classList.add('past-show');pastContainer.appendChild(s.el);});
+  }else{
+    pastWrap.style.display='none';
+  }
+}
+sortShows();
+
+// PAST EVENTS TOGGLE
+const pastToggle=document.getElementById('pastToggle');
+const pastShows=document.getElementById('pastShows');
+if(pastToggle){
+  pastToggle.addEventListener('click',()=>{
+    const open=pastShows.style.display!=='none';
+    pastShows.style.display=open?'none':'block';
+    pastToggle.classList.toggle('open',!open);
+    pastToggle.innerHTML=(!open?'&#9650;':'&#9660;')+' &nbsp; '+(open?'Show':'Hide')+' Past Events (<span id="pastCount">'+document.querySelectorAll('.past-show').length+'</span>)';
+  });
+}
+
 // COUNTDOWNS
 function updateCountdowns(){
-  const shows=[
-    {id:'countdown1',showId:'show1',date:new Date('2026-05-01T20:00:00')},
-    {id:'countdown2',showId:'show2',date:new Date('2026-06-27T20:00:00')}
-  ];
-  shows.forEach(s=>{
-    const el=document.getElementById(s.id);
-    const showEl=document.getElementById(s.showId)||el?.closest('.show');
+  document.querySelectorAll('#upcomingShows .show').forEach(show=>{
+    const dateStr=show.dataset.showDate;
+    if(!dateStr)return;
+    const el=show.querySelector('.show-countdown');
     if(!el)return;
-    const diff=s.date-new Date();
-    if(diff<=0){if(showEl)showEl.style.display='none';return;}
+    const diff=new Date(dateStr)-new Date();
+    if(diff<=0){el.innerHTML='<span>Now</span>';return;}
     const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),sec=Math.floor((diff%60000)/1000);
     el.innerHTML=`<span>${d}</span>d <span>${h}</span>h <span>${m}</span>m <span>${sec}</span>s`;
   });

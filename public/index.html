@@ -69,7 +69,33 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 3rem;display:
 .bio-fact:last-child{border-bottom:none}
 .bio-fact-label{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#333;text-transform:uppercase;margin-bottom:6px}
 .bio-fact-val{font-size:14px;color:var(--bone)}
-.music-embed{margin-bottom:12px;border:0.5px solid #111}
+.sc-players{display:flex;flex-direction:column;gap:12px}
+.sc-player{display:flex;align-items:center;gap:16px;background:var(--charcoal);border:0.5px solid #1a1a1a;padding:12px;transition:border-color .3s}
+.sc-player:hover{border-color:#222}
+.sc-player-art{width:80px;height:80px;flex-shrink:0;position:relative;cursor:pointer}
+.sc-player-art img{width:100%;height:100%;object-fit:cover}
+.sc-player-art-overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .2s}
+.sc-player:hover .sc-player-art-overlay,.sc-player.playing .sc-player-art-overlay{opacity:1}
+.sc-play-icon{width:0;height:0;border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent var(--acid);margin-left:3px}
+.sc-pause-icon{width:16px;height:20px;border-left:4px solid var(--acid);border-right:4px solid var(--acid)}
+.sc-player-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.sc-player-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.sc-player-title{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc-player-title a{color:var(--bone);text-decoration:none;transition:color .2s}
+.sc-player-title a:hover{color:var(--acid)}
+.sc-player-stats{display:flex;gap:12px;flex-shrink:0}
+.sc-player-stat{font-family:'Courier New',monospace;font-size:10px;color:#444;letter-spacing:.1em;text-transform:uppercase}
+.sc-player-stat span{color:#666}
+.sc-progress-wrap{width:100%;height:24px;position:relative;cursor:pointer}
+.sc-waveform{width:100%;height:24px;position:relative;overflow:hidden}
+.sc-waveform-bg{width:100%;height:100%;filter:brightness(0.3) saturate(0)}
+.sc-waveform-fill{position:absolute;top:0;left:0;height:100%;overflow:hidden;width:0%}
+.sc-waveform-fill img{height:100%;filter:brightness(0.8) sepia(1) hue-rotate(70deg) saturate(3)}
+.sc-player-bottom{display:flex;align-items:center;justify-content:space-between}
+.sc-player-time{font-family:'Courier New',monospace;font-size:10px;color:#333;letter-spacing:.1em}
+.sc-player-link{font-family:'Courier New',monospace;font-size:9px;color:#333;letter-spacing:.15em;text-transform:uppercase;text-decoration:none;transition:color .2s}
+.sc-player-link:hover{color:var(--acid)}
+@media(max-width:768px){.sc-player{flex-direction:column;align-items:stretch}.sc-player-art{width:100%;height:200px}.sc-player-top{flex-direction:column;align-items:flex-start;gap:4px}}
 .merch-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:2rem;flex-wrap:wrap;gap:1rem}
 .merch-header-text .merch-title{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.1em}
 .merch-header-text .merch-sub{font-family:'Courier New',monospace;font-size:10px;letter-spacing:.2em;color:#555;text-transform:uppercase;margin-top:6px}
@@ -205,11 +231,7 @@ footer{padding:3rem;border-top:0.5px solid #111;display:flex;align-items:center;
 
 <div class="section fade-in" id="music">
   <div class="section-label">Music</div>
-  <div style="display:flex;flex-direction:column;gap:12px">
-    <div class="music-embed"><iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer/aurea&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe></div>
-    <div class="music-embed"><iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer/praisethelord&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe></div>
-    <div class="music-embed"><iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer/call-me-karizma-nesya-we&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe></div>
-  </div>
+  <div class="sc-players" id="scPlayers"></div>
   <div style="display:flex;gap:12px;margin-top:1.5rem;flex-wrap:wrap">
     <a class="btn" href="https://soundcloud.com/iamdoomsayer" target="_blank">Soundcloud</a>
     <a class="btn" href="https://open.spotify.com/artist/7qKOHQyTesKwALRRCfare2" target="_blank">Spotify</a>
@@ -654,6 +676,170 @@ async function loadMerch(){
   }
 }
 loadMerch();
+
+// CUSTOM SOUNDCLOUD PLAYERS
+const SC_TRACKS=[
+  'call-me-karizma-nesya-we',
+  'aurea',
+  'praisethelord',
+  'yellow-marilyn'
+];
+let scAudio=null,scCurrentIdx=-1,scPlaying=false;
+
+function fmtDur(ms){const m=Math.floor(ms/60000),s=Math.floor((ms%60000)/1000);return m+':'+String(s).padStart(2,'0');}
+function fmtPlays(n){if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString();}
+
+async function loadSCPlayers(){
+  const container=document.getElementById('scPlayers');
+  if(!container)return;
+  container.innerHTML='<div style="font-family:Courier New,monospace;font-size:11px;color:#333;letter-spacing:.15em;text-transform:uppercase;padding:1rem 0">Loading tracks...</div>';
+
+  try{
+    const tracks=[];
+    for(const slug of SC_TRACKS){
+      try{
+        const r=await fetch(`${PROXY}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer/${slug}`);
+        const t=await r.json();
+        if(t&&t.id)tracks.push(t);
+      }catch(e){}
+    }
+    if(!tracks.length){container.innerHTML='';return;}
+    container.innerHTML='';
+
+    tracks.forEach((t,idx)=>{
+      const art=t.artwork_url?t.artwork_url.replace('-large','-t500x500'):'';
+      const waveform=t.waveform_url||'';
+      const dur=fmtDur(t.duration||0);
+      const plays=fmtPlays(t.playback_count||0);
+      const reposts=fmtPlays(t.reposts_count||0);
+      const permalink=t.permalink_url?t.permalink_url.split('?')[0]:'#';
+
+      const player=document.createElement('div');
+      player.className='sc-player';
+      player.dataset.idx=idx;
+      player.dataset.streamUrl=t.stream_url||'';
+      player.innerHTML=`
+        <div class="sc-player-art" onclick="toggleSCPlay(${idx})">
+          <img src="${art}" alt="${t.title}" loading="lazy">
+          <div class="sc-player-art-overlay"><div class="sc-play-icon"></div></div>
+        </div>
+        <div class="sc-player-body">
+          <div class="sc-player-top">
+            <div class="sc-player-title"><a href="${permalink}" target="_blank">${t.title}</a></div>
+            <div class="sc-player-stats">
+              <div class="sc-player-stat">&#9654; <span>${plays}</span></div>
+              <div class="sc-player-stat">&#8634; <span>${reposts}</span></div>
+            </div>
+          </div>
+          <div class="sc-progress-wrap" onclick="seekSC(event,${idx})">
+            <div class="sc-waveform">
+              <img class="sc-waveform-bg" src="${waveform}" alt="">
+              <div class="sc-waveform-fill"><img src="${waveform}" alt="" style="width:${player.querySelector?'100%':'100%'}"></div>
+            </div>
+          </div>
+          <div class="sc-player-bottom">
+            <div class="sc-player-time"><span class="sc-time-current">0:00</span> / ${dur}</div>
+            <a class="sc-player-link" href="${permalink}" target="_blank">Soundcloud &#9654;</a>
+          </div>
+        </div>`;
+      container.appendChild(player);
+
+      // Fix waveform fill image width to match container
+      const fillImg=player.querySelector('.sc-waveform-fill img');
+      const bgImg=player.querySelector('.sc-waveform-bg');
+      if(fillImg&&bgImg){
+        fillImg.style.width=bgImg.offsetWidth+'px';
+        new ResizeObserver(()=>{fillImg.style.width=bgImg.offsetWidth+'px';}).observe(bgImg);
+      }
+    });
+
+    // Register cursor hover on new elements
+    container.querySelectorAll('.sc-player-art,.sc-player-title a,.sc-player-link').forEach(el=>{
+      el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.opacity='0';});
+      el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});
+    });
+  }catch(e){container.innerHTML='';}
+}
+
+function toggleSCPlay(idx){
+  const players=document.querySelectorAll('.sc-player');
+  const player=players[idx];
+  if(!player)return;
+  const streamUrl=player.dataset.streamUrl;
+  if(!streamUrl)return;
+
+  // If clicking same track that's playing, pause it
+  if(scCurrentIdx===idx&&scPlaying){
+    scAudio.pause();
+    scPlaying=false;
+    player.classList.remove('playing');
+    const overlay=player.querySelector('.sc-player-art-overlay');
+    overlay.innerHTML='<div class="sc-play-icon"></div>';
+    return;
+  }
+
+  // Stop any current playback
+  if(scAudio){
+    scAudio.pause();
+    scAudio=null;
+    players.forEach(p=>{
+      p.classList.remove('playing');
+      const ov=p.querySelector('.sc-player-art-overlay');
+      if(ov)ov.innerHTML='<div class="sc-play-icon"></div>';
+    });
+  }
+
+  // Start new playback
+  const clientId=new URLSearchParams(window.location.search).get('sc_cid')||'';
+  const audioUrl=streamUrl+(streamUrl.includes('?')?'&':'?')+'client_id='+encodeURIComponent('');
+  scAudio=new Audio(streamUrl);
+  scAudio.crossOrigin='anonymous';
+  scCurrentIdx=idx;
+
+  scAudio.addEventListener('canplay',()=>{
+    scAudio.play().catch(()=>{});
+    scPlaying=true;
+    player.classList.add('playing');
+    const overlay=player.querySelector('.sc-player-art-overlay');
+    overlay.innerHTML='<div class="sc-pause-icon"></div>';
+  });
+
+  scAudio.addEventListener('timeupdate',()=>{
+    if(!scAudio)return;
+    const pct=(scAudio.currentTime/scAudio.duration)*100;
+    const fill=player.querySelector('.sc-waveform-fill');
+    const timeEl=player.querySelector('.sc-time-current');
+    if(fill)fill.style.width=pct+'%';
+    if(timeEl)timeEl.textContent=fmtDur(scAudio.currentTime*1000);
+  });
+
+  scAudio.addEventListener('ended',()=>{
+    scPlaying=false;
+    player.classList.remove('playing');
+    const overlay=player.querySelector('.sc-player-art-overlay');
+    overlay.innerHTML='<div class="sc-play-icon"></div>';
+    const fill=player.querySelector('.sc-waveform-fill');
+    if(fill)fill.style.width='0%';
+    const timeEl=player.querySelector('.sc-time-current');
+    if(timeEl)timeEl.textContent='0:00';
+  });
+
+  scAudio.addEventListener('error',()=>{
+    // If preview fails, open SoundCloud link instead
+    const link=player.querySelector('.sc-player-link');
+    if(link)window.open(link.href,'_blank');
+  });
+}
+
+function seekSC(event,idx){
+  if(!scAudio||scCurrentIdx!==idx)return;
+  const wrap=event.currentTarget;
+  const rect=wrap.getBoundingClientRect();
+  const pct=(event.clientX-rect.left)/rect.width;
+  scAudio.currentTime=pct*scAudio.duration;
+}
+
+loadSCPlayers();
 </script>
 </body>
 </html>

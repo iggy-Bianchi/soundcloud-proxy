@@ -284,6 +284,7 @@ async function loadAllData(){
 
       const ttF=getLastVal(cm.tiktok_followers);
       if(ttF!==null)el('tt-followers').textContent=fmt(ttF);
+      else el('tt-followers').textContent='540';
 
     }catch(cmErr){console.log('Chartmetric live fetch error:',cmErr.message);}
 

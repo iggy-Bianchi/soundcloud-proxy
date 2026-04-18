@@ -129,16 +129,16 @@ footer{padding:2rem 3rem;border-top:0.5px solid #111;display:flex;align-items:ce
 <div class="section">
   <div class="section-label">Live stats</div>
   <div class="stats-grid">
-    <div class="stat-card"><div class="stat-label">SC Followers</div><div class="stat-val" id="sc-followers">—</div><div class="stat-platform">Soundcloud</div></div>
-    <div class="stat-card"><div class="stat-label">Total Plays</div><div class="stat-val" id="sc-plays">—</div><div class="stat-platform">Soundcloud</div></div>
-    <div class="stat-card"><div class="stat-label">Reposts</div><div class="stat-val" id="sc-reposts">—</div><div class="stat-platform">Soundcloud</div></div>
-    <div class="stat-card"><div class="stat-label">Downloads</div><div class="stat-val" id="sc-downloads">—</div><div class="stat-platform">Soundcloud</div></div>
-    <div class="stat-card"><div class="stat-label">Engagement</div><div class="stat-val" id="sc-eng">—</div><div class="stat-platform">Soundcloud</div></div>
-    <div class="stat-card"><div class="stat-label">Monthly Listeners</div><div class="stat-val" id="sp-listeners">—</div><div class="stat-platform" style="color:#1DB954">Spotify</div></div>
-    <div class="stat-card"><div class="stat-label">SP Followers</div><div class="stat-val" id="sp-followers">—</div><div class="stat-platform" style="color:#1DB954">Spotify</div></div>
-    <div class="stat-card"><div class="stat-label">IG Followers</div><div class="stat-val" id="ig-followers">—</div><div class="stat-platform" style="color:#444">Instagram</div></div>
-    <div class="stat-card"><div class="stat-label">TT Followers</div><div class="stat-val" id="tt-followers">—</div><div class="stat-platform" style="color:#333">TikTok</div></div>
-    <div class="stat-card"><div class="stat-label">Tracks</div><div class="stat-val" id="sc-tracks">—</div><div class="stat-platform">Soundcloud</div></div>
+    <div class="stat-card"><div class="stat-label">SC Followers</div><div class="stat-val" id="sc-followers">&mdash;</div><div class="stat-platform">Soundcloud</div></div>
+    <div class="stat-card"><div class="stat-label">Total Plays</div><div class="stat-val" id="sc-plays">&mdash;</div><div class="stat-platform">Soundcloud</div></div>
+    <div class="stat-card"><div class="stat-label">Reposts</div><div class="stat-val" id="sc-reposts">&mdash;</div><div class="stat-platform">Soundcloud</div></div>
+    <div class="stat-card"><div class="stat-label">Downloads</div><div class="stat-val" id="sc-downloads">&mdash;</div><div class="stat-platform">Soundcloud</div></div>
+    <div class="stat-card"><div class="stat-label">Engagement</div><div class="stat-val" id="sc-eng">&mdash;</div><div class="stat-platform">Soundcloud</div></div>
+    <div class="stat-card"><div class="stat-label">Monthly Listeners</div><div class="stat-val" id="sp-listeners">&mdash;</div><div class="stat-platform" style="color:#1DB954">Spotify</div></div>
+    <div class="stat-card"><div class="stat-label">SP Followers</div><div class="stat-val" id="sp-followers">&mdash;</div><div class="stat-platform" style="color:#1DB954">Spotify</div></div>
+    <div class="stat-card"><div class="stat-label">IG Followers</div><div class="stat-val" id="ig-followers">&mdash;</div><div class="stat-platform" style="color:#444">Instagram</div></div>
+    <div class="stat-card"><div class="stat-label">TT Followers</div><div class="stat-val" id="tt-followers">&mdash;</div><div class="stat-platform" style="color:#333">TikTok</div></div>
+    <div class="stat-card"><div class="stat-label">Tracks</div><div class="stat-val" id="sc-tracks">&mdash;</div><div class="stat-platform">Soundcloud</div></div>
   </div>
 
   <div class="chart-wrap">
@@ -186,7 +186,7 @@ Founder of Planet Doom, the biggest recurring EDM night in Knoxville, TN, Doomsa
   <div style="display:flex;flex-direction:column;gap:12px">
     <div class="music-embed"><iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer/aurea&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe></div>
     <div class="music-embed"><iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer/praisethelord&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe></div>
-    <div class="music-embed"><iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer/thinkin-with-my-dick-doomsayer-flip&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe></div>
+    <div class="music-embed"><iframe width="100%" height="166" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=https%3A//soundcloud.com/iamdoomsayer/call-me-karizma-nesya-we&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false"></iframe></div>
   </div>
   <div style="display:flex;gap:10px;margin-top:1rem;flex-wrap:wrap">
     <a class="btn" href="https://soundcloud.com/iamdoomsayer" target="_blank">Soundcloud</a>
@@ -223,43 +223,80 @@ function checkPass(){
   if(val===PASSWORD){
     document.getElementById('gate').style.display='none';
     document.getElementById('epkContent').style.display='block';
-    loadStats();
-    loadSnapshots();
+    loadAllData();
   } else {
     document.getElementById('gateErr').style.display='block';
     document.getElementById('gateInput').value='';
   }
 }
 
-function fmt(n){if(!n&&n!==0)return'—';n=parseInt(n);if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString()}
-function fmtPct(n){return isNaN(n)||n===0?'—':n.toFixed(1)+'%'}
+function fmt(n){if(!n&&n!==0)return'\u2014';n=parseInt(n);if(isNaN(n))return'\u2014';if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString()}
+function fmtPct(n){if(n===null||n===undefined||isNaN(n))return'\u2014';return parseFloat(n).toFixed(1)+'%'}
 
-async function loadStats(){
+async function loadAllData(){
   try{
     const r=await fetch(`${PROXY}/api/snapshot`);
     const data=await r.json();
-    const s=data.latest||{};
-    if(s.sc_followers)document.getElementById('sc-followers').textContent=fmt(s.sc_followers);
-    if(s.sc_plays)document.getElementById('sc-plays').textContent=fmt(s.sc_plays);
-    if(s.sc_reposts)document.getElementById('sc-reposts').textContent=fmt(s.sc_reposts);
-    if(s.sc_downloads)document.getElementById('sc-downloads').textContent=fmt(s.sc_downloads);
-    if(s.sc_eng)document.getElementById('sc-eng').textContent=fmtPct(s.sc_eng);
-    if(s.sc_tracks)document.getElementById('sc-tracks').textContent=fmt(s.sc_tracks);
-    if(s.spotify_followers)document.getElementById('sp-followers').textContent=fmt(s.spotify_followers);
-    if(s.spotify_monthly_listeners)document.getElementById('sp-listeners').textContent=fmt(s.spotify_monthly_listeners);
-    if(s.tiktok_followers)document.getElementById('tt-followers').textContent=fmt(s.tiktok_followers);
-    if(s.ig_followers)document.getElementById('ig-followers').textContent=fmt(s.ig_followers);
-    if(data.history&&Array.isArray(data.history)&&data.history.length>0){
-      snapshots=data.history;
+
+    // History array has SoundCloud stats
+    const history=data.history||[];
+    if(history.length>0){
+      snapshots=history;
+      const latest=history[history.length-1];
+
+      // SoundCloud stats from history
+      const el=id=>document.getElementById(id);
+      if(latest.followers!==undefined)el('sc-followers').textContent=fmt(latest.followers);
+      if(latest.plays!==undefined)el('sc-plays').textContent=fmt(latest.plays);
+      if(latest.reposts!==undefined)el('sc-reposts').textContent=fmt(latest.reposts);
+      if(latest.downloads!==undefined)el('sc-downloads').textContent=fmt(latest.downloads);
+      if(latest.eng!==undefined&&latest.eng!==0)el('sc-eng').textContent=fmtPct(latest.eng);
+
+      // Spotify from Chartmetric data (stored in latest history entry or data.latest)
+      const cm=data.latest||{};
+      const spFollowers=cm.spotify_followers;
+      const spListeners=cm.spotify_monthly_listeners;
+
+      if(spFollowers&&Array.isArray(spFollowers)&&spFollowers.length>0){
+        const lastSp=spFollowers[spFollowers.length-1];
+        if(lastSp&&lastSp.value!==undefined)el('sp-followers').textContent=fmt(lastSp.value);
+      }else if(typeof spFollowers==='number'){
+        el('sp-followers').textContent=fmt(spFollowers);
+      }
+
+      if(spListeners&&Array.isArray(spListeners)&&spListeners.length>0){
+        const lastSl=spListeners[spListeners.length-1];
+        if(lastSl&&lastSl.value!==undefined)el('sp-listeners').textContent=fmt(lastSl.value);
+      }else if(typeof spListeners==='number'){
+        el('sp-listeners').textContent=fmt(spListeners);
+      }
+
+      // TikTok
+      const ttFollowers=cm.tiktok_followers;
+      if(ttFollowers&&Array.isArray(ttFollowers)&&ttFollowers.length>0){
+        const lastTt=ttFollowers[ttFollowers.length-1];
+        if(lastTt&&lastTt.value!==undefined)el('tt-followers').textContent=fmt(lastTt.value);
+      }else if(typeof ttFollowers==='number'){
+        el('tt-followers').textContent=fmt(ttFollowers);
+      }
+
+      // Instagram
+      const igFollowers=cm.ig_followers;
+      if(igFollowers&&Array.isArray(igFollowers)&&igFollowers.length>0){
+        const lastIg=igFollowers[igFollowers.length-1];
+        if(lastIg&&lastIg.value!==undefined)el('ig-followers').textContent=fmt(lastIg.value);
+      }else if(typeof igFollowers==='number'){
+        el('ig-followers').textContent=fmt(igFollowers);
+      }
+
       renderHistory();
     }
+
     renderTrackList();
   }catch(e){console.log('Stats error:',e.message);}
 }
 
 function renderTrackList(){
-  // Track list now comes from SoundCloud API directly since snapshot doesn't store track details
-  const PROXY='https://soundcloud-proxy-xi.vercel.app';
   fetch(`${PROXY}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer`)
     .then(r=>r.json()).then(user=>{
       if(user.error)return;
@@ -267,10 +304,12 @@ function renderTrackList(){
     }).then(r=>r&&r.json()).then(tracks=>{
       if(!tracks||!Array.isArray(tracks))return;
       const sorted=[...tracks].sort((a,b)=>b.playback_count-a.playback_count);
+      const el=document.getElementById('sc-tracks');
+      if(el)el.textContent=fmt(sorted.length);
       document.getElementById('trackList').innerHTML=sorted.map((t,i)=>{
         const plays=parseInt(t.playback_count||0),likes=parseInt(t.likes_count||0),reposts=parseInt(t.reposts_count||0),downloads=parseInt(t.download_count||0),comments=parseInt(t.comment_count||0);
         const eng=plays>0?((likes+reposts)/plays*100):0;
-        const dur=t.duration?Math.floor(t.duration/60000)+':'+(Math.floor((t.duration%60000)/1000)).toString().padStart(2,'0'):'—';
+        const dur=t.duration?Math.floor(t.duration/60000)+':'+(Math.floor((t.duration%60000)/1000)).toString().padStart(2,'0'):'\u2014';
         return`<div class="track">
           <div class="track-num">${String(i+1).padStart(2,'0')}</div>
           <div class="track-info">
@@ -286,15 +325,9 @@ function renderTrackList(){
           </div>
         </div>`;
       }).join('');
-    }).catch(()=>{});
-}
-
-async function loadSnapshots(){
-  try{
-    const r=await fetch(`${PROXY}/api/snapshot`);
-    const data=await r.json();
-    if(Array.isArray(data)&&data.length>0){snapshots=data;renderHistory();}
-  }catch(e){}
+    }).catch(()=>{
+      document.getElementById('trackList').innerHTML='<div style="color:#333;font-family:Courier New,monospace;font-size:11px">SoundCloud API unavailable. Try refreshing.</div>';
+    });
 }
 
 function getFiltered(){

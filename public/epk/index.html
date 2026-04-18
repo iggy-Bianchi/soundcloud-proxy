@@ -240,57 +240,52 @@ async function loadAllData(){
 
     // History array has SoundCloud stats
     const history=data.history||[];
+    const el=id=>document.getElementById(id);
+
     if(history.length>0){
       snapshots=history;
       const latest=history[history.length-1];
 
       // SoundCloud stats from history
-      const el=id=>document.getElementById(id);
       if(latest.followers!==undefined)el('sc-followers').textContent=fmt(latest.followers);
       if(latest.plays!==undefined)el('sc-plays').textContent=fmt(latest.plays);
       if(latest.reposts!==undefined)el('sc-reposts').textContent=fmt(latest.reposts);
       if(latest.downloads!==undefined)el('sc-downloads').textContent=fmt(latest.downloads);
       if(latest.eng!==undefined&&latest.eng!==0)el('sc-eng').textContent=fmtPct(latest.eng);
 
-      // Spotify from Chartmetric data (stored in latest history entry or data.latest)
-      const cm=data.latest||{};
-      const spFollowers=cm.spotify_followers;
-      const spListeners=cm.spotify_monthly_listeners;
-
-      if(spFollowers&&Array.isArray(spFollowers)&&spFollowers.length>0){
-        const lastSp=spFollowers[spFollowers.length-1];
-        if(lastSp&&lastSp.value!==undefined)el('sp-followers').textContent=fmt(lastSp.value);
-      }else if(typeof spFollowers==='number'){
-        el('sp-followers').textContent=fmt(spFollowers);
-      }
-
-      if(spListeners&&Array.isArray(spListeners)&&spListeners.length>0){
-        const lastSl=spListeners[spListeners.length-1];
-        if(lastSl&&lastSl.value!==undefined)el('sp-listeners').textContent=fmt(lastSl.value);
-      }else if(typeof spListeners==='number'){
-        el('sp-listeners').textContent=fmt(spListeners);
-      }
-
-      // TikTok
-      const ttFollowers=cm.tiktok_followers;
-      if(ttFollowers&&Array.isArray(ttFollowers)&&ttFollowers.length>0){
-        const lastTt=ttFollowers[ttFollowers.length-1];
-        if(lastTt&&lastTt.value!==undefined)el('tt-followers').textContent=fmt(lastTt.value);
-      }else if(typeof ttFollowers==='number'){
-        el('tt-followers').textContent=fmt(ttFollowers);
-      }
-
-      // Instagram
-      const igFollowers=cm.ig_followers;
-      if(igFollowers&&Array.isArray(igFollowers)&&igFollowers.length>0){
-        const lastIg=igFollowers[igFollowers.length-1];
-        if(lastIg&&lastIg.value!==undefined)el('ig-followers').textContent=fmt(lastIg.value);
-      }else if(typeof igFollowers==='number'){
-        el('ig-followers').textContent=fmt(igFollowers);
-      }
-
       renderHistory();
     }
+
+    // Fetch live Chartmetric data directly (more reliable than snapshot cache)
+    try{
+      const cmr=await fetch(`${PROXY}/api/chartmetric`);
+      const cmData=await cmr.json();
+      const cm=cmData.cmStats||cmData||{};
+
+      function getLastVal(arr){
+        if(!arr||!Array.isArray(arr)||arr.length===0)return null;
+        const last=arr[arr.length-1];
+        return last&&last.value!==undefined?last.value:null;
+      }
+
+      const spF=getLastVal(cm.spotify_followers);
+      if(spF!==null)el('sp-followers').textContent=fmt(spF);
+
+      const spL=cm.spotify_monthly_listeners;
+      if(spL&&Array.isArray(spL)){
+        const v=getLastVal(spL);
+        if(v!==null)el('sp-listeners').textContent=fmt(v);
+      }else if(typeof spL==='number'){
+        el('sp-listeners').textContent=fmt(spL);
+      }
+
+      const igF=getLastVal(cm.ig_followers);
+      if(igF!==null)el('ig-followers').textContent=fmt(igF);
+
+      const ttF=getLastVal(cm.tiktok_followers);
+      if(ttF!==null)el('tt-followers').textContent=fmt(ttF);
+
+    }catch(cmErr){console.log('Chartmetric live fetch error:',cmErr.message);}
 
     renderTrackList();
   }catch(e){console.log('Stats error:',e.message);}

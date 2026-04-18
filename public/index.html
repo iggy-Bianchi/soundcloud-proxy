@@ -468,11 +468,25 @@ updateCountdowns();
 setInterval(updateCountdowns,1000);
 
 // EMAIL
-function submitEmail(){
-  const v=document.getElementById('emailInput').value;
-  if(!v||!v.includes('@'))return;
-  document.getElementById('ritualOverlay').classList.add('active');
-  document.getElementById('emailInput').value='';
+async function submitEmail(){
+  const input=document.getElementById('emailInput');
+  const v=input.value.trim();
+  if(!v||!v.includes('@')||!v.includes('.'))return;
+  try{
+    const r=await fetch(`${PROXY}/api/subscribe`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:v})
+    });
+    const data=await r.json();
+    if(data.ok){
+      document.getElementById('ritualOverlay').classList.add('active');
+      input.value='';
+    }
+  }catch(e){
+    document.getElementById('ritualOverlay').classList.add('active');
+    input.value='';
+  }
 }
 
 // STATS

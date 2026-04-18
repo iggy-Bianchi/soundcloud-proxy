@@ -678,14 +678,14 @@ async function loadMerch(){
 }
 loadMerch();
 
-// CUSTOM SOUNDCLOUD PLAYERS
+// CUSTOM SOUNDCLOUD PLAYERS (using SC Widget API for reliable playback)
 const SC_TRACKS=[
-  'call-me-karizma-nesya-we',
-  'aurea',
-  'praisethelord',
-  'yellow-marilyn'
+  {slug:'call-me-karizma-nesya-we',url:'https://soundcloud.com/iamdoomsayer/call-me-karizma-nesya-we'},
+  {slug:'aurea',url:'https://soundcloud.com/iamdoomsayer/aurea'},
+  {slug:'praisethelord',url:'https://soundcloud.com/iamdoomsayer/praisethelord'},
+  {slug:'yellow-marilyn',url:'https://soundcloud.com/iamdoomsayer/yellow-marilyn'}
 ];
-let scAudio=null,scCurrentIdx=-1,scPlaying=false;
+let scWidgets=[],scCurrentIdx=-1,scPlaying=false;
 
 function fmtDur(ms){const m=Math.floor(ms/60000),s=Math.floor((ms%60000)/1000);return m+':'+String(s).padStart(2,'0');}
 function fmtPlays(n){if(n>=1000000)return(n/1000000).toFixed(1)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toLocaleString();}
@@ -695,13 +695,23 @@ async function loadSCPlayers(){
   if(!container)return;
   container.innerHTML='<div style="font-family:Courier New,monospace;font-size:11px;color:#333;letter-spacing:.15em;text-transform:uppercase;padding:1rem 0">Loading tracks...</div>';
 
+  // Load SC Widget API
+  await new Promise((resolve)=>{
+    if(window.SC&&window.SC.Widget){resolve();return;}
+    const s=document.createElement('script');
+    s.src='https://w.soundcloud.com/player/api.js';
+    s.onload=resolve;
+    s.onerror=resolve;
+    document.head.appendChild(s);
+  });
+
   try{
     const tracks=[];
-    for(const slug of SC_TRACKS){
+    for(const t of SC_TRACKS){
       try{
-        const r=await fetch(`${PROXY}/api/soundcloud?endpoint=resolve?url=https://soundcloud.com/iamdoomsayer/${slug}`);
-        const t=await r.json();
-        if(t&&t.id)tracks.push(t);
+        const r=await fetch(`${PROXY}/api/soundcloud?endpoint=resolve?url=${t.url}`);
+        const data=await r.json();
+        if(data&&data.id)tracks.push({...data,scUrl:t.url});
       }catch(e){}
     }
     if(!tracks.length){container.innerHTML='';return;}
@@ -714,13 +724,14 @@ async function loadSCPlayers(){
       const plays=fmtPlays(t.playback_count||0);
       const reposts=fmtPlays(t.reposts_count||0);
       const permalink=t.permalink_url?t.permalink_url.split('?')[0]:'#';
+      const iframeId='sc-iframe-'+idx;
 
       const player=document.createElement('div');
       player.className='sc-player';
       player.dataset.idx=idx;
-      player.dataset.streamUrl=t.stream_url||'';
       player.innerHTML=`
-        <div class="sc-player-art" onclick="toggleSCPlay(${idx})">
+        <iframe id="${iframeId}" style="display:none" width="0" height="0" scrolling="no" allow="autoplay" src="https://w.soundcloud.com/player/?url=${encodeURIComponent(t.scUrl)}&color=%231A7A1A&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false"></iframe>
+        <div class="sc-player-art" data-idx="${idx}">
           <img src="${art}" alt="${t.title}" loading="lazy">
           <div class="sc-player-art-overlay"><div class="sc-play-icon"></div></div>
         </div>
@@ -732,10 +743,10 @@ async function loadSCPlayers(){
               <div class="sc-player-stat">&#8634; <span>${reposts}</span></div>
             </div>
           </div>
-          <div class="sc-progress-wrap" onclick="seekSC(event,${idx})">
+          <div class="sc-progress-wrap" data-idx="${idx}">
             <div class="sc-waveform">
               <img class="sc-waveform-bg" src="${waveform}" alt="">
-              <div class="sc-waveform-fill"><img src="${waveform}" alt="" style="width:${player.querySelector?'100%':'100%'}"></div>
+              <div class="sc-waveform-fill"><img src="${waveform}" alt=""></div>
             </div>
           </div>
           <div class="sc-player-bottom">
@@ -745,13 +756,46 @@ async function loadSCPlayers(){
         </div>`;
       container.appendChild(player);
 
-      // Fix waveform fill image width to match container
+      // Fix waveform fill image width
       const fillImg=player.querySelector('.sc-waveform-fill img');
       const bgImg=player.querySelector('.sc-waveform-bg');
       if(fillImg&&bgImg){
-        fillImg.style.width=bgImg.offsetWidth+'px';
-        new ResizeObserver(()=>{fillImg.style.width=bgImg.offsetWidth+'px';}).observe(bgImg);
+        const syncWidth=()=>{fillImg.style.width=bgImg.offsetWidth+'px';};
+        syncWidth();
+        new ResizeObserver(syncWidth).observe(bgImg);
       }
+
+      // Init SC Widget
+      const iframe=document.getElementById(iframeId);
+      if(window.SC&&window.SC.Widget&&iframe){
+        const widget=SC.Widget(iframe);
+        scWidgets[idx]=widget;
+
+        widget.bind(SC.Widget.Events.PLAY_PROGRESS,data=>{
+          if(scCurrentIdx!==idx)return;
+          const fill=player.querySelector('.sc-waveform-fill');
+          const timeEl=player.querySelector('.sc-time-current');
+          if(fill)fill.style.width=data.relativePosition*100+'%';
+          if(timeEl)timeEl.textContent=fmtDur(data.currentPosition);
+        });
+
+        widget.bind(SC.Widget.Events.FINISH,()=>{
+          scPlaying=false;
+          scCurrentIdx=-1;
+          player.classList.remove('playing');
+          const overlay=player.querySelector('.sc-player-art-overlay');
+          if(overlay)overlay.innerHTML='<div class="sc-play-icon"></div>';
+          const fill=player.querySelector('.sc-waveform-fill');
+          if(fill)fill.style.width='0%';
+          const timeEl=player.querySelector('.sc-time-current');
+          if(timeEl)timeEl.textContent='0:00';
+        });
+      }
+
+      // Click handlers using addEventListener (works on mobile)
+      player.querySelector('.sc-player-art').addEventListener('click',()=>toggleSCPlay(idx));
+      player.querySelector('.sc-player-art').addEventListener('touchend',(e)=>{e.preventDefault();toggleSCPlay(idx);});
+      player.querySelector('.sc-progress-wrap').addEventListener('click',(e)=>seekSC(e,idx));
     });
 
     // Register cursor hover on new elements
@@ -765,79 +809,49 @@ async function loadSCPlayers(){
 function toggleSCPlay(idx){
   const players=document.querySelectorAll('.sc-player');
   const player=players[idx];
-  if(!player)return;
-  const streamUrl=player.dataset.streamUrl;
-  if(!streamUrl)return;
+  const widget=scWidgets[idx];
+  if(!player||!widget)return;
 
   // If clicking same track that's playing, pause it
   if(scCurrentIdx===idx&&scPlaying){
-    scAudio.pause();
+    widget.pause();
     scPlaying=false;
     player.classList.remove('playing');
-    const overlay=player.querySelector('.sc-player-art-overlay');
-    overlay.innerHTML='<div class="sc-play-icon"></div>';
+    player.querySelector('.sc-player-art-overlay').innerHTML='<div class="sc-play-icon"></div>';
     return;
   }
 
   // Stop any current playback
-  if(scAudio){
-    scAudio.pause();
-    scAudio=null;
-    players.forEach(p=>{
-      p.classList.remove('playing');
-      const ov=p.querySelector('.sc-player-art-overlay');
-      if(ov)ov.innerHTML='<div class="sc-play-icon"></div>';
-    });
+  if(scCurrentIdx>=0&&scWidgets[scCurrentIdx]){
+    scWidgets[scCurrentIdx].pause();
+    const prev=players[scCurrentIdx];
+    if(prev){
+      prev.classList.remove('playing');
+      prev.querySelector('.sc-player-art-overlay').innerHTML='<div class="sc-play-icon"></div>';
+    }
   }
 
-  // Start new playback
-  const clientId=new URLSearchParams(window.location.search).get('sc_cid')||'';
-  const audioUrl=streamUrl+(streamUrl.includes('?')?'&':'?')+'client_id='+encodeURIComponent('');
-  scAudio=new Audio(streamUrl);
-  scAudio.crossOrigin='anonymous';
+  // Play new track
+  widget.play();
   scCurrentIdx=idx;
-
-  scAudio.addEventListener('canplay',()=>{
-    scAudio.play().catch(()=>{});
-    scPlaying=true;
-    player.classList.add('playing');
-    const overlay=player.querySelector('.sc-player-art-overlay');
-    overlay.innerHTML='<div class="sc-pause-icon"></div>';
-  });
-
-  scAudio.addEventListener('timeupdate',()=>{
-    if(!scAudio)return;
-    const pct=(scAudio.currentTime/scAudio.duration)*100;
-    const fill=player.querySelector('.sc-waveform-fill');
-    const timeEl=player.querySelector('.sc-time-current');
-    if(fill)fill.style.width=pct+'%';
-    if(timeEl)timeEl.textContent=fmtDur(scAudio.currentTime*1000);
-  });
-
-  scAudio.addEventListener('ended',()=>{
-    scPlaying=false;
-    player.classList.remove('playing');
-    const overlay=player.querySelector('.sc-player-art-overlay');
-    overlay.innerHTML='<div class="sc-play-icon"></div>';
-    const fill=player.querySelector('.sc-waveform-fill');
-    if(fill)fill.style.width='0%';
-    const timeEl=player.querySelector('.sc-time-current');
-    if(timeEl)timeEl.textContent='0:00';
-  });
-
-  scAudio.addEventListener('error',()=>{
-    // If preview fails, open SoundCloud link instead
-    const link=player.querySelector('.sc-player-link');
-    if(link)window.open(link.href,'_blank');
-  });
+  scPlaying=true;
+  player.classList.add('playing');
+  player.querySelector('.sc-player-art-overlay').innerHTML='<div class="sc-pause-icon"></div>';
 }
 
 function seekSC(event,idx){
-  if(!scAudio||scCurrentIdx!==idx)return;
+  const widget=scWidgets[idx];
+  if(!widget)return;
   const wrap=event.currentTarget;
   const rect=wrap.getBoundingClientRect();
   const pct=(event.clientX-rect.left)/rect.width;
-  scAudio.currentTime=pct*scAudio.duration;
+  widget.getDuration(dur=>{
+    widget.seekTo(pct*dur);
+    if(scCurrentIdx!==idx){
+      // Start playing if not already
+      toggleSCPlay(idx);
+    }
+  });
 }
 
 loadSCPlayers();

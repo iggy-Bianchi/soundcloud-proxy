@@ -139,6 +139,7 @@ nav{width:100%;padding:1.5rem 3rem;display:flex;align-items:center;justify-conte
   <div class="go-title">CONSUMED</div>
   <div class="go-score" id="goScore">You survived <span id="goRound">0</span> rounds</div>
   <input class="name-input" id="nameInput" type="text" placeholder="Enter your name" maxlength="20" />
+  <input class="name-input" id="igInput" type="text" placeholder="@yourhandle (required to claim prize)" maxlength="30" style="margin-top:6px" />
   <div class="btn-row">
     <button class="btn primary" onclick="submitScore()">Submit Score</button>
     <button class="btn" onclick="shareScore()">Share</button>
@@ -258,17 +259,21 @@ function restartGame(){
 
 async function submitScore(){
   const name=getEl('nameInput').value.trim().toUpperCase()||'ANONYMOUS';
+  const instagram=getEl('igInput').value.trim();
   if(lastScore===0)return;
+  if(!instagram){getEl('igInput').focus();getEl('igInput').style.borderColor='var(--acid)';return;}
   try{
     await fetch(`${PROXY}/api/ritual`,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({name,score:lastScore,ts:Date.now()})
+      body:JSON.stringify({name,score:lastScore,instagram,ts:Date.now()})
     });
     loadLeaderboard();
     getEl('gameOver').classList.remove('visible');
     getEl('startBtn').style.display='block';
     getEl('nameInput').value='';
+    getEl('igInput').value='';
+    getEl('igInput').style.borderColor='';
   }catch(e){console.log(e);}
 }
 

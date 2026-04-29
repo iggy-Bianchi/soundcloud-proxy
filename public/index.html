@@ -842,18 +842,22 @@ async function loadMerch(){
       const uniqueColorIds=new Set();
       if(co)ev.forEach(v=>{const ov=co.values.find(cv=>v.options.includes(cv.id));if(ov)uniqueColorIds.add(ov.id);});
       const sizeMode=uniqueColorIds.size<=1&&!!so;
+      const SIZE_ORDER=['S','M','L','XL','2XL','3XL','4XL'];
       let sw='';
+      let fvDisplay=fv;
       if(sizeMode){
+        const evSorted=[...ev].sort((a,b)=>{const oa=so.values.find(sv=>a.options.includes(sv.id));const ob=so.values.find(sv=>b.options.includes(sv.id));const ia=oa?SIZE_ORDER.indexOf(oa.title):-1;const ib=ob?SIZE_ORDER.indexOf(ob.title):-1;return(ia===-1?999:ia)-(ib===-1?999:ib);});
+        fvDisplay=evSorted[0]||fv;
         sw='<div class="merch-variants">';
-        ev.forEach((v,i)=>{const ov=so.values.find(sv=>v.options.includes(sv.id));if(ov){sw+=`<button class="merch-size${i===0?' active':''}" data-variant-idx="${i}">${ov.title}</button>`;}});
+        evSorted.forEach((v,i)=>{const ov=so.values.find(sv=>v.options.includes(sv.id));if(ov){sw+=`<button class="merch-size${i===0?' active':''}" data-variant-idx="${ev.indexOf(v)}">${ov.title}</button>`;}});
         sw+='</div>';
       }else if(co){
         sw='<div class="merch-variants">';
         ev.forEach((v,i)=>{const ov=co.values.find(cv=>v.options.includes(cv.id));if(ov){const bg=ov.colors[0]||'#333';sw+=`<button class="merch-color${i===0?' active':''}" style="background:${bg}" data-variant-idx="${i}" title="${ov.title}"></button>`;}});
         sw+='</div>';
       }
-      const price=(fv.price/100).toFixed(2);
-      const vt=sizeMode?(fv.title.split(' / ')[1]||fv.title):fv.title.split(' / ')[0];
+      const price=(fvDisplay.price/100).toFixed(2);
+      const vt=sizeMode?(fvDisplay.title.split(' / ')[1]||fvDisplay.title):fvDisplay.title.split(' / ')[0];
       card.innerHTML=`
         <div class="merch-card-img">
           <img src="${ci[0]?.src||''}" alt="${product.title}" loading="lazy">
@@ -864,7 +868,7 @@ async function loadMerch(){
           <div class="merch-card-price">$${price}</div>
           <div class="merch-card-variant">${vt}</div>
           ${sw}
-          <button class="merch-buy" data-product-id="${product.id}" data-variant-id="${fv.id}" data-title="${product.title} - ${fv.title}" data-price="${fv.price}" data-image="${ci[0]?.src||''}">Acquire</button>
+          <button class="merch-buy" data-product-id="${product.id}" data-variant-id="${fvDisplay.id}" data-title="${product.title} - ${fvDisplay.title}" data-price="${fvDisplay.price}" data-image="${ci[0]?.src||''}">Acquire</button>
         </div>`;
       const img=card.querySelector('.merch-card-img img');
       const dots=card.querySelectorAll('.merch-img-dot');

@@ -53,9 +53,51 @@ async function getSoundcloudStats() {
   }
 }
 
+async function runSnapshot(res) {
+  const sc = await getSoundcloudStats();
+
+  if (!sc.sc_followers && !sc.sc_plays) {
+    console.error('snapshot: SoundCloud stats empty — possible auth or API failure');
+    return res.status(200).json({ ok: false, error: 'SoundCloud stats returned empty' });
+  }
+
+  const now = new Date();
+  const label = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+  // Merge SC stats into latest snapshot (preserve CM stats)
+  const existing = await redis.get('latest_snapshot') || {};
+  const snapshot = { ...existing, ...sc, label, ts: Date.now() };
+  await redis.set('latest_snapshot', snapshot);
+
+  // Append to history
+  const history = await redis.get('snapshots') || [];
+  const last = history[history.length - 1];
+  if (last && last.label === label) {
+    history[history.length - 1] = { ...last, followers: sc.sc_followers, plays: sc.sc_plays, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng };
+  } else {
+    history.push({ label, ts: Date.now(), followers: sc.sc_followers, plays: sc.sc_plays, likes: 0, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng });
+  }
+  if (history.length > 90) history.splice(0, history.length - 90);
+  await redis.set('snapshots', history);
+
+  return res.status(200).json({ ok: true, snapshot });
+}
+
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+
+  // Vercel crons always fire GET — detect via header and run snapshot
+  const isCron = req.headers['x-vercel-cron'] === '1';
+
+  if (req.method === 'GET' && isCron) {
+    try {
+      return await runSnapshot(res);
+    } catch (err) {
+      console.error('snapshot cron error:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
+  }
 
   // GET — return latest snapshot + history
   if (req.method === 'GET') {
@@ -78,29 +120,8 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, seeded: body.seed.length });
     }
 
-    // SoundCloud snapshot
     try {
-      const sc = await getSoundcloudStats();
-      const now = new Date();
-      const label = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-
-      // Merge SC stats into latest snapshot (preserve CM stats)
-      const existing = await redis.get('latest_snapshot') || {};
-      const snapshot = { ...existing, ...sc, label, ts: Date.now() };
-      await redis.set('latest_snapshot', snapshot);
-
-      // Append to history
-      const history = await redis.get('snapshots') || [];
-      const last = history[history.length - 1];
-      if (last && last.label === label) {
-        history[history.length - 1] = { ...last, followers: sc.sc_followers, plays: sc.sc_plays, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng };
-      } else {
-        history.push({ label, ts: Date.now(), followers: sc.sc_followers, plays: sc.sc_plays, likes: 0, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng });
-      }
-      if (history.length > 90) history.splice(0, history.length - 90);
-      await redis.set('snapshots', history);
-
-      return res.status(200).json({ ok: true, snapshot });
+      return await runSnapshot(res);
     } catch (err) {
       return res.status(500).json({ error: err.message });
     }

@@ -192,6 +192,9 @@ nav{position:fixed;top:26px;left:0;right:0;z-index:200;padding:1rem 2.5rem;displ
 .merch-color{width:20px;height:20px;border:0.5px solid var(--dust);cursor:pointer;transition:border-color .2s;padding:0;position:relative}
 .merch-color.active{border-color:var(--acid)}
 .merch-color.active::after{content:'';position:absolute;inset:-3px;border:0.5px solid var(--acid)}
+.merch-size{padding:4px 10px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;border:0.5px solid var(--dust);color:var(--ash);background:transparent;cursor:pointer;transition:all .2s}
+.merch-size.active{border-color:var(--acid);color:var(--acid)}
+.merch-size:hover{border-color:var(--toxic);color:var(--bone)}
 .merch-buy{width:100%;padding:10px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;border:0.5px solid var(--toxic);color:var(--acid);background:rgba(26,122,26,.1);cursor:pointer;transition:all .3s}
 .merch-buy:hover{background:rgba(57,255,20,.15)}
 .merch-buy:disabled{opacity:.4;cursor:not-allowed}
@@ -276,7 +279,7 @@ html.accent-cyan{--acid:#00eaff;--toxic:#0099aa;--acid-dim:rgba(0,234,255,.35)}
 @media(hover:none){
   .cursor,.cursor-ring{display:none}
   body{cursor:auto}
-  .btn,.show-btn,.list-submit,.merch-buy,.merch-color,.merch-img-dot,.past-toggle,.sc-player-art,.sc-progress-wrap,.sc-player-link{cursor:pointer}
+  .btn,.show-btn,.list-submit,.merch-buy,.merch-color,.merch-size,.merch-img-dot,.past-toggle,.sc-player-art,.sc-progress-wrap,.sc-player-link{cursor:pointer}
   .list-input{cursor:text}
   .nav-links a{cursor:pointer}
 }
@@ -835,14 +838,22 @@ async function loadMerch(){
       let ci=vi.length?vi:product.images.slice(0,3);
       const dotsHtml=ci.length>1?`<div class="merch-img-nav">${ci.map((_,i)=>`<button class="merch-img-dot${i===0?' active':''}" data-idx="${i}"></button>`).join('')}</div>`:'';
       const co=product.options.find(o=>o.type==='color');
+      const so=product.options.find(o=>o.type==='size');
+      const uniqueColorIds=new Set();
+      if(co)ev.forEach(v=>{const ov=co.values.find(cv=>v.options.includes(cv.id));if(ov)uniqueColorIds.add(ov.id);});
+      const sizeMode=uniqueColorIds.size<=1&&!!so;
       let sw='';
-      if(co){
+      if(sizeMode){
+        sw='<div class="merch-variants">';
+        ev.forEach((v,i)=>{const ov=so.values.find(sv=>v.options.includes(sv.id));if(ov){sw+=`<button class="merch-size${i===0?' active':''}" data-variant-idx="${i}">${ov.title}</button>`;}});
+        sw+='</div>';
+      }else if(co){
         sw='<div class="merch-variants">';
         ev.forEach((v,i)=>{const ov=co.values.find(cv=>v.options.includes(cv.id));if(ov){const bg=ov.colors[0]||'#333';sw+=`<button class="merch-color${i===0?' active':''}" style="background:${bg}" data-variant-idx="${i}" title="${ov.title}"></button>`;}});
         sw+='</div>';
       }
       const price=(fv.price/100).toFixed(2);
-      const vt=fv.title.split(' / ')[0];
+      const vt=sizeMode?(fv.title.split(' / ')[1]||fv.title):fv.title.split(' / ')[0];
       card.innerHTML=`
         <div class="merch-card-img">
           <img src="${ci[0]?.src||''}" alt="${product.title}" loading="lazy">
@@ -859,6 +870,7 @@ async function loadMerch(){
       const dots=card.querySelectorAll('.merch-img-dot');
       dots.forEach(dot=>{dot.addEventListener('click',()=>{const idx=parseInt(dot.dataset.idx);if(ci[idx])img.src=ci[idx].src;dots.forEach(d=>d.classList.remove('active'));dot.classList.add('active');});});
       const swatches=card.querySelectorAll('.merch-color');
+      const sizes=card.querySelectorAll('.merch-size');
       const pe=card.querySelector('.merch-card-price');
       const ve=card.querySelector('.merch-card-variant');
       const bb=card.querySelector('.merch-buy');
@@ -873,6 +885,17 @@ async function loadMerch(){
           dots.forEach((d,i)=>{d.style.display=ci[i]?'':'none';});dots.forEach(d=>d.classList.remove('active'));if(dots[0])dots[0].classList.add('active');
         });
       });
+      sizes.forEach(s=>{
+        s.addEventListener('click',()=>{
+          const vi2=parseInt(s.dataset.variantIdx);const v=ev[vi2];
+          const imgs=product.images.filter(im=>im.variant_ids.includes(v.id));
+          ci=imgs.length?imgs:product.images.slice(0,3);
+          img.src=ci[0]?.src||'';pe.textContent='$'+(v.price/100).toFixed(2);ve.textContent=v.title.split(' / ')[1]||v.title;
+          bb.dataset.variantId=v.id;bb.dataset.title=product.title+' - '+v.title;bb.dataset.price=v.price;bb.dataset.image=ci[0]?.src||'';
+          sizes.forEach(x=>x.classList.remove('active'));s.classList.add('active');
+          dots.forEach((d,i)=>{d.style.display=ci[i]?'':'none';});dots.forEach(d=>d.classList.remove('active'));if(dots[0])dots[0].classList.add('active');
+        });
+      });
       bb.addEventListener('click',async()=>{
         bb.textContent='Processing...';bb.classList.add('loading');
         try{
@@ -884,7 +907,7 @@ async function loadMerch(){
       });
       grid.appendChild(card);
     });
-    document.querySelectorAll('.merch-buy,.merch-color,.merch-img-dot').forEach(regHover);
+    document.querySelectorAll('.merch-buy,.merch-color,.merch-size,.merch-img-dot').forEach(regHover);
   }catch(e){grid.innerHTML='<div class="merch-loading">Failed to load. Refresh to try again.</div>';}
 }
 loadMerch();

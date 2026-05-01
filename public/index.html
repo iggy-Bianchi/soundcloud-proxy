@@ -22,10 +22,10 @@ html{scroll-behavior:smooth}
 body{font-family:'JetBrains Mono',monospace;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;cursor:none}
 
 /* SCANLINES */
-body::before{content:'';position:fixed;inset:0;z-index:9;pointer-events:none;opacity:var(--scanline-opacity);background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.032) 2px,rgba(0,0,0,.032) 4px)}
+body::before{content:'';position:fixed;inset:0;z-index:9;pointer-events:none;opacity:var(--scanline-opacity);background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.032) 2px,rgba(0,0,0,.032) 4px);will-change:transform}
 
 /* FILM GRAIN */
-#grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:8;pointer-events:none;opacity:.04;filter:url(#grainFilter);animation:grainShift .18s steps(1) infinite}
+#grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:8;pointer-events:none;opacity:.04;filter:url(#grainFilter);animation:grainShift .5s steps(1) infinite;will-change:transform}
 @keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(-2%,-1%)}50%{transform:translate(1%,2%)}75%{transform:translate(-1%,1%)}100%{transform:translate(2%,-2%)}}
 
 #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%}
@@ -288,6 +288,7 @@ html.accent-cyan{--acid:#00eaff;--toxic:#0099aa;--acid-dim:rgba(0,234,255,.35)}
   nav{top:22px;padding:.8rem 1.2rem}
   .nav-links{display:none}
   .hud{display:none}
+  #grain{display:none}
   .hero{padding:2rem 1.5rem 4rem}
   .section-wrap{padding:4rem 1.5rem}
   .section-hdr::before{font-size:4rem}
@@ -621,7 +622,7 @@ html.accent-cyan{--acid:#00eaff;--toxic:#0099aa;--acid-dim:rgba(0,234,255,.35)}
     </div>
     <div class="tweaks-row">
       <div class="tweaks-lbl">Particles</div>
-      <input type="range" id="particleSlider" min="20" max="200" value="120">
+      <input type="range" id="particleSlider" min="10" max="120" value="45">
     </div>
   </div>
 </div>
@@ -633,9 +634,11 @@ const SHOP_ID='27188929';
 // BG PARTICLES
 const bgCanvas=document.getElementById('bgCanvas');
 const bgCtx=bgCanvas.getContext('2d');
-let bgParticles=[],bgParticleTarget=120;
+const isMobile=window.matchMedia('(max-width:767px)').matches||('ontouchstart' in window);
+let bgParticles=[],bgParticleTarget=isMobile?15:45;
+document.getElementById('particleSlider').value=bgParticleTarget;
 function resizeBg(){bgCanvas.width=window.innerWidth;bgCanvas.height=window.innerHeight;}
-resizeBg();window.addEventListener('resize',resizeBg);
+resizeBg();let _bgResizeT;window.addEventListener('resize',()=>{clearTimeout(_bgResizeT);_bgResizeT=setTimeout(resizeBg,150);});
 class BgParticle{
   constructor(){this.reset(true);}
   reset(init){
@@ -648,21 +651,29 @@ class BgParticle{
   update(){this.x+=this.speedX;this.y+=this.speedY;this.life++;if(this.life>this.maxLife||this.y<-10)this.reset(false);}
   draw(){bgCtx.beginPath();bgCtx.arc(this.x,this.y,this.size,0,Math.PI*2);bgCtx.fillStyle=`rgba(57,255,20,${this.opacity*(1-this.life/this.maxLife)})`;bgCtx.fill();}
 }
-for(let i=0;i<120;i++)bgParticles.push(new BgParticle());
-function animBg(){
+for(let i=0;i<bgParticleTarget;i++)bgParticles.push(new BgParticle());
+let bgLastFrame=0;
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(animBg);});
+function animBg(ts){
+  if(document.hidden)return;
+  if(ts-bgLastFrame<33){requestAnimationFrame(animBg);return;}
+  bgLastFrame=ts;
   bgCtx.clearRect(0,0,bgCanvas.width,bgCanvas.height);
   while(bgParticles.length<bgParticleTarget)bgParticles.push(new BgParticle());
   if(bgParticles.length>bgParticleTarget)bgParticles.length=bgParticleTarget;
   bgParticles.forEach(p=>{p.update();p.draw();});
   requestAnimationFrame(animBg);
 }
-animBg();
+requestAnimationFrame(animBg);
 
 // CURSOR
 const cursor=document.getElementById('cursor');
 const ring=document.getElementById('cursorRing');
-let mx=0,my=0,rx=0,ry=0;
-document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px';});
+let mx=0,my=0,rx=0,ry=0,_cursorRaf=false;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  if(!_cursorRaf){_cursorRaf=true;requestAnimationFrame(()=>{cursor.style.left=mx+'px';cursor.style.top=my+'px';_cursorRaf=false;});}
+});
 function animRing(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);}
 animRing();
 function regHover(el){
@@ -676,7 +687,7 @@ const heroCanvas=document.getElementById('heroCanvas');
 const hctx=heroCanvas.getContext('2d');
 let hParticles=[];
 function resizeHero(){heroCanvas.width=heroCanvas.parentElement.offsetWidth;heroCanvas.height=heroCanvas.parentElement.offsetHeight;}
-resizeHero();window.addEventListener('resize',resizeHero);
+resizeHero();let _heroResizeT;window.addEventListener('resize',()=>{clearTimeout(_heroResizeT);_heroResizeT=setTimeout(resizeHero,150);});
 class HParticle{
   constructor(){this.reset(true);}
   reset(init){
@@ -689,9 +700,19 @@ class HParticle{
   update(){this.x+=this.speedX;this.y+=this.speedY;this.life++;if(this.life>this.maxLife||this.y<-10)this.reset(false);}
   draw(){hctx.beginPath();hctx.arc(this.x,this.y,this.size,0,Math.PI*2);hctx.fillStyle=`rgba(57,255,20,${this.opacity*(1-this.life/this.maxLife)})`;hctx.fill();}
 }
-for(let i=0;i<80;i++)hParticles.push(new HParticle());
-function animHero(){hctx.clearRect(0,0,heroCanvas.width,heroCanvas.height);hParticles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animHero);}
-animHero();
+const heroCount=isMobile?15:40;
+for(let i=0;i<heroCount;i++)hParticles.push(new HParticle());
+let heroLastFrame=0;
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(animHero);});
+function animHero(ts){
+  if(document.hidden)return;
+  if(ts-heroLastFrame<33){requestAnimationFrame(animHero);return;}
+  heroLastFrame=ts;
+  hctx.clearRect(0,0,heroCanvas.width,heroCanvas.height);
+  hParticles.forEach(p=>{p.update();p.draw();});
+  requestAnimationFrame(animHero);
+}
+requestAnimationFrame(animHero);
 
 // LOGO SHATTER
 const logoImg=document.getElementById('logoImg');

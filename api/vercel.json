@@ -3,21 +3,14 @@
     "api/soundcloud.js": { "runtime": "nodejs18.x" },
     "api/snapshot.js": { "runtime": "nodejs18.x" },
     "api/chartmetric.js": { "runtime": "nodejs18.x" },
+    "api/daily-cron.js": { "runtime": "nodejs18.x" },
     "api/ritual.js": { "runtime": "nodejs18.x" },
     "api/printify.js": { "runtime": "nodejs18.x" }
   },
   "crons": [
     {
-      "path": "/api/snapshot",
+      "path": "/api/daily-cron",
       "schedule": "0 17 * * *"
-    },
-    {
-      "path": "/api/chartmetric",
-      "schedule": "0 17 */4 * *"
-    },
-    {
-      "path": "/api/ritual?action=reset",
-      "schedule": "0 5 1-7,15-21 * 1"
     }
   ]
 }

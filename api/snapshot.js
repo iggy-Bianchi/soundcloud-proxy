@@ -9,23 +9,47 @@ async function getSoundcloudStats() {
   try {
     const cached = await redis.get('sc_token');
     let token = cached;
+    console.log('[SC] cached token present:', !!token);
 
     if (!token) {
+      console.log('[SC] fetching new OAuth token');
       const tokenRes = await fetch('https://api.soundcloud.com/oauth2/token', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: new URLSearchParams({ grant_type: 'client_credentials', client_id: CLIENT_ID, client_secret: CLIENT_SECRET })
       });
+      if (!tokenRes.ok) {
+        console.error('[SC] token fetch failed:', tokenRes.status, await tokenRes.text());
+        return {};
+      }
       const { access_token, expires_in } = await tokenRes.json();
       token = access_token;
       await redis.set('sc_token', token, { ex: (expires_in || 3600) - 60 });
+      console.log('[SC] new token cached, expires_in:', expires_in);
     }
 
     const headers = { Authorization: `OAuth ${token}` };
     const userRes = await fetch('https://api.soundcloud.com/resolve?url=https://soundcloud.com/iamdoomsayer', { headers });
+    if (!userRes.ok) {
+      console.error('[SC] user resolve failed:', userRes.status);
+      if (userRes.status === 401) {
+        await redis.del('sc_token');
+        console.log('[SC] evicted stale token from cache');
+      }
+      return {};
+    }
     const user = await userRes.json();
+    console.log('[SC] user resolved: id=%s followers=%d', user.id, user.followers_count);
 
     const tracksRes = await fetch(`https://api.soundcloud.com/users/${user.id}/tracks?limit=20`, { headers });
+    if (!tracksRes.ok) {
+      console.error('[SC] tracks fetch failed:', tracksRes.status);
+      if (tracksRes.status === 401) {
+        await redis.del('sc_token');
+        console.log('[SC] evicted stale token from cache');
+      }
+      return {};
+    }
     const tracks = await tracksRes.json();
 
     let plays = 0, reposts = 0, downloads = 0;
@@ -38,6 +62,7 @@ async function getSoundcloudStats() {
     }
 
     const eng = plays > 0 ? (reposts / plays * 100) : 0;
+    console.log('[SC] stats: plays=%d reposts=%d downloads=%d', plays, reposts, downloads);
 
     return {
       sc_followers: user.followers_count,
@@ -48,21 +73,23 @@ async function getSoundcloudStats() {
       sc_eng: eng
     };
   } catch (e) {
-    console.error('SoundCloud error:', e.message);
+    console.error('[SC] error:', e.message, e.stack);
     return {};
   }
 }
 
 async function runSnapshot(res) {
+  console.log('[snapshot] runSnapshot started at', new Date().toISOString());
   const sc = await getSoundcloudStats();
 
   if (!sc.sc_followers && !sc.sc_plays) {
-    console.error('snapshot: SoundCloud stats empty — possible auth or API failure');
+    console.error('[snapshot] SoundCloud stats empty — skipping history append');
     return res.status(200).json({ ok: false, error: 'SoundCloud stats returned empty' });
   }
 
   const now = new Date();
   const label = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  console.log('[snapshot] label:', label);
 
   // Merge SC stats into latest snapshot (preserve CM stats)
   const existing = await redis.get('latest_snapshot') || {};
@@ -72,13 +99,18 @@ async function runSnapshot(res) {
   // Append to history
   const history = await redis.get('snapshots') || [];
   const last = history[history.length - 1];
+  console.log('[snapshot] history length:', history.length, '| last label:', last?.label ?? 'none');
+
   if (last && last.label === label) {
+    console.log('[snapshot] updating existing entry for', label);
     history[history.length - 1] = { ...last, followers: sc.sc_followers, plays: sc.sc_plays, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng };
   } else {
+    console.log('[snapshot] appending new entry for', label);
     history.push({ label, ts: Date.now(), followers: sc.sc_followers, plays: sc.sc_plays, likes: 0, reposts: sc.sc_reposts, downloads: sc.sc_downloads, eng: sc.sc_eng });
   }
   if (history.length > 90) history.splice(0, history.length - 90);
   await redis.set('snapshots', history);
+  console.log('[snapshot] history saved, length now:', history.length);
 
   return res.status(200).json({ ok: true, snapshot });
 }

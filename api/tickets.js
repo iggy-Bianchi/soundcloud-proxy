@@ -25,7 +25,7 @@ export default async function handler(req, res) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Emo Night Rave: Pink Is Punk / Jun 19 / The Pink Cactus / Planet Doom',
+              name: 'Emo Night Rave: Pink Is Punk / Jun 19 / The Pink Cactus / Planet Doom (Presale)',
             },
             unit_amount: 1000,
           },

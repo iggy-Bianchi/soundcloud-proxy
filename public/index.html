@@ -1072,6 +1072,7 @@ renderCartDrawer();
 
 // SC PLAYERS
 const SC_TRACKS=[
+  {slug:'youcanasktheflowers',url:'https://soundcloud.com/iamdoomsayer/youcanasktheflowers'},
   {slug:'call-me-karizma-nesya-we',url:'https://soundcloud.com/iamdoomsayer/call-me-karizma-nesya-we'},
   {slug:'aurea',url:'https://soundcloud.com/iamdoomsayer/aurea'},
   {slug:'praisethelord',url:'https://soundcloud.com/iamdoomsayer/praisethelord'},
@@ -1097,7 +1098,7 @@ async function loadSCPlayers(){
     if(!tracks.length){container.innerHTML='';return;}
     container.innerHTML='';
     tracks.forEach((t,idx)=>{
-      const art=t.artwork_url?t.artwork_url.replace('-large','-t500x500'):'';
+      const art=(t.artwork_url?t.artwork_url.replace('-large','-t500x500'):'') || (t.user&&t.user.avatar_url?t.user.avatar_url.replace('-large','-t500x500'):'');
       const waveform=t.waveform_url||'';
       const dur=fmtDur(t.duration||0);const plays=fmtPlays(t.playback_count||0);const reposts=fmtPlays(t.reposts_count||0);
       const permalink=t.permalink_url?t.permalink_url.split('?')[0]:'#';

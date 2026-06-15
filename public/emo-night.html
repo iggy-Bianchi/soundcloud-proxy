@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PINK IS PUNK — Emo Night // DOOMSAYER</title>
+<meta name="description" content="Planet Doom presents PINK IS PUNK: Emo Night with Doomsayer + TJO. The Pink Cactus, Knoxville. Friday June 19, 9PM. $10 presale, limited cap. 18+." />
+
+<!-- Open Graph / share preview -->
+<meta property="og:title" content="PINK IS PUNK — Emo Night // DOOMSAYER" />
+<meta property="og:description" content="Doomsayer + TJO at The Pink Cactus. Fri June 19, 9PM. $10 presale, limited cap. 18+." />
+<meta property="og:image" content="https://www.iamdoomsayer.com/Emo_Night_PD_3.png" />
+<meta property="og:url" content="https://www.iamdoomsayer.com/emo-night" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+<style>
+  /* ---- tokens ---------------------------------------------------- */
+  :root{
+    --void:#08080a;
+    --panel:#121216;
+    --edge:#20202a;
+    --pink:#ff1f9c;
+    --pink-soft:#ff5cbb;
+    --pink-glow:rgba(255,31,156,.45);
+    --ice:#f3f3f5;
+    --ash:#7e7e89;
+    --display:"Anton",Impact,sans-serif;
+    --body:"Inter",system-ui,sans-serif;
+    --hud:"Space Mono",ui-monospace,monospace;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--void);
+    color:var(--ice);
+    font-family:var(--body);
+    line-height:1.55;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+
+  /* scanline + grain atmosphere (echoes the site SYSTEM toggles) */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:90;
+    background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 2px,rgba(0,0,0,.22) 2px 3px);
+    mix-blend-mode:multiply;opacity:.5;
+  }
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:89;
+    background:radial-gradient(120% 90% at 50% 0%,transparent 55%,rgba(0,0,0,.85) 100%);
+  }
+
+  /* ---- top HUD bar ----------------------------------------------- */
+  .hud{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 18px;font-family:var(--hud);font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ash);
+    background:linear-gradient(to bottom,rgba(8,8,10,.92),rgba(8,8,10,0));
+    backdrop-filter:blur(6px);
+  }
+  .hud .back{color:var(--ice);display:flex;align-items:center;gap:8px;transition:color .2s;}
+  .hud .back:hover{color:var(--pink);}
+  .hud .stamp{display:none;gap:22px;}
+  @media(min-width:760px){.hud .stamp{display:flex;}}
+
+  /* ---- hero ------------------------------------------------------ */
+  .hero{
+    position:relative;min-height:100svh;
+    display:flex;flex-direction:column;justify-content:center;
+    padding:96px 20px 56px;max-width:1080px;margin:0 auto;
+  }
+  .eyebrow{
+    font-family:var(--hud);font-size:12px;letter-spacing:.34em;text-transform:uppercase;
+    color:var(--pink);margin-bottom:22px;display:flex;align-items:center;gap:12px;
+  }
+  .eyebrow::before{content:"";width:34px;height:1px;background:var(--pink);}
+
+  /* the flyer-echo title block */
+  .marquee{display:inline-block;transform:rotate(-2.2deg);margin-bottom:6px;}
+  .marquee .row{
+    display:inline-block;background:var(--pink);color:#000;
+    font-family:var(--display);font-weight:400;line-height:.92;
+    text-transform:uppercase;padding:6px 16px 10px;
+    font-size:clamp(38px,11vw,118px);letter-spacing:.01em;
+  }
+  .marquee .row .out{
+    color:transparent;-webkit-text-stroke:2px #fff;text-stroke:2px #fff;
+  }
+  .marquee .row.b{margin-top:-2px;}
+
+  .lineup{
+    font-family:var(--display);text-transform:uppercase;
+    font-size:clamp(30px,7vw,64px);line-height:1;margin:26px 0 4px;letter-spacing:.01em;
+  }
+  .lineup .x{color:var(--pink);}
+  .lineup .small{color:var(--ash);font-size:.42em;vertical-align:middle;letter-spacing:.06em;}
+
+  .facts{
+    font-family:var(--hud);font-size:13px;letter-spacing:.05em;color:var(--ice);
+    display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;
+  }
+  .facts span{display:inline-flex;align-items:center;gap:8px;}
+  .facts b{color:var(--pink);font-weight:700;}
+  .facts .dot{width:4px;height:4px;border-radius:50%;background:var(--ash);}
+
+  /* ---- countdown (signature element) ----------------------------- */
+  .count{
+    display:flex;gap:10px;margin:34px 0 30px;flex-wrap:wrap;
+  }
+  .count .unit{
+    background:var(--panel);border:1px solid var(--edge);
+    padding:12px 14px;min-width:78px;text-align:center;
+  }
+  .count .n{font-family:var(--display);font-size:38px;line-height:1;color:var(--ice);}
+  .count .l{font-family:var(--hud);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash);margin-top:6px;}
+  .count.done .n{color:var(--pink);}
+
+  /* ---- CTA ------------------------------------------------------- */
+  .buy{
+    display:flex;flex-wrap:wrap;align-items:center;gap:16px;
+  }
+  .qty{
+    display:flex;align-items:center;border:1px solid var(--edge);background:var(--panel);
+  }
+  .qty button{
+    background:none;border:none;color:var(--ice);font-family:var(--hud);
+    font-size:20px;width:42px;height:50px;cursor:pointer;transition:color .15s;
+  }
+  .qty button:hover{color:var(--pink);}
+  .qty .val{
+    font-family:var(--hud);font-size:16px;width:38px;text-align:center;
+  }
+  .cta{
+    appearance:none;border:none;cursor:pointer;
+    font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;
+    font-size:20px;padding:16px 30px;color:#000;background:var(--pink);
+    box-shadow:0 0 0 0 var(--pink-glow);transition:box-shadow .25s,transform .12s;
+  }
+  .cta:hover{box-shadow:0 0 34px 2px var(--pink-glow);}
+  .cta:active{transform:translateY(1px);}
+  .cta:disabled{opacity:.6;cursor:wait;}
+  .fineprint{font-family:var(--hud);font-size:11px;color:var(--ash);letter-spacing:.08em;margin-top:14px;text-transform:uppercase;}
+
+  /* status banners */
+  .banner{
+    font-family:var(--hud);font-size:13px;letter-spacing:.04em;
+    border:1px solid var(--edge);padding:14px 16px;margin-bottom:26px;display:none;
+  }
+  .banner.show{display:block;}
+  .banner.ok{border-color:var(--pink);color:var(--pink-soft);background:rgba(255,31,156,.08);}
+  .banner.warn{color:var(--ash);}
+
+  /* ---- detail strip ---------------------------------------------- */
+  .strip{border-top:1px solid var(--edge);border-bottom:1px solid var(--edge);}
+  .strip .inner{
+    max-width:1080px;margin:0 auto;padding:54px 20px;
+    display:grid;gap:40px;grid-template-columns:1fr;
+  }
+  @media(min-width:860px){.strip .inner{grid-template-columns:1.1fr .9fr;align-items:start;}}
+
+  .block h2{
+    font-family:var(--hud);font-size:12px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--pink);margin-bottom:18px;
+  }
+  .meta{display:grid;gap:0;}
+  .meta .line{
+    display:flex;justify-content:space-between;gap:16px;
+    padding:13px 0;border-bottom:1px solid var(--edge);
+  }
+  .meta .k{font-family:var(--hud);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);}
+  .meta .v{font-size:15px;text-align:right;}
+  .meta .v a{color:var(--pink);}
+
+  .note{color:var(--ash);font-size:15px;}
+  .note strong{color:var(--ice);}
+  .perk{
+    margin-top:22px;border:1px solid var(--pink);padding:18px;background:rgba(255,31,156,.06);
+  }
+  .perk .tag{font-family:var(--hud);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--pink);margin-bottom:8px;}
+
+  .flyer-wrap{position:relative;}
+  .flyer-wrap img{
+    width:100%;display:block;border:1px solid var(--edge);
+    filter:saturate(1.05);
+  }
+  .flyer-cap{font-family:var(--hud);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);margin-top:10px;text-align:center;}
+
+  /* ---- footer ---------------------------------------------------- */
+  footer{max-width:1080px;margin:0 auto;padding:48px 20px 70px;text-align:center;}
+  .wordmark{font-family:var(--display);font-size:clamp(40px,12vw,120px);letter-spacing:.02em;color:var(--ice);text-transform:uppercase;line-height:.9;}
+  .social{display:flex;gap:24px;justify-content:center;margin:24px 0 18px;font-family:var(--hud);font-size:12px;letter-spacing:.12em;text-transform:uppercase;}
+  .social a{color:var(--ash);transition:color .2s;}
+  .social a:hover{color:var(--pink);}
+  .tag-line{font-family:var(--hud);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ash);}
+
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+  <div class="hud">
+    <a class="back" href="/">&larr; Doomsayer</a>
+    <div class="stamp">
+      <span>35&deg;58'N / 83&deg;55'W</span>
+      <span>The Pink Cactus</span>
+      <span id="hud-clock">--:--:-- UTC</span>
+    </div>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div id="banner-ok" class="banner ok">
+      Presale secured. Watch your inbox &mdash; full details drop the week of the show. Reply to that email to request one emo-era song.
+    </div>
+    <div id="banner-warn" class="banner warn">
+      Checkout closed before payment. Your spot isn't held yet &mdash; grab it below.
+    </div>
+
+    <div class="eyebrow">Planet Doom presents</div>
+
+    <div class="marquee">
+      <div class="row">Pink <span class="out">Is</span> Punk</div><br />
+      <div class="row b"><span class="out">Emo</span> Night</div>
+    </div>
+
+    <div class="lineup">
+      Doomsayer <span class="x">+</span> TJO
+    </div>
+
+    <div class="facts">
+      <span><b>FRI</b> June 19</span>
+      <span class="dot"></span>
+      <span>Doors / <b>9PM</b></span>
+      <span class="dot"></span>
+      <span>The Pink Cactus</span>
+      <span class="dot"></span>
+      <span><b>18+</b></span>
+      <span class="dot"></span>
+      <span><b>$10</b> presale &middot; limited cap</span>
+    </div>
+
+    <div class="count" id="count">
+      <div class="unit"><div class="n" id="cd-d">--</div><div class="l">Days</div></div>
+      <div class="unit"><div class="n" id="cd-h">--</div><div class="l">Hrs</div></div>
+      <div class="unit"><div class="n" id="cd-m">--</div><div class="l">Min</div></div>
+      <div class="unit"><div class="n" id="cd-s">--</div><div class="l">Sec</div></div>
+    </div>
+
+    <div class="buy">
+      <div class="qty">
+        <button type="button" id="minus" aria-label="Decrease quantity">&minus;</button>
+        <span class="val" id="qty">1</span>
+        <button type="button" id="plus" aria-label="Increase quantity">+</button>
+      </div>
+      <button type="button" class="cta" id="buy-btn">Claim Presale &mdash; $10</button>
+    </div>
+    <div class="fineprint">Limited capacity &middot; presale closes when caps hit &middot; secure checkout via Stripe</div>
+  </section>
+
+  <!-- ============ DETAILS ============ -->
+  <section class="strip">
+    <div class="inner">
+      <div class="block">
+        <h2>The Ritual</h2>
+        <div class="meta">
+          <div class="line"><span class="k">Date</span><span class="v">Friday, June 19, 2026</span></div>
+          <div class="line"><span class="k">Doors</span><span class="v">9:00 PM</span></div>
+          <div class="line"><span class="k">Venue</span><span class="v">The Pink Cactus</span></div>
+          <div class="line"><span class="k">Address</span><span class="v"><a href="https://maps.google.com/?q=1147+Sevier+Ave+Knoxville+TN" target="_blank" rel="noopener">1147 Sevier Ave, Knoxville, TN</a></span></div>
+          <div class="line"><span class="k">Lineup</span><span class="v">Doomsayer + TJO</span></div>
+          <div class="line"><span class="k">Age</span><span class="v">18+</span></div>
+          <div class="line"><span class="k">Presale</span><span class="v">$10 &middot; limited capacity</span></div>
+        </div>
+
+        <div class="perk">
+          <div class="tag">Presale Perk</div>
+          <div class="note"><strong>Presale buyers pick the soundtrack.</strong> Reply to your confirmation email and request one emo-era song. We'll work the best ones into the set.</div>
+        </div>
+      </div>
+
+      <div class="block">
+        <h2>Pink Is Punk</h2>
+        <p class="note" style="margin-bottom:22px;">Black eyeliner, breakdowns, and the songs you screamed in the car at 16 &mdash; reworked into a late-night ritual. Doomsayer and TJO take over The Pink Cactus for one night of emo, pop-punk, and bass. Wear black. Bring your voice.</p>
+        <div class="flyer-wrap">
+          <img src="/Emo_Night_PD_3.png" alt="Pink Is Punk Emo Night flyer — Doomsayer + TJO, The Pink Cactus, June 19" />
+          <div class="flyer-cap">// June 19 &middot; The Pink Cactus &middot; Knoxville</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer>
+    <div class="wordmark">Doomsayer</div>
+    <div class="social">
+      <a href="https://instagram.com/iamdoomsayer" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://soundcloud.com/iamdoomsayer" target="_blank" rel="noopener">Soundcloud</a>
+      <a href="https://open.spotify.com/artist/7qKOHQyTesKwALRRCfare2" target="_blank" rel="noopener">Spotify</a>
+      <a href="https://tiktok.com/@iamdoomsayer" target="_blank" rel="noopener">TikTok</a>
+    </div>
+    <div class="tag-line">/ The ritual continues.</div>
+  </footer>
+
+<script>
+  /* ---- if your home-page presale uses a different route, change this one line ---- */
+  var CHECKOUT_ENDPOINT = "/api/emo-checkout";
+
+  /* ---- quantity stepper ---- */
+  var qty = 1, MAXQ = 6;
+  var qtyEl = document.getElementById("qty");
+  function render(){ qtyEl.textContent = qty; }
+  document.getElementById("plus").onclick  = function(){ if(qty<MAXQ){qty++;render();} };
+  document.getElementById("minus").onclick = function(){ if(qty>1){qty--;render();} };
+
+  /* ---- checkout ---- */
+  var btn = document.getElementById("buy-btn");
+  btn.onclick = async function(){
+    btn.disabled = true;
+    var label = btn.textContent;
+    btn.textContent = "Summoning checkout...";
+    try{
+      var r = await fetch(CHECKOUT_ENDPOINT, {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({ quantity: qty })
+      });
+      var data = await r.json();
+      if(data && data.url){ window.location.href = data.url; return; }
+      throw new Error(data && data.error ? data.error : "No checkout URL returned");
+    }catch(e){
+      btn.disabled = false;
+      btn.textContent = label;
+      alert("Checkout couldn't open: " + e.message + "\nTry again in a moment.");
+    }
+  };
+
+  /* ---- post-checkout status ---- */
+  var status = new URLSearchParams(location.search).get("status");
+  if(status === "success") document.getElementById("banner-ok").classList.add("show");
+  if(status === "cancelled" || status === "canceled") document.getElementById("banner-warn").classList.add("show");
+
+  /* ---- live UTC clock (HUD) ---- */
+  function clock(){
+    var d = new Date();
+    var p = function(n){return String(n).padStart(2,"0");};
+    document.getElementById("hud-clock").textContent =
+      p(d.getUTCHours())+":"+p(d.getUTCMinutes())+":"+p(d.getUTCSeconds())+" UTC";
+  }
+  clock(); setInterval(clock,1000);
+
+  /* ---- countdown to doors: Fri June 19 2026, 9PM ET (01:00 UTC Jun 20) ---- */
+  var TARGET = Date.UTC(2026,5,20,1,0,0);
+  function tick(){
+    var diff = TARGET - Date.now();
+    var box = document.getElementById("count");
+    if(diff <= 0){
+      box.classList.add("done");
+      document.getElementById("cd-d").textContent="00";
+      document.getElementById("cd-h").textContent="00";
+      document.getElementById("cd-m").textContent="00";
+      document.getElementById("cd-s").textContent="LIVE";
+      return;
+    }
+    var s = Math.floor(diff/1000);
+    var d = Math.floor(s/86400); s-=d*86400;
+    var h = Math.floor(s/3600);  s-=h*3600;
+    var m = Math.floor(s/60);    s-=m*60;
+    var p = function(n){return String(n).padStart(2,"0");};
+    document.getElementById("cd-d").textContent=p(d);
+    document.getElementById("cd-h").textContent=p(h);
+    document.getElementById("cd-m").textContent=p(m);
+    document.getElementById("cd-s").textContent=p(s);
+  }
+  tick(); setInterval(tick,1000);
+</script>
+</body>
+</html>

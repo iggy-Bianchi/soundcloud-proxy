@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PINK IS PUNK // EMO NIGHT — DOOMSAYER</title>
+<meta name="description" content="Planet Doom presents Pink Is Punk: Emo Night with Doomsayer + TJO. The Pink Cactus, Knoxville. Friday June 19, 9PM. $10 presale, limited cap. 18+.">
+<meta property="og:title" content="PINK IS PUNK // EMO NIGHT — DOOMSAYER">
+<meta property="og:description" content="Doomsayer + TJO at The Pink Cactus. Fri June 19, 9PM. $10 presale, limited cap. 18+.">
+<meta property="og:image" content="https://www.iamdoomsayer.com/Emo_Night_PD_3.png">
+<meta property="og:url" content="https://www.iamdoomsayer.com/emo-night">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400&family=VT323&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000;--charcoal:#0a0a0a;--charcoal-2:#101010;
+  --acid:#FF1493;--toxic:#a01060;--acid-dim:rgba(255,20,147,.4);
+  --bone:#E8E8E8;--ash:#777;--dust:#3a2230;--ink:#160d12;
+  --scanline-opacity:1;
+}
+html{scroll-behavior:smooth}
+[id]{scroll-margin-top:54px}
+body{font-family:'JetBrains Mono',monospace;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden;cursor:none}
+
+/* SCANLINES */
+body::before{content:'';position:fixed;inset:0;z-index:9;pointer-events:none;opacity:var(--scanline-opacity);background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.04) 2px,rgba(0,0,0,.04) 4px);will-change:transform}
+/* FILM GRAIN */
+#grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:8;pointer-events:none;opacity:.045;filter:url(#grainFilter);animation:grainShift .5s steps(1) infinite;will-change:transform}
+@keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(-2%,-1%)}50%{transform:translate(1%,2%)}75%{transform:translate(-1%,1%)}100%{transform:translate(2%,-2%)}}
+#bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;width:100%;height:100%}
+
+/* CURSOR */
+.cursor{position:fixed;width:30px;height:30px;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s}
+.cursor svg{width:100%;height:100%;animation:spinSigil 8s linear infinite}
+.cursor-ring{position:fixed;width:50px;height:50px;pointer-events:none;z-index:9998;transform:translate(-50%,-50%)}
+.cursor-ring svg{width:100%;height:100%}
+@keyframes spinSigil{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent)}
+.nav-sigil{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-sigil-mark{width:20px;height:20px;position:relative;flex-shrink:0}
+.nav-sigil-mark::before{content:'';position:absolute;inset:4px;border:1px solid var(--acid);transform:rotate(45deg)}
+.nav-sigil-mark::after{content:'';position:absolute;inset:0;border:0.5px solid var(--acid-dim)}
+.nav-sigil-text{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;color:var(--bone)}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--acid)}
+.nav-epk{border:0.5px solid var(--toxic);color:var(--acid);padding:4px 12px}
+.nav-epk:hover{background:rgba(255,20,147,.08)}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:6rem 3rem 4rem;overflow:hidden}
+.hud{position:absolute;inset:0;z-index:2;pointer-events:none}
+.hud-corner{position:absolute;width:36px;height:36px}
+.hud-corner-tl{top:54px;left:18px;border-top:1px solid var(--acid-dim);border-left:1px solid var(--acid-dim)}
+.hud-corner-tr{top:54px;right:18px;border-top:1px solid var(--acid-dim);border-right:1px solid var(--acid-dim)}
+.hud-corner-bl{bottom:18px;left:18px;border-bottom:1px solid var(--acid-dim);border-left:1px solid var(--acid-dim)}
+.hud-corner-br{bottom:18px;right:18px;border-bottom:1px solid var(--acid-dim);border-right:1px solid var(--acid-dim)}
+.hud-coords{position:absolute;top:62px;left:26px;font-family:'VT323',monospace;font-size:14px;letter-spacing:.08em;color:var(--acid-dim);text-transform:uppercase}
+.hud-readouts{position:absolute;top:62px;right:26px;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.hud-val{font-family:'VT323',monospace;font-size:13px;letter-spacing:.06em;color:var(--acid-dim);text-transform:uppercase}
+.hud-bpm{position:absolute;bottom:28px;right:26px;font-family:'VT323',monospace;font-size:18px;letter-spacing:.1em;color:var(--acid-dim)}
+
+.hero-content{position:relative;z-index:5;max-width:960px;width:100%}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.28em;color:var(--acid);text-transform:uppercase;margin-bottom:1.6rem;display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:'';width:34px;height:0.5px;background:var(--acid)}
+
+.title-block{transform:rotate(-2deg);display:inline-block;margin-bottom:.4rem}
+.title-row{display:inline-block;background:var(--acid);color:#000;font-family:'Bebas Neue',sans-serif;line-height:.92;text-transform:uppercase;padding:2px 16px 6px;font-size:clamp(42px,11vw,120px);letter-spacing:.02em}
+.title-row .out{color:#000;-webkit-text-stroke:2px #000;text-stroke:2px #000;background:#fff;padding:0 .12em;margin:0 .04em}
+.title-row.b{margin-top:-4px}
+
+.lineup{font-family:'Bebas Neue',sans-serif;text-transform:uppercase;font-size:clamp(30px,6.5vw,62px);line-height:1;margin:1.6rem 0 .2rem;letter-spacing:.03em}
+.lineup .x{color:var(--acid)}
+
+.facts{font-family:'VT323',monospace;font-size:18px;letter-spacing:.04em;color:var(--bone);display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:1rem}
+.facts b{color:var(--acid)}
+.facts .sep{color:var(--dust)}
+
+/* COUNTDOWN */
+.count{display:flex;gap:10px;margin:2rem 0 1.8rem;flex-wrap:wrap}
+.count .unit{background:var(--charcoal);border:0.5px solid var(--ink);padding:12px 14px;min-width:76px;text-align:center}
+.count .n{font-family:'Bebas Neue',sans-serif;font-size:2.4rem;line-height:1;color:var(--bone)}
+.count .l{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash);margin-top:5px}
+.count.done .n{color:var(--acid)}
+
+/* CTA */
+.buy{display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+.qty{display:flex;align-items:center;border:0.5px solid var(--dust);background:var(--charcoal)}
+.qty button{background:none;border:none;color:var(--bone);font-family:'JetBrains Mono',monospace;font-size:16px;width:40px;height:48px;cursor:none;transition:color .15s}
+.qty button:hover{color:var(--acid)}
+.qty .val{font-family:'JetBrains Mono',monospace;font-size:14px;width:34px;text-align:center}
+.cta{padding:14px 30px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;border:0.5px solid var(--acid);color:var(--acid);background:rgba(255,20,147,.1);cursor:none;transition:all .3s}
+.cta:hover{background:rgba(255,20,147,.2)}
+.cta:disabled{opacity:.5;pointer-events:none}
+.fineprint{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ash);letter-spacing:.12em;margin-top:1rem;text-transform:uppercase}
+
+/* SECTIONS */
+.section-bg{background:var(--charcoal);border-top:0.5px solid var(--ink);border-bottom:0.5px solid var(--ink)}
+.section-wrap{padding:5rem 3rem;max-width:1100px;margin:0 auto}
+.section-hdr{position:relative;margin-bottom:2.6rem;overflow:visible}
+.section-hdr::before{content:attr(data-ghost);position:absolute;top:-28px;left:-4px;font-family:'Bebas Neue',sans-serif;font-size:7rem;color:rgba(255,255,255,.06);letter-spacing:.05em;pointer-events:none;line-height:1;white-space:nowrap;user-select:none}
+.section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.28em;color:var(--acid);text-transform:uppercase;display:flex;align-items:center;gap:16px}
+.section-label::after{content:'';flex:1;height:0.5px;background:var(--ink)}
+
+.grid{display:grid;gap:3rem;grid-template-columns:1fr}
+.meta .row{display:flex;justify-content:space-between;gap:16px;padding:13px 0;border-bottom:0.5px solid var(--ink)}
+.meta .k{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--ash)}
+.meta .v{font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right}
+.meta .v a{color:var(--acid);text-decoration:none}
+.note{font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.8;color:var(--ash)}
+.note b{color:var(--bone)}
+.perk{margin-top:1.6rem;border:0.5px solid var(--acid);background:rgba(255,20,147,.06);padding:1.1rem}
+.perk .tag{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--acid);margin-bottom:.5rem}
+.flyer img{width:100%;display:block;border:0.5px solid var(--ink)}
+.flyer .cap{font-family:'VT323',monospace;font-size:14px;letter-spacing:.1em;text-transform:uppercase;color:var(--ash);margin-top:.7rem;text-align:center}
+
+.banner{font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.05em;border:0.5px solid var(--acid);background:rgba(255,20,147,.08);color:var(--acid);padding:13px 16px;margin-bottom:1.6rem;display:none}
+.banner.show{display:block}
+
+/* FOOTER */
+footer{padding:3rem;border-top:0.5px solid var(--ink);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.1em;color:var(--dust)}
+.footer-links{display:flex;gap:1.5rem}
+.footer-links a{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--dust);text-decoration:none;text-transform:uppercase;transition:color .2s}
+.footer-links a:hover{color:var(--acid)}
+.footer-copy{font-family:'JetBrains Mono',monospace;font-size:9px;color:#2a1a22;letter-spacing:.1em}
+
+@media(min-width:860px){.grid{grid-template-columns:1.05fr .95fr;align-items:start}}
+@media(hover:none){.cursor,.cursor-ring{display:none}body{cursor:auto}.cta,.qty button,.nav-links a,.nav-sigil{cursor:pointer}}
+@media(max-width:768px){
+  nav{padding:.8rem 1.2rem}.nav-links a:not(.nav-epk){display:none}.hud{display:none}#grain{display:none}
+  .hero{padding:5rem 1.4rem 3rem}.section-wrap{padding:3.5rem 1.4rem}.section-hdr::before{font-size:4rem}
+  footer{padding:2rem 1.4rem}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.cursor svg{animation:none}#grain{animation:none}}
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <filter id="grainFilter" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/>
+    <feColorMatrix type="saturate" values="0"/>
+  </filter>
+</svg>
+<div id="grain" aria-hidden="true"></div>
+<canvas id="bgCanvas"></canvas>
+
+<div class="cursor" id="cursor">
+  <svg viewBox="0 0 30 30" fill="none">
+    <circle cx="15" cy="15" r="13" stroke="var(--acid)" stroke-width="0.5" opacity="0.6"/>
+    <rect x="8" y="8" width="14" height="14" stroke="var(--acid)" stroke-width="0.5" transform="rotate(45 15 15)"/>
+    <circle cx="15" cy="15" r="1.5" fill="var(--acid)"/>
+  </svg>
+</div>
+<div class="cursor-ring" id="cursorRing">
+  <svg viewBox="0 0 50 50" fill="none"><circle cx="25" cy="25" r="23" stroke="var(--acid)" stroke-width="0.5" stroke-dasharray="3 6" opacity="0.22"/></svg>
+</div>
+
+<nav>
+  <a href="/" class="nav-sigil"><div class="nav-sigil-mark"></div><span class="nav-sigil-text">DOOMSAYER</span></a>
+  <div class="nav-links">
+    <a href="/#shows">All Shows</a>
+    <a href="/epk" class="nav-epk">EPK</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hud">
+    <div class="hud-corner hud-corner-tl"></div><div class="hud-corner hud-corner-tr"></div>
+    <div class="hud-corner hud-corner-bl"></div><div class="hud-corner hud-corner-br"></div>
+    <div class="hud-coords">35&#176;58'N / 83&#176;55'W</div>
+    <div class="hud-readouts">
+      <div class="hud-val" id="hudClock">00:00:00 UTC</div>
+      <div class="hud-val">THE PINK CACTUS</div>
+    </div>
+    <div class="hud-bpm">EMO // 06.19</div>
+  </div>
+
+  <div class="hero-content">
+    <div class="banner" id="banner">Ticket confirmed. See you at the ritual. Reply to your email to request one emo-era song.</div>
+    <div class="eyebrow">Planet Doom presents</div>
+    <div class="title-block">
+      <div class="title-row">Pink <span class="out">Is</span> Punk</div><br>
+      <div class="title-row b">Emo Night</div>
+    </div>
+    <div class="lineup">Doomsayer <span class="x">+</span> TJO</div>
+    <div class="facts">
+      <span><b>FRI</b> JUNE 19</span><span class="sep">/</span>
+      <span>DOORS <b>9PM</b></span><span class="sep">/</span>
+      <span>THE PINK CACTUS</span><span class="sep">/</span>
+      <span><b>18+</b></span><span class="sep">/</span>
+      <span><b>$10</b> PRESALE</span>
+    </div>
+    <div class="count" id="count">
+      <div class="unit"><div class="n" id="cd-d">--</div><div class="l">Days</div></div>
+      <div class="unit"><div class="n" id="cd-h">--</div><div class="l">Hrs</div></div>
+      <div class="unit"><div class="n" id="cd-m">--</div><div class="l">Min</div></div>
+      <div class="unit"><div class="n" id="cd-s">--</div><div class="l">Sec</div></div>
+    </div>
+    <div class="buy">
+      <div class="qty">
+        <button type="button" id="minus" aria-label="Decrease">&minus;</button>
+        <span class="val" id="qty">1</span>
+        <button type="button" id="plus" aria-label="Increase">+</button>
+      </div>
+      <button type="button" class="cta" id="buyBtn" onclick="buyTicket(this)">Claim Presale &mdash; $10</button>
+    </div>
+    <div class="fineprint">Limited capacity &middot; presale closes when caps hit &middot; secure checkout via Stripe</div>
+  </div>
+</section>
+
+<!-- DETAILS -->
+<div class="section-bg">
+<div class="section-wrap">
+  <div class="grid">
+    <div>
+      <div class="section-hdr" data-ghost="RITUAL"><div class="section-label">[ THE RITUAL ]</div></div>
+      <div class="meta">
+        <div class="row"><span class="k">Date</span><span class="v">Friday, June 19, 2026</span></div>
+        <div class="row"><span class="k">Doors</span><span class="v">9:00 PM</span></div>
+        <div class="row"><span class="k">Venue</span><span class="v">The Pink Cactus</span></div>
+        <div class="row"><span class="k">Address</span><span class="v"><a href="https://maps.google.com/?q=1147+Sevier+Ave+Knoxville+TN" target="_blank" rel="noopener">1147 Sevier Ave, Knoxville</a></span></div>
+        <div class="row"><span class="k">Lineup</span><span class="v">Doomsayer + TJO</span></div>
+        <div class="row"><span class="k">Age</span><span class="v">18+</span></div>
+        <div class="row"><span class="k">Presale</span><span class="v">$10 &middot; limited cap</span></div>
+      </div>
+      <div class="perk">
+        <div class="tag">Presale Perk</div>
+        <div class="note"><b>Presale buyers pick the soundtrack.</b> Reply to your confirmation email and request one emo-era song. The best ones make the set.</div>
+      </div>
+    </div>
+    <div>
+      <div class="section-hdr" data-ghost="PINK"><div class="section-label">[ PINK IS PUNK ]</div></div>
+      <p class="note" style="margin-bottom:1.6rem">Black eyeliner, breakdowns, and the songs you screamed in the car at 16, reworked into a late-night ritual. Doomsayer and TJO take over The Pink Cactus for one night of emo, pop-punk, and bass. Wear black. Bring your voice.</p>
+      <div class="flyer">
+        <img src="/Emo_Night_PD_3.png" alt="Pink Is Punk Emo Night flyer">
+        <div class="cap">// June 19 &middot; The Pink Cactus &middot; Knoxville</div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  <div class="footer-logo">DOOMSAYER</div>
+  <div class="footer-links">
+    <a href="https://instagram.com/iamdoomsayer" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://soundcloud.com/iamdoomsayer" target="_blank" rel="noopener">Soundcloud</a>
+    <a href="https://open.spotify.com/artist/7qKOHQyTesKwALRRCfare2" target="_blank" rel="noopener">Spotify</a>
+    <a href="https://tiktok.com/@iamdoomsayer" target="_blank" rel="noopener">TikTok</a>
+  </div>
+  <div class="footer-copy">/ The ritual continues.</div>
+</footer>
+
+<script>
+const PROXY='https://soundcloud-proxy-xi.vercel.app';
+
+/* quantity */
+let qty=1;const MAXQ=6;const qtyEl=document.getElementById('qty');
+document.getElementById('plus').onclick=()=>{if(qty<MAXQ){qty++;qtyEl.textContent=qty;}};
+document.getElementById('minus').onclick=()=>{if(qty>1){qty--;qtyEl.textContent=qty;}};
+
+/* checkout — same endpoint the home page uses */
+async function buyTicket(btn){
+  const orig=btn.textContent;btn.textContent='Processing...';btn.disabled=true;
+  try{
+    const resp=await fetch(`${PROXY}/api/tickets`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'pink-cactus-0619',quantity:qty})});
+    const data=await resp.json();
+    if(data.url){window.location.href=data.url;return;}
+    throw new Error('no url');
+  }catch(e){btn.textContent=orig;btn.disabled=false;alert('Checkout error. Try again in a moment.');}
+}
+
+/* return banner */
+const p=new URLSearchParams(location.search);
+if(p.get('ticket')==='success'||p.get('status')==='success')document.getElementById('banner').classList.add('show');
+
+/* HUD clock */
+function clock(){const d=new Date();const z=n=>String(n).padStart(2,'0');document.getElementById('hudClock').textContent=z(d.getUTCHours())+':'+z(d.getUTCMinutes())+':'+z(d.getUTCSeconds())+' UTC';}
+clock();setInterval(clock,1000);
+
+/* countdown to Fri Jun 19 2026 9PM ET = 01:00 UTC Jun 20 */
+const TARGET=Date.UTC(2026,5,20,1,0,0);
+function tick(){
+  const diff=TARGET-Date.now();const box=document.getElementById('count');const z=n=>String(n).padStart(2,'0');
+  if(diff<=0){box.classList.add('done');document.getElementById('cd-d').textContent='00';document.getElementById('cd-h').textContent='00';document.getElementById('cd-m').textContent='00';document.getElementById('cd-s').textContent='LIVE';return;}
+  let s=Math.floor(diff/1000);const d=Math.floor(s/86400);s-=d*86400;const h=Math.floor(s/3600);s-=h*3600;const m=Math.floor(s/60);s-=m*60;
+  document.getElementById('cd-d').textContent=z(d);document.getElementById('cd-h').textContent=z(h);document.getElementById('cd-m').textContent=z(m);document.getElementById('cd-s').textContent=z(s);
+}
+tick();setInterval(tick,1000);
+
+/* custom cursor (skipped on touch) */
+if(!matchMedia('(hover:none)').matches){
+  const cursor=document.getElementById('cursor'),ring=document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0,raf=false;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;if(!raf){raf=true;requestAnimationFrame(()=>{cursor.style.left=mx+'px';cursor.style.top=my+'px';raf=false;});}});
+  (function ringLoop(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(ringLoop);})();
+  document.querySelectorAll('a,button').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(1.8)';ring.style.opacity='0';});
+    el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.opacity='1';});
+  });
+}
+
+/* bg particles (pink) */
+const c=document.getElementById('bgCanvas'),ctx=c.getContext('2d');
+const mob=matchMedia('(max-width:767px)').matches||('ontouchstart' in window);
+let parts=[],target=mob?15:42;
+function rs(){c.width=innerWidth;c.height=innerHeight;}rs();let rt;addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(rs,150);});
+function mk(init){return{x:Math.random()*c.width,y:init?Math.random()*c.height:c.height+10,s:Math.random()*1.2+.2,vy:-(Math.random()*.3+.05),vx:(Math.random()-.5)*.15,o:Math.random()*.25+.05,life:init?Math.floor(Math.random()*400):0,max:Math.random()*400+200};}
+for(let i=0;i<target;i++)parts.push(mk(true));
+let last=0;
+addEventListener('visibilitychange',()=>{if(!document.hidden)requestAnimationFrame(loop);});
+function loop(ts){if(document.hidden)return;if(ts-last<33){requestAnimationFrame(loop);return;}last=ts;ctx.clearRect(0,0,c.width,c.height);while(parts.length<target)parts.push(mk(false));if(parts.length>target)parts.length=target;parts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.life++;if(p.life>p.max||p.y<-10)Object.assign(p,mk(false));ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fillStyle=`rgba(255,20,147,${p.o*(1-p.life/p.max)})`;ctx.fill();});requestAnimationFrame(loop);}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

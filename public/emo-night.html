@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z47PSEW4LB"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z47PSEW4LB');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>PINK IS PUNK // EMO NIGHT — DOOMSAYER</title>
@@ -184,7 +192,7 @@ footer{padding:3rem;border-top:0.5px solid var(--ink);display:flex;align-items:c
   </div>
 
   <div class="hero-content">
-    <div class="banner" id="banner">Ticket confirmed. See you at the ritual. Reply to your email to request one emo-era song.</div>
+    <div class="banner" id="banner">Ticket confirmed. See you at the ritual.</div>
     <div class="eyebrow">Planet Doom presents</div>
     <div class="title-block">
       <div class="title-row">Pink <span class="out">Is</span> Punk</div><br>
@@ -231,10 +239,6 @@ footer{padding:3rem;border-top:0.5px solid var(--ink);display:flex;align-items:c
         <div class="row"><span class="k">Age</span><span class="v">18+</span></div>
         <div class="row"><span class="k">Presale</span><span class="v">$10 &middot; limited cap</span></div>
       </div>
-      <div class="perk">
-        <div class="tag">Presale Perk</div>
-        <div class="note"><b>Presale buyers pick the soundtrack.</b> Reply to your confirmation email and request one emo-era song. The best ones make the set.</div>
-      </div>
     </div>
     <div>
       <div class="section-hdr" data-ghost="PINK"><div class="section-label">[ PINK IS PUNK ]</div></div>
@@ -270,6 +274,7 @@ document.getElementById('minus').onclick=()=>{if(qty>1){qty--;qtyEl.textContent=
 /* checkout — same endpoint the home page uses */
 async function buyTicket(btn){
   const orig=btn.textContent;btn.textContent='Processing...';btn.disabled=true;
+  if(typeof gtag==='function'){gtag('event','begin_checkout',{currency:'USD',value:qty*10,items:[{item_id:'pink-cactus-0619',item_name:'Pink Is Punk Emo Night',price:10,quantity:qty}]});}
   try{
     const resp=await fetch(`${PROXY}/api/tickets`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({event:'pink-cactus-0619',quantity:qty})});
     const data=await resp.json();
@@ -278,9 +283,12 @@ async function buyTicket(btn){
   }catch(e){btn.textContent=orig;btn.disabled=false;alert('Checkout error. Try again in a moment.');}
 }
 
-/* return banner */
+/* return banner + purchase event */
 const p=new URLSearchParams(location.search);
-if(p.get('ticket')==='success'||p.get('status')==='success')document.getElementById('banner').classList.add('show');
+if(p.get('ticket')==='success'||p.get('status')==='success'){
+  document.getElementById('banner').classList.add('show');
+  if(typeof gtag==='function'){gtag('event','purchase',{transaction_id:p.get('session_id')||('pc0619-'+Date.now()),currency:'USD',value:0,items:[{item_id:'pink-cactus-0619',item_name:'Pink Is Punk Emo Night',price:10}]});}
+}
 
 /* HUD clock */
 function clock(){const d=new Date();const z=n=>String(n).padStart(2,'0');document.getElementById('hudClock').textContent=z(d.getUTCHours())+':'+z(d.getUTCMinutes())+':'+z(d.getUTCSeconds())+' UTC';}

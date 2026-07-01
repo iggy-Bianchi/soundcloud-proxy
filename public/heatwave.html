@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PLANET DOOM: HEAT WAVE / Doomsayer</title>
+<meta name="description" content="Planet Doom presents HEAT WAVE - a heavy dubstep & bass night at The Pink Cactus, Knoxville. July 17. $10 presale, limited cap. 18+.">
+
+<!-- Open Graph -->
+<meta property="og:title" content="PLANET DOOM: HEAT WAVE">
+<meta property="og:description" content="Heavy dubstep & bass. The Pink Cactus, Knoxville. July 17 / 9PM / $10 presale / 18+">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.iamdoomsayer.com/heatwave">
+
+<!-- GA4 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z47PSEW4LB"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-Z47PSEW4LB');</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000;--char:#0a0a0a;--char2:#101010;
+  --pink:#FF1493;--pink-dim:rgba(255,20,147,.35);--pink-glow:rgba(255,20,147,.55);
+  --ember:#FF5E1A;--flare:#FF8A00;--haze:#8a94a6;
+  --bone:#E8E8E8;--ash:#666;--dust:#333;--ink:#161616;
+}
+html{scroll-behavior:smooth}
+body{font-family:'JetBrains Mono',monospace;background:var(--black);color:var(--bone);min-height:100vh;overflow-x:hidden}
+
+/* HEAT GRADIENT TEXT */
+.heat-text{
+  background:linear-gradient(180deg,#ffd9a8 0%,var(--flare) 28%,var(--ember) 52%,var(--pink) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;
+}
+
+/* SCANLINES + GRAIN */
+body::before{content:'';position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.5;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.05) 2px,rgba(0,0,0,.05) 4px)}
+#grain{position:fixed;inset:-50%;width:200%;height:200%;z-index:8;pointer-events:none;opacity:.045;filter:url(#grainFilter);animation:grainShift .5s steps(1) infinite}
+@keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(-2%,-1%)}50%{transform:translate(1%,2%)}75%{transform:translate(-1%,1%)}100%{transform:translate(2%,-2%)}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:1rem 2.5rem;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.95),transparent)}
+.nav-sigil{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-sigil-mark{width:20px;height:20px;position:relative;flex-shrink:0}
+.nav-sigil-mark::before{content:'';position:absolute;inset:4px;border:1px solid var(--pink);transform:rotate(45deg)}
+.nav-sigil-mark::after{content:'';position:absolute;inset:0;border:.5px solid var(--pink-dim)}
+.nav-sigil-text{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.15em;color:var(--bone)}
+.nav-back{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--ash);text-decoration:none;border:.5px solid var(--dust);padding:6px 14px;transition:all .25s}
+.nav-back:hover{border-color:var(--pink);color:var(--pink)}
+
+/* HERO */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:7rem 1.5rem 4rem;overflow:hidden}
+/* baked sky + desert horizon */
+.hero-sky{position:absolute;inset:0;z-index:0;background:
+  radial-gradient(120% 80% at 50% 8%, #b9c2d0 0%, #6f7a8c 22%, #2e3440 46%, #0a0a0a 72%, #000 100%);
+  opacity:.5}
+.hero-heat{position:absolute;left:0;right:0;bottom:0;height:56%;z-index:1;background:
+  radial-gradient(90% 120% at 50% 130%, var(--flare) 0%, var(--ember) 26%, var(--pink) 46%, rgba(255,20,147,.15) 62%, transparent 78%);
+  opacity:.42;filter:blur(2px);animation:heatPulse 6s ease-in-out infinite}
+@keyframes heatPulse{0%,100%{opacity:.34;transform:translateY(0) scaleY(1)}50%{opacity:.5;transform:translateY(-6px) scaleY(1.04)}}
+/* cracked-earth line texture */
+.hero-crack{position:absolute;left:0;right:0;bottom:0;height:38%;z-index:2;opacity:.5;
+  -webkit-mask-image:linear-gradient(to top,#000 0%,transparent 100%);mask-image:linear-gradient(to top,#000 0%,transparent 100%)}
+.hero-overlay{position:absolute;inset:0;z-index:3;background:linear-gradient(to bottom,rgba(0,0,0,.35) 0%,transparent 30%,transparent 60%,rgba(0,0,0,.35) 100%)}
+
+.hero-inner{position:relative;z-index:5;max-width:900px;width:100%}
+/* flyer as hero centerpiece */
+.flyer-wrap{display:flex;justify-content:center;margin-bottom:2.2rem}
+.flyer{width:100%;max-width:480px;height:auto;display:block;border:.5px solid var(--pink-dim);box-shadow:0 0 60px rgba(255,20,147,.28),0 20px 60px rgba(0,0,0,.6)}
+.hero-eyebrow{font-family:'VT323',monospace;font-size:1.15rem;letter-spacing:.42em;color:var(--haze);text-transform:uppercase;margin-bottom:.4rem}
+.hero-presents{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.5em;color:var(--ash);text-transform:uppercase;margin-bottom:1.6rem}
+.hero-title{font-family:'Bebas Neue',sans-serif;line-height:.86;letter-spacing:.02em}
+.hero-title .planet{display:block;font-size:clamp(2.4rem,9vw,5.2rem);color:var(--bone);opacity:.9}
+.hero-title .heat{display:block;font-size:clamp(4.6rem,20vw,12rem);text-shadow:0 0 40px var(--pink-glow),0 0 90px rgba(255,94,26,.3)}
+
+/* wobble visualizer = dubstep signature */
+.wobble{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:52px;margin:1.8rem auto 1.4rem;width:min(320px,70vw)}
+.wobble span{flex:1;background:linear-gradient(to top,var(--pink),var(--flare));border-radius:2px 2px 0 0;height:16%;animation:wob 1s ease-in-out infinite;box-shadow:0 0 12px var(--pink-dim)}
+@keyframes wob{0%,100%{height:14%}50%{height:100%}}
+.wobble span:nth-child(1){animation-delay:-.9s}.wobble span:nth-child(2){animation-delay:-.2s}
+.wobble span:nth-child(3){animation-delay:-.6s}.wobble span:nth-child(4){animation-delay:-.1s}
+.wobble span:nth-child(5){animation-delay:-.7s}.wobble span:nth-child(6){animation-delay:-.35s}
+.wobble span:nth-child(7){animation-delay:-.85s}.wobble span:nth-child(8){animation-delay:-.15s}
+.wobble span:nth-child(9){animation-delay:-.5s}.wobble span:nth-child(10){animation-delay:-.25s}
+.wobble span:nth-child(11){animation-delay:-.75s}.wobble span:nth-child(12){animation-delay:-.4s}
+.wobble span:nth-child(13){animation-delay:-.3s}.wobble span:nth-child(14){animation-delay:-.65s}
+
+.hero-meta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem 1.4rem;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--bone);margin-bottom:2.2rem}
+.hero-meta .dot{color:var(--pink)}
+.hero-cta{display:inline-flex;align-items:center;gap:12px;padding:15px 38px;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:12px;letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:#000;background:linear-gradient(90deg,var(--flare),var(--pink));border:none;transition:transform .2s,box-shadow .3s;box-shadow:0 0 0 rgba(255,20,147,0)}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 34px var(--pink-glow)}
+.hero-cta .price{font-family:'VT323',monospace;font-size:1.3rem;letter-spacing:.05em}
+.hero-scroll{margin-top:2.4rem;font-family:'VT323',monospace;font-size:1rem;letter-spacing:.3em;color:var(--dust);text-transform:uppercase;animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:.8}}
+
+/* SECTION SHELL */
+.wrap{max-width:1000px;margin:0 auto;padding:6rem 1.5rem}
+.sec-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.3em;color:var(--pink);text-transform:uppercase;display:flex;align-items:center;gap:16px;margin-bottom:2.6rem}
+.sec-label::after{content:'';flex:1;height:.5px;background:var(--ink)}
+
+/* LINEUP */
+.line-head{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.6rem,4vw,2.4rem);letter-spacing:.06em;margin-bottom:2rem}
+.headliner{border:.5px solid var(--pink);background:linear-gradient(180deg,rgba(255,20,147,.07),transparent);padding:2.2rem 1.5rem;text-align:center;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.headliner::before{content:'HEADLINE';position:absolute;top:10px;left:14px;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.3em;color:var(--pink);opacity:.8}
+.headliner .name{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,11vw,5.5rem);line-height:.9}
+.headliner .tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--ash);margin-top:.4rem}
+.support{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--ink);border:.5px solid var(--ink)}
+.support-act{background:var(--char);padding:1.6rem 1rem;text-align:center;transition:background .3s}
+.support-act:hover{background:var(--char2)}
+.support-act .sa-name{font-family:'Bebas Neue',sans-serif;font-size:1.9rem;letter-spacing:.04em;color:var(--bone)}
+.support-act .sa-role{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--dust);margin-top:4px}
+
+/* DETAILS */
+.details{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--ink);border:.5px solid var(--ink)}
+.detail{background:var(--char);padding:1.8rem 1.5rem}
+.detail .d-label{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--dust);margin-bottom:.6rem}
+.detail .d-val{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.03em;color:var(--bone)}
+.detail .d-val.pink{color:var(--pink)}
+.detail .d-sub{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;color:var(--ash);margin-top:.3rem}
+.detail a{color:var(--pink);text-decoration:none}
+.detail a:hover{text-decoration:underline}
+
+/* FINAL CTA */
+.finale{position:relative;text-align:center;padding:7rem 1.5rem;overflow:hidden;border-top:.5px solid var(--ink)}
+.finale-glow{position:absolute;inset:0;z-index:0;background:radial-gradient(80% 120% at 50% 130%,var(--pink) 0%,var(--ember) 30%,transparent 62%);opacity:.22;animation:heatPulse 6s ease-in-out infinite}
+.finale-inner{position:relative;z-index:2}
+.finale h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,8vw,5rem);line-height:.95;letter-spacing:.03em;margin-bottom:.6rem}
+.finale p{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ash);margin-bottom:2.2rem}
+
+/* FOOTER */
+footer{padding:2.6rem 1.5rem;border-top:.5px solid var(--ink);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.1em;color:var(--dust)}
+.footer-links{display:flex;gap:1.4rem}
+.footer-links a{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.15em;color:var(--dust);text-decoration:none;text-transform:uppercase;transition:color .2s}
+.footer-links a:hover{color:var(--pink)}
+
+@media(max-width:640px){
+  nav{padding:.85rem 1.2rem}
+  .wrap{padding:4.5rem 1.2rem}
+  .hero-meta{font-size:11px}
+  footer{flex-direction:column;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-heat,.finale-glow,.wobble span,.hero-scroll,#grain{animation:none}
+  .wobble span{height:60%}
+}
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <filter id="grainFilter"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+</svg>
+<div id="grain" aria-hidden="true"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="https://www.iamdoomsayer.com" class="nav-sigil">
+    <div class="nav-sigil-mark"></div>
+    <span class="nav-sigil-text">DOOMSAYER</span>
+  </a>
+  <a href="https://www.iamdoomsayer.com" class="nav-back">&larr; Back to site</a>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-sky"></div>
+  <div class="hero-heat"></div>
+  <svg class="hero-crack" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+    <g stroke="#000" stroke-width="1.4" fill="none" opacity="0.7">
+      <path d="M0 380 L180 300 L150 210 M180 300 L340 260 L420 180 M340 260 L300 360 M420 180 L560 150 L680 220 M560 150 L520 60 M680 220 L820 200 L900 120 M820 200 L860 320 M900 120 L1040 140 L1200 80 M1040 140 L1080 260 L1200 300 M150 210 L60 120"/>
+      <path d="M0 260 L120 240 L200 300 M300 360 L440 340 L520 400 M700 340 L840 360 M980 300 L1120 340"/>
+    </g>
+  </svg>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-inner">
+    <div class="flyer-wrap">
+      <img class="flyer" src="heatwave-flyer.png" alt="Planet Doom Heat Wave - dubstep and bass night with SPNCE, infinitechlo, DANISH, Bassboarder and bounce back. July 17, 9PM, The Pink Cactus, 1147 Sevier Ave Knoxville. $10 presale, 18+.">
+    </div>
+
+    <a class="hero-cta" href="https://posh.vip/e/planet-doom-heat-wave-dubstep" target="_blank" rel="noopener">
+      Get Presale Tickets <span class="price">$10</span>
+    </a>
+    <div class="hero-scroll">&darr; Lineup &amp; Details &darr;</div>
+  </div>
+</header>
+
+<!-- LINEUP -->
+<section class="wrap">
+  <div class="sec-label">[ Lineup ]</div>
+  <div class="headliner">
+    <div class="name heat-text">SPNCE</div>
+    <div class="tag">The Pink Cactus / Knoxville, TN</div>
+  </div>
+  <div class="support">
+    <div class="support-act"><div class="sa-name">infinitechlo</div><div class="sa-role">Support</div></div>
+    <div class="support-act"><div class="sa-name">DANISH</div><div class="sa-role">Support</div></div>
+    <div class="support-act"><div class="sa-name">Bassboarder</div><div class="sa-role">Support</div></div>
+    <div class="support-act"><div class="sa-name">bounce back</div><div class="sa-role">Support</div></div>
+  </div>
+</section>
+
+<!-- DETAILS -->
+<section class="wrap" style="padding-top:0">
+  <div class="sec-label">[ Details ]</div>
+  <div class="details">
+    <div class="detail">
+      <div class="d-label">Date</div>
+      <div class="d-val pink">Thursday, July 17</div>
+      <div class="d-sub">Doors / music 9PM</div>
+    </div>
+    <div class="detail">
+      <div class="d-label">Venue</div>
+      <div class="d-val">The Pink Cactus</div>
+      <div class="d-sub">1147 Sevier Ave, Knoxville, TN</div>
+    </div>
+    <div class="detail">
+      <div class="d-label">Admission</div>
+      <div class="d-val">18+</div>
+      <div class="d-sub">Valid ID required</div>
+    </div>
+    <div class="detail">
+      <div class="d-label">Presale</div>
+      <div class="d-val pink">$10</div>
+      <div class="d-sub">Limited cap. <a href="https://posh.vip/e/planet-doom-heat-wave-dubstep" target="_blank" rel="noopener">Grab tickets &rarr;</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="finale">
+  <div class="finale-glow"></div>
+  <div class="finale-inner">
+    <h2 class="heat-text">DON'T MISS THE WAVE</h2>
+    <p>Presale is capped. Once it's gone, it's gone.</p>
+    <a class="hero-cta" href="https://posh.vip/e/planet-doom-heat-wave-dubstep" target="_blank" rel="noopener">
+      Get Presale Tickets <span class="price">$10</span>
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">DOOMSAYER</div>
+  <div class="footer-links">
+    <a href="https://www.iamdoomsayer.com">Home</a>
+    <a href="https://instagram.com/iamdoomsayer" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://soundcloud.com/iamdoomsayer" target="_blank" rel="noopener">Soundcloud</a>
+    <a href="https://posh.vip/e/planet-doom-heat-wave-dubstep" target="_blank" rel="noopener">Tickets</a>
+  </div>
+</footer>
+
+</body>
+</html>
